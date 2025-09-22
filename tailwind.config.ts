@@ -52,6 +52,10 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        education: "hsl(var(--education))",
+        ecology: "hsl(var(--ecology))",
+        sport: "hsl(var(--sport))",
+        culture: "hsl(var(--culture))",
       },
       borderRadius: {
         lg: "var(--radius)",
