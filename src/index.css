@@ -13,17 +13,20 @@
     --popover: 0 0% 100%;
     --popover-foreground: 223 47% 11%;
 
-    /* Pastelowy niebieski - główny kolor */
-    --primary: 210 100% 70%;
+    /* Vibrant primary colors with gradients */
+    --primary: 220 100% 65%;
+    --primary-glow: 220 100% 80%;
     --primary-foreground: 0 0% 100%;
 
-    /* Pastelowy zielony */
-    --secondary: 120 60% 75%;
-    --secondary-foreground: 120 100% 25%;
+    /* Vibrant secondary colors */
+    --secondary: 150 80% 60%;
+    --secondary-glow: 150 80% 75%;
+    --secondary-foreground: 150 100% 10%;
 
-    /* Pastelowy pomarańczowy */  
-    --accent: 25 100% 75%;
-    --accent-foreground: 25 100% 25%;
+    /* Vibrant accent colors */
+    --accent: 35 100% 65%;
+    --accent-glow: 35 100% 80%;
+    --accent-foreground: 35 100% 10%;
 
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
@@ -33,15 +36,40 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 210 100% 70%;
+    --ring: 220 100% 65%;
 
-    /* Kolory kategorii dla znaczników */
-    --education: 210 100% 70%;
-    --ecology: 120 60% 75%;
-    --sport: 0 100% 75%;
-    --culture: 270 60% 75%;
+    /* Enhanced category colors */
+    --education: 220 100% 65%;
+    --education-glow: 220 100% 80%;
+    --ecology: 150 80% 60%;
+    --ecology-glow: 150 80% 75%;
+    --sport: 10 100% 65%;
+    --sport-glow: 10 100% 80%;
+    --culture: 280 80% 65%;
+    --culture-glow: 280 80% 80%;
+    --social: 340 80% 65%;
+    --social-glow: 340 80% 80%;
+    --health: 190 80% 65%;
+    --health-glow: 190 80% 80%;
 
-    --radius: 0.75rem;
+    /* Gradient definitions */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    --gradient-secondary: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--secondary-glow)));
+    --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--accent-glow)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)), hsl(var(--accent)));
+    --gradient-card: linear-gradient(145deg, hsl(var(--card)), hsl(var(--muted)));
+
+    /* Shadows with glow effects */
+    --shadow-primary: 0 10px 30px -10px hsl(var(--primary) / 0.3);
+    --shadow-secondary: 0 10px 30px -10px hsl(var(--secondary) / 0.3);
+    --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.4);
+    --shadow-card: 0 4px 20px -5px hsl(var(--foreground) / 0.1);
+
+    /* Animation timing */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    --radius: 1rem;
   }
 
   .dark {
@@ -54,24 +82,31 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
+    --primary: 220 100% 70%;
+    --primary-glow: 220 100% 85%;
     --primary-foreground: 222.2 47.4% 11.2%;
 
-    --secondary: 217.2 32.6% 17.5%;
+    --secondary: 150 80% 65%;
+    --secondary-glow: 150 80% 80%;
     --secondary-foreground: 210 40% 98%;
+
+    --accent: 35 100% 70%;
+    --accent-glow: 35 100% 85%;
+    --accent-foreground: 210 40% 98%;
 
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --ring: 220 100% 70%;
+
+    /* Dark mode gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)), hsl(var(--accent)));
+    --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.2);
   }
 }
 
@@ -82,7 +117,186 @@
 
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  /* Gradient backgrounds */
+  .bg-gradient-hero {
+    background: var(--gradient-hero);
+  }
+  
+  .bg-gradient-primary {
+    background: var(--gradient-primary);
+  }
+  
+  .bg-gradient-secondary {
+    background: var(--gradient-secondary);
+  }
+  
+  .bg-gradient-accent {
+    background: var(--gradient-accent);
+  }
+  
+  .bg-gradient-card {
+    background: var(--gradient-card);
+  }
+
+  /* Glow effects */
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+  
+  .shadow-primary {
+    box-shadow: var(--shadow-primary);
+  }
+  
+  .shadow-secondary {
+    box-shadow: var(--shadow-secondary);
+  }
+  
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+
+  /* Interactive elements */
+  .hover-lift {
+    transition: var(--transition-smooth);
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-glow);
+  }
+  
+  .hover-bounce {
+    transition: var(--transition-bounce);
+  }
+  
+  .hover-bounce:hover {
+    transform: scale(1.05);
+  }
+
+  /* Animated gradients */
+  .animated-gradient {
+    background: linear-gradient(-45deg, hsl(var(--primary)), hsl(var(--secondary)), hsl(var(--accent)), hsl(var(--primary-glow)));
+    background-size: 400% 400%;
+    animation: gradient-shift 8s ease infinite;
+  }
+
+  .pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite alternate;
+  }
+
+  /* Category colors */
+  .category-education {
+    background: linear-gradient(135deg, hsl(var(--education)), hsl(var(--education-glow)));
+  }
+  
+  .category-ecology {
+    background: linear-gradient(135deg, hsl(var(--ecology)), hsl(var(--ecology-glow)));
+  }
+  
+  .category-sport {
+    background: linear-gradient(135deg, hsl(var(--sport)), hsl(var(--sport-glow)));
+  }
+  
+  .category-culture {
+    background: linear-gradient(135deg, hsl(var(--culture)), hsl(var(--culture-glow)));
+  }
+  
+  .category-social {
+    background: linear-gradient(135deg, hsl(var(--social)), hsl(var(--social-glow)));
+  }
+  
+  .category-health {
+    background: linear-gradient(135deg, hsl(var(--health)), hsl(var(--health-glow)));
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .border-gradient {
+    border: 2px solid transparent;
+    background: linear-gradient(var(--background), var(--background)) padding-box,
+                var(--gradient-primary) border-box;
+  }
+}
+
+/* Keyframe animations */
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes pulse-glow {
+  from {
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.4);
+  }
+  to {
+    box-shadow: 0 0 40px hsl(var(--primary) / 0.8);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-slide-in {
+  animation: slide-in 0.5s ease-out;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out;
 }
 
 /* OSMBuildings styles */
