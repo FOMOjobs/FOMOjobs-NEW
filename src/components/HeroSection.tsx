@@ -31,7 +31,7 @@ export const HeroSection = () => {
                 Znajdź wolontariat
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
-              <Button variant="outline" size="lg" className="border-white/30 text-white hover:bg-white/10 hover-bounce">
+              <Button variant="outline" size="lg" className="bg-white/10 backdrop-blur-sm border-white/50 text-white hover:bg-white/20 hover:border-white/70 hover-bounce">
                 Dodaj organizację
               </Button>
             </div>
@@ -54,7 +54,9 @@ export const HeroSection = () => {
               </div>
               <div className="text-center">
                 <div className="flex items-center justify-center mb-2">
-                  <MapPin className="h-8 w-8 text-white pulse-glow" />
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 border border-white/20">
+                    <MapPin className="h-8 w-8 text-white pulse-glow" />
+                  </div>
                 </div>
                 <div className="text-2xl font-bold text-white">Kraków</div>
                 <div className="text-white/80">Cały miasto</div>
