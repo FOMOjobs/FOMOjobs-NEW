@@ -34,7 +34,7 @@ export const HeroSection = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
       {/* Animated background */}
       <div className="absolute inset-0 animated-gradient" />
       
@@ -44,18 +44,18 @@ export const HeroSection = () => {
           {/* Text Content */}
           <div className="text-center lg:text-left space-y-8 animate-fade-in-up">
             <div>
-              <h1 className="text-5xl md:text-7xl font-bold text-white leading-tight mb-2">
+              <h1 className="text-4xl md:text-5xl font-bold text-white leading-tight mb-2">
                 Planty{' '}
-                <span className="inline-block bg-gradient-to-r from-secondary to-secondary-glow bg-clip-text text-transparent">
+                <span className="inline-block bg-white bg-clip-text text-transparent drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]">
                   Możliwości
                 </span>
               </h1>
-              <p className="text-lg md:text-xl text-white/80 italic">
+              <p className="text-base md:text-lg text-white/90 italic">
                 Krakowskie Cyfrowe Centrum Wolontariatu
               </p>
             </div>
             
-            <p className="text-xl md:text-2xl text-white/90 max-w-2xl">
+            <p className="text-lg md:text-xl text-white/90 max-w-2xl leading-relaxed">
               Łączymy mieszkańców Krakowa z inicjatywami, które naprawdę się liczą. Dołącz do wolontariatu już dziś!
             </p>
             

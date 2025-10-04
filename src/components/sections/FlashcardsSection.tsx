@@ -133,6 +133,9 @@ export const FlashcardsSection = () => {
 
         {/* CTA */}
         <div className="text-center mt-12">
+          <h3 className="text-3xl font-bold mb-6 text-foreground">
+            Zmieniajże Kraków razem z nami!
+          </h3>
           <Link
             to="/auth"
             className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-4 rounded-xl font-bold text-lg hover:bg-primary/90 hover:scale-105 transition-all shadow-lg hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
