@@ -60,7 +60,7 @@ export const FlashcardsSection = () => {
           {steps.map((step, index) => (
             <div
               key={index}
-              className="relative h-80 cursor-pointer perspective-1000"
+              className="relative h-64 sm:h-72 md:h-80 cursor-pointer perspective-1000"
               onMouseEnter={() => setFlippedCard(index)}
               onMouseLeave={() => setFlippedCard(null)}
             >

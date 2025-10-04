@@ -104,41 +104,41 @@ export const HeroSection = () => {
             <div className="flex gap-2 mb-4">
               <button
                 onClick={() => handleTabClick('photo')}
-                className={`px-6 py-3 rounded-lg font-semibold transition flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 ${
+                className={`px-4 sm:px-6 py-3 sm:py-4 rounded-lg font-semibold transition flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 ${
                   activeView === 'photo'
                     ? 'bg-secondary text-white'
                     : 'bg-white/20 text-white hover:bg-white/30'
                 }`}
               >
                 <Camera className="w-5 h-5" />
-                Zdjęcia
+                <span className="hidden sm:inline">Zdjęcia</span>
               </button>
               <button
                 onClick={() => handleTabClick('map')}
-                className={`px-6 py-3 rounded-lg font-semibold transition flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 ${
+                className={`px-4 sm:px-6 py-3 sm:py-4 rounded-lg font-semibold transition flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 ${
                   activeView === 'map'
                     ? 'bg-secondary text-white'
                     : 'bg-white/20 text-white hover:bg-white/30'
                 }`}
               >
                 <Map className="w-5 h-5" />
-                Mapa
+                <span className="hidden sm:inline">Mapa</span>
               </button>
               <button
                 onClick={() => handleTabClick('calendar')}
-                className={`px-6 py-3 rounded-lg font-semibold transition flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 ${
+                className={`px-4 sm:px-6 py-3 sm:py-4 rounded-lg font-semibold transition flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 ${
                   activeView === 'calendar'
                     ? 'bg-secondary text-white'
                     : 'bg-white/20 text-white hover:bg-white/30'
                 }`}
               >
                 <CalendarIcon className="w-5 h-5" />
-                Kalendarz
+                <span className="hidden sm:inline">Kalendarz</span>
               </button>
             </div>
 
             {/* Carousel Container */}
-            <div className="relative w-full h-[500px] rounded-2xl overflow-hidden shadow-glow">
+            <div className="relative w-full h-[350px] sm:h-[400px] md:h-[450px] lg:h-[500px] rounded-2xl overflow-hidden shadow-glow">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeView}
