@@ -9,7 +9,6 @@ import Profile from "./pages/Profile";
 import CalendarPage from "./pages/Calendar";
 import Chat from "./pages/Chat";
 import Admin from "./pages/Admin";
-import Achievements from "./pages/Achievements";
 
 const queryClient = new QueryClient();
 
@@ -26,7 +25,6 @@ const App = () => (
             <Route path="/calendar" element={<CalendarPage />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/admin" element={<Admin />} />
-            <Route path="/achievements" element={<Achievements />} />
           </Routes>
         </AuthProvider>
       </BrowserRouter>
