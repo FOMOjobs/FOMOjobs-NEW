@@ -61,6 +61,47 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          created_at: string | null
+          id: string
+          message: string
+          read: boolean | null
+          related_application_id: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          message: string
+          read?: boolean | null
+          related_application_id?: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          message?: string
+          read?: boolean | null
+          related_application_id?: string | null
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_related_application_id_fkey"
+            columns: ["related_application_id"]
+            isOneToOne: false
+            referencedRelation: "volunteer_applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organization_profiles: {
         Row: {
           address: string
@@ -214,6 +255,53 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      volunteer_applications: {
+        Row: {
+          applied_at: string | null
+          attendance_marked: boolean | null
+          attended: boolean | null
+          created_at: string | null
+          id: string
+          notes: string | null
+          opportunity_id: string
+          status: string | null
+          updated_at: string | null
+          volunteer_id: string
+        }
+        Insert: {
+          applied_at?: string | null
+          attendance_marked?: boolean | null
+          attended?: boolean | null
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          opportunity_id: string
+          status?: string | null
+          updated_at?: string | null
+          volunteer_id: string
+        }
+        Update: {
+          applied_at?: string | null
+          attendance_marked?: boolean | null
+          attended?: boolean | null
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          opportunity_id?: string
+          status?: string | null
+          updated_at?: string | null
+          volunteer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "volunteer_applications_volunteer_id_fkey"
+            columns: ["volunteer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
