@@ -21,8 +21,8 @@ export const Navigation = () => {
     { label: 'Strona główna', href: '/' },
     { label: 'Wolontariaty', href: '/' },
     { label: 'Kalendarz', href: '/calendar' },
-    { label: 'Czat', href: '#chat' },
-    { label: 'O nas', href: '#about' },
+    { label: 'Czat', href: '/chat' },
+    { label: 'Certyfikaty', href: '/certificates' },
   ];
 
   return (

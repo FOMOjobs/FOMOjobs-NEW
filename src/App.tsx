@@ -7,6 +7,9 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
 import CalendarPage from "./pages/Calendar";
+import Chat from "./pages/Chat";
+import Admin from "./pages/Admin";
+import Certificates from "./pages/Certificates";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +24,9 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/calendar" element={<CalendarPage />} />
+            <Route path="/chat" element={<Chat />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/certificates" element={<Certificates />} />
           </Routes>
         </AuthProvider>
       </BrowserRouter>
