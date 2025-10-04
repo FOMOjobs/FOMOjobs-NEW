@@ -177,7 +177,6 @@ const Index = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="date">Najbliższe</SelectItem>
-                  <SelectItem value="urgent">Pilne</SelectItem>
                   <SelectItem value="popular">Popularne</SelectItem>
                   <SelectItem value="spots">Wolne miejsca</SelectItem>
                 </SelectContent>

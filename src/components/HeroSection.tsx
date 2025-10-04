@@ -43,17 +43,20 @@ export const HeroSection = () => {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Text Content */}
           <div className="text-center lg:text-left space-y-8 animate-fade-in-up">
-            <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight">
-              Krakowskie{' '}
-              <span className="inline-block bg-gradient-to-r from-secondary to-secondary-glow bg-clip-text text-transparent">
-                Cyfrowe
-              </span>{' '}
-              Centrum Wolontariatu
-            </h1>
+            <div>
+              <h1 className="text-5xl md:text-7xl font-bold text-white leading-tight mb-2">
+                Planty{' '}
+                <span className="inline-block bg-gradient-to-r from-secondary to-secondary-glow bg-clip-text text-transparent">
+                  Możliwości
+                </span>
+              </h1>
+              <p className="text-lg md:text-xl text-white/80 italic">
+                Krakowskie Cyfrowe Centrum Wolontariatu
+              </p>
+            </div>
             
             <p className="text-xl md:text-2xl text-white/90 max-w-2xl">
-              Łączymy młodych wolontariuszy z organizacjami w Krakowie. 
-              Znajdź swoją pasję i zmień świat razem z nami!
+              Łączymy mieszkańców Krakowa z inicjatywami, które naprawdę się liczą. Dołącz do wolontariatu już dziś!
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">

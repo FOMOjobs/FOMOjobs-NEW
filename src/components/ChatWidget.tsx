@@ -77,7 +77,7 @@ export const ChatWidget = () => {
       {/* Chat Button */}
       <Button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 h-16 w-16 rounded-full shadow-glow bg-gradient-primary hover:scale-110 transition-all duration-300 z-50"
+        className="fixed bottom-24 right-6 h-16 w-16 rounded-full shadow-glow bg-gradient-primary hover:scale-110 transition-all duration-300 z-50"
         size="icon"
       >
         <Sparkles className="h-8 w-8 text-white" />
@@ -85,7 +85,7 @@ export const ChatWidget = () => {
 
       {/* Chat Window */}
       {isOpen && (
-        <Card className="fixed bottom-24 right-6 w-96 h-[500px] shadow-glow border-2 border-primary/20 z-50 flex flex-col">
+        <Card className="fixed bottom-44 right-6 w-96 h-[500px] shadow-glow border-2 border-primary/20 z-50 flex flex-col">
           <CardHeader className="bg-gradient-primary text-white rounded-t-lg pb-3">
             <div className="flex items-center justify-between">
               <CardTitle className="flex items-center gap-2">

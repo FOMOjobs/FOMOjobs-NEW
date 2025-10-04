@@ -1,6 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import obwarzanekIcon from '@/assets/icon-obwarzanek.png';
+import smokIcon from '@/assets/icon-smok.png';
+import wiezaIcon from '@/assets/icon-wieza.png';
+import golabIcon from '@/assets/icon-golab.png';
+import obwarzanekOrangeIcon from '@/assets/icon-obwarzanek-orange.png';
+import smokPinkIcon from '@/assets/icon-smok-pink.png';
 
 export const ReviewsSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -11,7 +17,7 @@ export const ReviewsSection = () => {
       id: 1,
       name: "Ania Kowalska",
       age: 17,
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Ania",
+      avatar: obwarzanekIcon,
       rating: 5,
       badge: "raczacy-lajkonik",
       badgeName: "Rączący Lajkonik",
@@ -23,7 +29,7 @@ export const ReviewsSection = () => {
       id: 2,
       name: "Michał Nowak",
       age: 19,
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Michal",
+      avatar: smokIcon,
       rating: 5,
       badge: "straznik-smoka",
       badgeName: "Strażnik Smoka",
@@ -35,7 +41,7 @@ export const ReviewsSection = () => {
       id: 3,
       name: "Zosia Wiśniewska",
       age: 16,
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Zosia",
+      avatar: wiezaIcon,
       rating: 5,
       badge: "szewczyk-dratewka",
       badgeName: "Szewczyk Dratewka",
@@ -47,7 +53,7 @@ export const ReviewsSection = () => {
       id: 4,
       name: "Kacper Zieliński",
       age: 18,
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Kacper",
+      avatar: golabIcon,
       rating: 5,
       badge: "mistrz-bugle",
       badgeName: "Mistrz Bugle",
@@ -59,7 +65,7 @@ export const ReviewsSection = () => {
       id: 5,
       name: "Maja Lewandowska",
       age: 17,
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Maja",
+      avatar: obwarzanekOrangeIcon,
       rating: 5,
       badge: "raczacy-lajkonik",
       badgeName: "Rączący Lajkonik",
@@ -71,7 +77,7 @@ export const ReviewsSection = () => {
       id: 6,
       name: "Jakub Wójcik",
       age: 20,
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Jakub",
+      avatar: smokPinkIcon,
       rating: 5,
       badge: "ambasador-krakowa",
       badgeName: "Ambasador Krakowa",

@@ -95,15 +95,15 @@ export const FlashcardsSection = () => {
                   </div>
 
                   {/* Text */}
-                  <h3 className="text-2xl font-bold mb-3 text-foreground text-center">
+                  <h3 className="text-2xl font-bold mb-3 text-black dark:text-white text-center">
                     {step.title}
                   </h3>
-                  <p className="text-muted-foreground text-center">
+                  <p className="text-black/80 dark:text-white/80 text-center">
                     {step.subtitle}
                   </p>
 
                   {/* Hover hint */}
-                  <p className="absolute bottom-6 text-sm text-muted-foreground">
+                  <p className="absolute bottom-6 text-sm text-black/60 dark:text-white/60">
                     Najedź aby zobaczyć więcej
                   </p>
                 </div>
