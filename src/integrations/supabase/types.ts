@@ -14,16 +14,229 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      minor_consent: {
+        Row: {
+          consent_document_url: string | null
+          id: string
+          parent_email: string
+          parent_name: string
+          parent_phone: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: Database["public"]["Enums"]["consent_status"] | null
+          submitted_at: string | null
+          volunteer_id: string
+        }
+        Insert: {
+          consent_document_url?: string | null
+          id?: string
+          parent_email: string
+          parent_name: string
+          parent_phone?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["consent_status"] | null
+          submitted_at?: string | null
+          volunteer_id: string
+        }
+        Update: {
+          consent_document_url?: string | null
+          id?: string
+          parent_email?: string
+          parent_name?: string
+          parent_phone?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["consent_status"] | null
+          submitted_at?: string | null
+          volunteer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "minor_consent_volunteer_id_fkey"
+            columns: ["volunteer_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organization_profiles: {
+        Row: {
+          address: string
+          created_at: string | null
+          description: string | null
+          id: string
+          logo_url: string | null
+          organization_name: string
+          updated_at: string | null
+          user_id: string
+          verification_document_url: string | null
+          website: string | null
+        }
+        Insert: {
+          address: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          logo_url?: string | null
+          organization_name: string
+          updated_at?: string | null
+          user_id: string
+          verification_document_url?: string | null
+          website?: string | null
+        }
+        Update: {
+          address?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          logo_url?: string | null
+          organization_name?: string
+          updated_at?: string | null
+          user_id?: string
+          verification_document_url?: string | null
+          website?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_profiles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          created_at: string | null
+          date_of_birth: string | null
+          first_name: string | null
+          id: string
+          last_name: string | null
+          phone: string | null
+          updated_at: string | null
+          user_type: Database["public"]["Enums"]["user_type"]
+          verification_status:
+            | Database["public"]["Enums"]["verification_status"]
+            | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string | null
+          date_of_birth?: string | null
+          first_name?: string | null
+          id: string
+          last_name?: string | null
+          phone?: string | null
+          updated_at?: string | null
+          user_type: Database["public"]["Enums"]["user_type"]
+          verification_status?:
+            | Database["public"]["Enums"]["verification_status"]
+            | null
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string | null
+          date_of_birth?: string | null
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          phone?: string | null
+          updated_at?: string | null
+          user_type?: Database["public"]["Enums"]["user_type"]
+          verification_status?:
+            | Database["public"]["Enums"]["verification_status"]
+            | null
+        }
+        Relationships: []
+      }
+      school_coordinator_profiles: {
+        Row: {
+          authorization_document_url: string | null
+          created_at: string | null
+          id: string
+          school_address: string | null
+          school_name: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          authorization_document_url?: string | null
+          created_at?: string | null
+          id?: string
+          school_address?: string | null
+          school_name: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          authorization_document_url?: string | null
+          created_at?: string | null
+          id?: string
+          school_address?: string | null
+          school_name?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "school_coordinator_profiles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_minor: {
+        Args: { user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
+      consent_status: "pending" | "approved" | "rejected"
+      user_type: "volunteer" | "organization" | "school_coordinator"
+      verification_status: "pending" | "verified" | "rejected"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +363,11 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+      consent_status: ["pending", "approved", "rejected"],
+      user_type: ["volunteer", "organization", "school_coordinator"],
+      verification_status: ["pending", "verified", "rejected"],
+    },
   },
 } as const
