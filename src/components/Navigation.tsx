@@ -1,16 +1,21 @@
 import { useState } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
-import { Menu, X, Globe, Bell, User } from 'lucide-react';
+import { Menu, X, Globe, Bell, User, LogOut } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
 export const Navigation = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [language, setLanguage] = useState('PL');
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
   const navLinks = [
     { label: 'Strona główna', href: '#home' },
@@ -79,9 +84,32 @@ export const Navigation = () => {
             </Button>
 
             {/* User Profile */}
-            <Button variant="ghost" size="icon">
-              <User className="h-5 w-5" />
-            </Button>
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <User className="h-5 w-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="bg-background border-border">
+                  <DropdownMenuItem className="cursor-pointer">
+                    Mój profil
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer">
+                    Ustawienia
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={signOut} className="cursor-pointer text-destructive">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Wyloguj się
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button onClick={() => navigate('/auth')}>
+                Zaloguj się
+              </Button>
+            )}
 
             {/* Mobile Menu Toggle */}
             <Button
