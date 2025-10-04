@@ -72,21 +72,22 @@ export const MapView: React.FC<MapViewProps> = ({ selectedCategory = 'all', onMa
       style={{ height: '600px', width: '100%', borderRadius: '12px' }}
       scrollWheelZoom={true}
     >
-      {/* @ts-expect-error - react-leaflet prop types */}
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      />
+      <>
+        {/* @ts-expect-error - react-leaflet prop types */}
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        />
 
-      {filteredOpportunities.map((opp) => (
-        // @ts-expect-error - react-leaflet prop types
-        <Marker
-          key={opp.id}
-          position={opp.location.coordinates as [number, number]}
-          icon={categoryIcons[opp.category]}
-        >
-          {/* @ts-expect-error - react-leaflet prop types */}
-          <Popup maxWidth={300}>
+        {filteredOpportunities.map((opp) => (
+          // @ts-expect-error - react-leaflet prop types
+          <Marker
+            key={opp.id}
+            position={opp.location.coordinates as [number, number]}
+            icon={categoryIcons[opp.category]}
+          >
+            {/* @ts-expect-error - react-leaflet prop types */}
+            <Popup maxWidth={300}>
             <div className="p-2">
               {opp.imageUrl && (
                 <img 
@@ -115,9 +116,9 @@ export const MapView: React.FC<MapViewProps> = ({ selectedCategory = 'all', onMa
             </div>
           </Popup>
         </Marker>
-      ))}
+        ))}
 
-      {/* Legenda */}
+        {/* Legenda */}
       <div className="leaflet-top leaflet-left" style={{ marginTop: '80px' }}>
         <div className="leaflet-control bg-white/95 backdrop-blur-sm rounded-lg p-4 shadow-lg">
           <h4 className="font-semibold mb-3 text-sm">Kategorie</h4>
@@ -138,6 +139,7 @@ export const MapView: React.FC<MapViewProps> = ({ selectedCategory = 'all', onMa
           </div>
         </div>
       </div>
+      </>
     </MapContainer>
   );
 };

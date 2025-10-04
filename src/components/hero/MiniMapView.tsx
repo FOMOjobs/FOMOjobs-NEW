@@ -93,39 +93,41 @@ export const MiniMapView = () => {
         dragging={true}
         zoomControl={true}
       >
-        {/* @ts-expect-error - react-leaflet prop types */}
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; OpenStreetMap contributors'
-        />
-        
-        {upcomingOpportunities.map((opp) => (
-          // @ts-expect-error - react-leaflet prop types
-          <Marker
-            key={opp.id}
-            position={opp.location.coordinates as [number, number]}
-            icon={createCategoryIcon(opp.category)}
-          >
-            <Popup>
-              <div className="p-2 min-w-[200px]">
-                <div className={`inline-block px-2 py-1 rounded text-xs font-semibold mb-2 ${getCategoryColor(opp.category)}`}>
-                  {getCategoryName(opp.category)}
+        <>
+          {/* @ts-expect-error - react-leaflet prop types */}
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; OpenStreetMap contributors'
+          />
+          
+          {upcomingOpportunities.map((opp) => (
+            // @ts-expect-error - react-leaflet prop types
+            <Marker
+              key={opp.id}
+              position={opp.location.coordinates as [number, number]}
+              icon={createCategoryIcon(opp.category)}
+            >
+              <Popup>
+                <div className="p-2 min-w-[200px]">
+                  <div className={`inline-block px-2 py-1 rounded text-xs font-semibold mb-2 ${getCategoryColor(opp.category)}`}>
+                    {getCategoryName(opp.category)}
+                  </div>
+                  <h4 className="font-bold text-sm mb-1">{opp.title}</h4>
+                  <p className="text-xs text-gray-600 mb-1">{opp.organization}</p>
+                  <p className="text-xs text-gray-500 mb-2">
+                    📅 {new Date(opp.date.start).toLocaleDateString('pl-PL')} • {opp.timeCommitment}
+                  </p>
+                  <Button
+                    onClick={() => window.location.href = `/opportunities/${opp.id}`}
+                    className="w-full bg-primary text-white py-1 px-3 rounded text-xs font-semibold hover:bg-primary/90 transition"
+                  >
+                    Zobacz więcej
+                  </Button>
                 </div>
-                <h4 className="font-bold text-sm mb-1">{opp.title}</h4>
-                <p className="text-xs text-gray-600 mb-1">{opp.organization}</p>
-                <p className="text-xs text-gray-500 mb-2">
-                  📅 {new Date(opp.date.start).toLocaleDateString('pl-PL')} • {opp.timeCommitment}
-                </p>
-                <Button
-                  onClick={() => window.location.href = `/opportunities/${opp.id}`}
-                  className="w-full bg-primary text-white py-1 px-3 rounded text-xs font-semibold hover:bg-primary/90 transition"
-                >
-                  Zobacz więcej
-                </Button>
-              </div>
-            </Popup>
-          </Marker>
-        ))}
+              </Popup>
+            </Marker>
+          ))}
+        </>
       </MapContainer>
 
       <div className="absolute top-4 left-4 bg-white/95 backdrop-blur px-4 py-2 rounded-lg shadow-lg z-[1000]">
