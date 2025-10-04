@@ -1,3 +1,5 @@
+import { Navigation } from '@/components/Navigation';
+import { AccessibilityBar } from '@/components/AccessibilityBar';
 import { HeroSection } from '@/components/HeroSection';
 import { MapView } from '@/components/MapView';
 import { useVolunteerStore } from '@/stores/volunteerStore';
@@ -27,8 +29,10 @@ const Index = () => {
   ];
 
   return (
-    <main className="min-h-screen">
-      <HeroSection />
+    <div className="min-h-screen bg-background pb-20">
+      <Navigation />
+      <main>
+        <HeroSection />
       
       {/* Main Content Section */}
       <section className="py-16 bg-gradient-card">
@@ -135,7 +139,10 @@ const Index = () => {
           </Tabs>
         </div>
       </section>
-    </main>
+      </main>
+      
+      <AccessibilityBar />
+    </div>
   );
 };
 

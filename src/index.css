@@ -5,59 +5,53 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 223 47% 11%;
-
+    --foreground: 0 0% 18%;
     --card: 0 0% 100%;
-    --card-foreground: 223 47% 11%;
-
+    --card-foreground: 0 0% 18%;
     --popover: 0 0% 100%;
-    --popover-foreground: 223 47% 11%;
-
-    /* Vibrant primary colors with gradients */
-    --primary: 220 100% 65%;
-    --primary-glow: 220 100% 80%;
+    --popover-foreground: 0 0% 18%;
+    
+    /* Młody Kraków Brand Colors */
+    --primary: 330 84% 52%; /* Magenta #E91E8C */
     --primary-foreground: 0 0% 100%;
-
-    /* Vibrant secondary colors */
-    --secondary: 150 80% 60%;
-    --secondary-glow: 150 80% 75%;
-    --secondary-foreground: 150 100% 10%;
-
-    /* Vibrant accent colors */
-    --accent: 35 100% 65%;
-    --accent-glow: 35 100% 80%;
-    --accent-foreground: 35 100% 10%;
-
+    --primary-glow: 330 84% 62%;
+    
+    --secondary: 82 61% 59%; /* Green #8BC53F */
+    --secondary-foreground: 0 0% 18%;
+    --secondary-glow: 82 61% 69%;
+    
+    --accent: 258 38% 46%; /* Purple #5B4B9C */
+    --accent-foreground: 0 0% 100%;
+    --accent-glow: 258 38% 56%;
+    
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
-
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
+    --destructive-foreground: 0 0% 100%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 220 100% 65%;
+    --ring: 330 84% 52%;
+    
+    /* Category colors */
+    --education: 221 83% 53%;
+    --education-glow: 221 83% 63%;
+    --ecology: 82 61% 59%; /* Use brand green */
+    --ecology-glow: 82 61% 69%;
+    --sport: 24 95% 53%;
+    --sport-glow: 24 95% 63%;
+    --culture: 258 38% 46%; /* Use brand purple */
+    --culture-glow: 258 38% 56%;
+    --social: 330 84% 52%; /* Use brand magenta */
+    --social-glow: 330 84% 62%;
+    --health: 0 72% 51%;
+    --health-glow: 0 72% 61%;
 
-    /* Enhanced category colors */
-    --education: 220 100% 65%;
-    --education-glow: 220 100% 80%;
-    --ecology: 150 80% 60%;
-    --ecology-glow: 150 80% 75%;
-    --sport: 10 100% 65%;
-    --sport-glow: 10 100% 80%;
-    --culture: 280 80% 65%;
-    --culture-glow: 280 80% 80%;
-    --social: 340 80% 65%;
-    --social-glow: 340 80% 80%;
-    --health: 190 80% 65%;
-    --health-glow: 190 80% 80%;
-
-    /* Gradient definitions */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
-    --gradient-secondary: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--secondary-glow)));
-    --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--accent-glow)));
-    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)), hsl(var(--accent)));
-    --gradient-card: linear-gradient(145deg, hsl(var(--card)), hsl(var(--muted)));
+    /* Gradients - Młody Kraków Brand */
+    --gradient-primary: linear-gradient(135deg, hsl(330, 84%, 52%), hsl(258, 38%, 46%)); /* Magenta to Purple */
+    --gradient-secondary: linear-gradient(135deg, hsl(82, 61%, 59%), hsl(330, 84%, 52%)); /* Green to Magenta */
+    --gradient-accent: linear-gradient(135deg, hsl(258, 38%, 46%), hsl(330, 84%, 52%)); /* Purple to Magenta */
+    --gradient-hero: linear-gradient(135deg, hsl(330, 84%, 52%), hsl(258, 38%, 46%)); /* Magenta to Purple */
+    --gradient-card: linear-gradient(to bottom, hsl(var(--card)), hsl(var(--muted)));
 
     /* Shadows with glow effects */
     --shadow-primary: 0 10px 30px -10px hsl(var(--primary) / 0.3);
@@ -73,40 +67,37 @@
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 220 100% 70%;
-    --primary-glow: 220 100% 85%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 150 80% 65%;
-    --secondary-glow: 150 80% 80%;
-    --secondary-foreground: 210 40% 98%;
-
-    --accent: 35 100% 70%;
-    --accent-glow: 35 100% 85%;
-    --accent-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
+    --background: 0 0% 10%;
+    --foreground: 0 0% 90%;
+    --card: 0 0% 18%;
+    --card-foreground: 0 0% 90%;
+    --popover: 0 0% 18%;
+    --popover-foreground: 0 0% 90%;
+    
+    /* Młody Kraków Brand Colors - Dark Mode (slightly muted) */
+    --primary: 330 75% 48%; /* Magenta darker */
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 330 75% 58%;
+    
+    --secondary: 82 55% 52%; /* Green darker */
+    --secondary-foreground: 0 0% 10%;
+    --secondary-glow: 82 55% 62%;
+    
+    --accent: 258 35% 42%; /* Purple darker */
+    --accent-foreground: 0 0% 100%;
+    --accent-glow: 258 35% 52%;
+    
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 65%;
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 220 100% 70%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 25%;
+    --input: 0 0% 25%;
+    --ring: 330 75% 48%;
 
     /* Dark mode gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)), hsl(var(--accent)));
-    --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.2);
+    --gradient-hero: linear-gradient(135deg, hsl(330, 75%, 48%), hsl(258, 35%, 42%));
+    --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.3);
   }
 }
 

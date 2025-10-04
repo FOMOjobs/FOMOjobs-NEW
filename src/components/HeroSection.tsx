@@ -15,7 +15,7 @@ export const HeroSection = () => {
           <div className="text-center lg:text-left space-y-8 animate-fade-in-up">
             <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight">
               Krakowskie{' '}
-              <span className="text-gradient bg-white/20 bg-clip-text text-transparent">
+              <span className="inline-block bg-gradient-to-r from-secondary to-secondary-glow bg-clip-text text-transparent">
                 Cyfrowe
               </span>{' '}
               Centrum Wolontariatu
@@ -27,11 +27,17 @@ export const HeroSection = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Button size="lg" className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white border border-white/30 hover-lift group">
+              <Button 
+                size="lg" 
+                className="bg-white text-primary hover:bg-white/90 shadow-lg hover:shadow-xl hover-lift group font-semibold"
+              >
                 Znajdź wolontariat
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
-              <Button variant="outline" size="lg" className="bg-white/10 backdrop-blur-sm border-white/50 text-white hover:bg-white/20 hover:border-white/70 hover-bounce">
+              <Button 
+                size="lg" 
+                className="bg-white/15 backdrop-blur-sm border-2 border-white text-white hover:bg-white/25 hover:border-white hover-bounce font-semibold"
+              >
                 Dodaj organizację
               </Button>
             </div>
