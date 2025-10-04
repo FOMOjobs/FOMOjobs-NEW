@@ -1,11 +1,10 @@
-// @ts-nocheck
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import React, { useEffect, useRef } from 'react';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { useVolunteerStore } from '@/stores/volunteerStore';
 import { VolunteerCategory } from '@/types/volunteer.types';
-import { Button } from '@/components/ui/button';
 
+// Fix Leaflet default icon paths in React
 // @ts-ignore
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -22,10 +21,10 @@ const createCategoryIcon = (category: VolunteerCategory) => {
     culture: { emoji: '🎭', color: '#E91E8C' },
     social: { emoji: '🤝', color: '#FF6B9D' },
     health: { emoji: '❤️', color: '#EF4444' }
-  };
-  
+  } as const;
+
   const icon = icons[category];
-  
+
   return L.divIcon({
     html: `
       <div style="
@@ -50,90 +49,64 @@ const createCategoryIcon = (category: VolunteerCategory) => {
   });
 };
 
-const getCategoryName = (category: VolunteerCategory): string => {
-  const names = {
-    education: 'Edukacja',
-    ecology: 'Ekologia',
-    sport: 'Sport',
-    culture: 'Kultura',
-    social: 'Pomoc społeczna',
-    health: 'Zdrowie'
-  };
-  return names[category];
-};
-
-const getCategoryColor = (category: VolunteerCategory): string => {
-  const colors = {
-    education: 'bg-purple-100 text-purple-800',
-    ecology: 'bg-green-100 text-green-800',
-    sport: 'bg-orange-100 text-orange-800',
-    culture: 'bg-pink-100 text-pink-800',
-    social: 'bg-rose-100 text-rose-800',
-    health: 'bg-red-100 text-red-800'
-  };
-  return colors[category];
-};
-
-export const MiniMapView = () => {
-  const krakowCenter: [number, number] = [50.0614, 19.9366];
+export const MiniMapView: React.FC = () => {
+  const mapRef = useRef<HTMLDivElement | null>(null);
+  const mapInstance = useRef<L.Map | null>(null);
   const { opportunities } = useVolunteerStore();
-  
-  const upcomingOpportunities = opportunities
-    .filter(opp => new Date(opp.date.start) > new Date())
-    .slice(0, 10);
+
+  useEffect(() => {
+    if (!mapRef.current || mapInstance.current) return;
+
+    const krakowCenter: L.LatLngExpression = [50.0614, 19.9366];
+    const map = L.map(mapRef.current, {
+      center: krakowCenter,
+      zoom: 12,
+      zoomControl: true,
+      scrollWheelZoom: false,
+    });
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors',
+      maxZoom: 19,
+    }).addTo(map);
+
+    // Add markers for the next 10 upcoming opportunities
+    const upcoming = opportunities
+      .filter((opp) => new Date(opp.date.start) > new Date())
+      .slice(0, 10);
+
+    upcoming.forEach((opp) => {
+      const marker = L.marker(opp.location.coordinates as L.LatLngExpression, {
+        icon: createCategoryIcon(opp.category),
+      }).addTo(map);
+
+      marker.bindPopup(`
+        <div class="p-2 min-w-[200px]">
+          <div class="font-bold text-sm mb-1">${opp.title}</div>
+          <div class="text-xs text-gray-600 mb-1">${opp.organization}</div>
+          <div class="text-xs text-gray-500 mb-2">📅 ${new Date(opp.date.start).toLocaleDateString('pl-PL')}</div>
+          <button 
+            onclick="window.location.href='/opportunities/${opp.id}'" 
+            class="w-full bg-rose-500 text-white py-1 px-3 rounded text-xs font-semibold">
+            Zobacz więcej
+          </button>
+        </div>
+      `);
+    });
+
+    mapInstance.current = map;
+
+    return () => {
+      map.remove();
+      mapInstance.current = null;
+    };
+  }, []);
 
   return (
-    <div className="w-full h-full relative">
-      {/* @ts-expect-error - react-leaflet prop types */}
-      <MapContainer
-        center={krakowCenter}
-        zoom={12}
-        style={{ height: '100%', width: '100%' }}
-        scrollWheelZoom={false}
-        dragging={true}
-        zoomControl={true}
-      >
-        <>
-          {/* @ts-expect-error - react-leaflet prop types */}
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; OpenStreetMap contributors'
-          />
-          
-          {upcomingOpportunities.map((opp) => (
-            // @ts-expect-error - react-leaflet prop types
-            <Marker
-              key={opp.id}
-              position={opp.location.coordinates as [number, number]}
-              icon={createCategoryIcon(opp.category)}
-            >
-              <Popup>
-                <div className="p-2 min-w-[200px]">
-                  <div className={`inline-block px-2 py-1 rounded text-xs font-semibold mb-2 ${getCategoryColor(opp.category)}`}>
-                    {getCategoryName(opp.category)}
-                  </div>
-                  <h4 className="font-bold text-sm mb-1">{opp.title}</h4>
-                  <p className="text-xs text-gray-600 mb-1">{opp.organization}</p>
-                  <p className="text-xs text-gray-500 mb-2">
-                    📅 {new Date(opp.date.start).toLocaleDateString('pl-PL')} • {opp.timeCommitment}
-                  </p>
-                  <Button
-                    onClick={() => window.location.href = `/opportunities/${opp.id}`}
-                    className="w-full bg-primary text-white py-1 px-3 rounded text-xs font-semibold hover:bg-primary/90 transition"
-                  >
-                    Zobacz więcej
-                  </Button>
-                </div>
-              </Popup>
-            </Marker>
-          ))}
-        </>
-      </MapContainer>
-
+    <div className="relative w-full h-full">
+      <div ref={mapRef} className="w-full h-full rounded-2xl overflow-hidden" />
       <div className="absolute top-4 left-4 bg-white/95 backdrop-blur px-4 py-2 rounded-lg shadow-lg z-[1000]">
-        <p className="text-sm font-semibold text-gray-800">
-          📍 {upcomingOpportunities.length} nadchodzących wolontariatów
-        </p>
+        <p className="text-sm font-semibold text-gray-800">📍 Mini mapa wolontariatu</p>
       </div>
     </div>
   );
