@@ -92,7 +92,7 @@ export const Navigation = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="bg-background border-border">
-                  <DropdownMenuItem className="cursor-pointer">
+                  <DropdownMenuItem onClick={() => navigate('/profile')} className="cursor-pointer">
                     Mój profil
                   </DropdownMenuItem>
                   <DropdownMenuItem className="cursor-pointer">
