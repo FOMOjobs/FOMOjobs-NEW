@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { UserCheck, Search, MapPin, Sparkles } from 'lucide-react';
+import { UserCheck, Search, MapPin, Sparkles, FileText, Mail, PartyPopper, Map, Target, Calendar, MousePointer, MessageCircle, Award, Rocket } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const FlashcardsSection = () => {
@@ -12,11 +12,10 @@ export const FlashcardsSection = () => {
       title: "Zarejestruj się",
       subtitle: "Stwórz darmowe konto w 2 minuty",
       details: [
-        { emoji: "📝", text: "Wypełnij prosty formularz" },
-        { emoji: "✉️", text: "Potwierdź email" },
-        { emoji: "🎉", text: "Gotowe - możesz zacząć!" }
-      ],
-      color: "hsl(var(--primary))"
+        { icon: FileText, text: "Wypełnij prosty formularz" },
+        { icon: Mail, text: "Potwierdź email" },
+        { icon: PartyPopper, text: "Gotowe - możesz zacząć!" }
+      ]
     },
     {
       number: 2,
@@ -25,11 +24,10 @@ export const FlashcardsSection = () => {
       title: "Znajdź wolontariat",
       subtitle: "Przeglądaj oferty na mapie lub liście",
       details: [
-        { emoji: "🗺️", text: "Użyj mapy lub wyszukiwarki" },
-        { emoji: "🎯", text: "Filtruj po kategorii i lokalizacji" },
-        { emoji: "📅", text: "Sprawdź kalendarz wydarzeń" }
-      ],
-      color: "hsl(var(--secondary))"
+        { icon: Map, text: "Użyj mapy lub wyszukiwarki" },
+        { icon: Target, text: "Filtruj po kategorii i lokalizacji" },
+        { icon: Calendar, text: "Sprawdź kalendarz wydarzeń" }
+      ]
     },
     {
       number: 3,
@@ -37,11 +35,10 @@ export const FlashcardsSection = () => {
       title: "Aplikuj i działaj!",
       subtitle: "Jedno kliknięcie i jesteś wolontariuszem",
       details: [
-        { emoji: "👆", text: "Kliknij 'Aplikuj teraz'" },
-        { emoji: "💬", text: "Czatuj z organizacją" },
-        { emoji: "🎖️", text: "Zbieraj odznaki i zaświadczenia" }
-      ],
-      color: "hsl(142, 47%, 54%)"
+        { icon: MousePointer, text: "Kliknij 'Aplikuj teraz'" },
+        { icon: MessageCircle, text: "Czatuj z organizacją" },
+        { icon: Award, text: "Zbieraj odznaki i zaświadczenia" }
+      ]
     }
   ];
 
@@ -76,26 +73,22 @@ export const FlashcardsSection = () => {
                 <div className="absolute inset-0 backface-hidden bg-card rounded-2xl shadow-xl p-8 flex flex-col items-center justify-center border-2 border-border">
                   {/* Number Badge */}
                   <div
-                    className="absolute top-6 right-6 w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl"
-                    style={{ backgroundColor: step.color }}
+                    className={`absolute top-6 right-6 w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl step-badge-${step.number}`}
                   >
                     {step.number}
                   </div>
 
                   {/* Icon */}
                   <div
-                    className="w-24 h-24 rounded-full flex items-center justify-center mb-6 relative"
-                    style={{ backgroundColor: `${step.color}20` }}
+                    className={`w-24 h-24 rounded-full flex items-center justify-center mb-6 relative step-bg-${step.number}`}
                   >
                     <step.icon
-                      className="w-12 h-12"
-                      style={{ color: step.color }}
+                      className={`w-12 h-12 step-icon-${step.number}`}
                       strokeWidth={2}
                     />
                     {step.iconSecondary && (
                       <step.iconSecondary
-                        className="w-6 h-6 absolute -bottom-1 -right-1"
-                        style={{ color: step.color }}
+                        className={`w-6 h-6 absolute -bottom-1 -right-1 step-icon-${step.number}`}
                         strokeWidth={2}
                       />
                     )}
@@ -117,8 +110,7 @@ export const FlashcardsSection = () => {
 
                 {/* BACK SIDE */}
                 <div
-                  className="absolute inset-0 backface-hidden rotate-y-180 rounded-2xl shadow-xl p-8 flex flex-col justify-center text-white"
-                  style={{ backgroundColor: step.color }}
+                  className={`absolute inset-0 backface-hidden rotate-y-180 rounded-2xl shadow-xl p-8 flex flex-col justify-center text-white step-back-${step.number}`}
                 >
                   <h4 className="text-xl font-bold mb-6 text-center">
                     {step.title}
@@ -126,9 +118,7 @@ export const FlashcardsSection = () => {
                   <ul className="space-y-4">
                     {step.details.map((detail, idx) => (
                       <li key={idx} className="flex items-start gap-3">
-                        <span className="text-2xl flex-shrink-0">
-                          {detail.emoji}
-                        </span>
+                        <detail.icon className="w-6 h-6 flex-shrink-0 mt-1" strokeWidth={2} />
                         <span className="text-lg">
                           {detail.text}
                         </span>
@@ -145,9 +135,10 @@ export const FlashcardsSection = () => {
         <div className="text-center mt-12">
           <Link
             to="/auth"
-            className="inline-block bg-primary text-primary-foreground px-8 py-4 rounded-xl font-bold text-lg hover:bg-primary/90 hover:scale-105 transition-all shadow-lg hover:shadow-xl"
+            className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-4 rounded-xl font-bold text-lg hover:bg-primary/90 hover:scale-105 transition-all shadow-lg hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
           >
-            Zacznij już teraz! 🚀
+            Zacznij już teraz!
+            <Rocket className="w-5 h-5" />
           </Link>
         </div>
       </div>

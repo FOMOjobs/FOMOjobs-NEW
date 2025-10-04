@@ -75,9 +75,9 @@ const Index = () => {
               <Button
                 key={category.id}
                 variant={selectedCategory === category.id ? "default" : "outline"}
-                className={`hover-bounce ${
-                  selectedCategory === category.id 
-                    ? `category-${category.id === 'all' ? 'education' : category.id} text-white shadow-primary` 
+                className={`hover-bounce focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+                  selectedCategory === category.id
+                    ? `category-${category.id === 'all' ? 'education' : category.id} text-white shadow-primary`
                     : 'border-gradient'
                 }`}
                 onClick={() => setSelectedCategory(category.id)}

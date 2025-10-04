@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Heart, Users, MapPin } from 'lucide-react';
+import { ArrowRight, Heart, Users, MapPin, Camera, Map, Calendar as CalendarIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PhotoCarousel } from './hero/PhotoCarousel';
 import { MiniMapView } from './hero/MiniMapView';
@@ -102,35 +102,38 @@ export const HeroSection = () => {
           <div className="relative animate-slide-in">
             {/* Tab Navigation */}
             <div className="flex gap-2 mb-4">
-              <button 
+              <button
                 onClick={() => handleTabClick('photo')}
-                className={`px-6 py-3 rounded-lg font-semibold transition ${
-                  activeView === 'photo' 
-                    ? 'bg-secondary text-white' 
+                className={`px-6 py-3 rounded-lg font-semibold transition flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 ${
+                  activeView === 'photo'
+                    ? 'bg-secondary text-white'
                     : 'bg-white/20 text-white hover:bg-white/30'
                 }`}
               >
-                📸 Zdjęcia
+                <Camera className="w-5 h-5" />
+                Zdjęcia
               </button>
-              <button 
+              <button
                 onClick={() => handleTabClick('map')}
-                className={`px-6 py-3 rounded-lg font-semibold transition ${
-                  activeView === 'map' 
-                    ? 'bg-secondary text-white' 
+                className={`px-6 py-3 rounded-lg font-semibold transition flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 ${
+                  activeView === 'map'
+                    ? 'bg-secondary text-white'
                     : 'bg-white/20 text-white hover:bg-white/30'
                 }`}
               >
-                🗺️ Mapa
+                <Map className="w-5 h-5" />
+                Mapa
               </button>
-              <button 
+              <button
                 onClick={() => handleTabClick('calendar')}
-                className={`px-6 py-3 rounded-lg font-semibold transition ${
-                  activeView === 'calendar' 
-                    ? 'bg-secondary text-white' 
+                className={`px-6 py-3 rounded-lg font-semibold transition flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 ${
+                  activeView === 'calendar'
+                    ? 'bg-secondary text-white'
                     : 'bg-white/20 text-white hover:bg-white/30'
                 }`}
               >
-                📅 Kalendarz
+                <CalendarIcon className="w-5 h-5" />
+                Kalendarz
               </button>
             </div>
 

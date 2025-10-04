@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
-import { Menu, X, Globe, Bell, User, LogOut } from 'lucide-react';
+import { Menu, X, Globe, Bell, User, LogOut, Flag } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import logo from '@/assets/mlody-krakow-logo.png';
 import {
@@ -50,7 +50,7 @@ export const Navigation = () => {
                       navigate(link.href);
                     }
                   }}
-                  className="text-foreground/80 hover:text-primary transition-colors font-medium relative group cursor-pointer"
+                  className="text-foreground/80 hover:text-primary transition-colors font-medium relative group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded"
                 >
                   {link.label}
                   <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full" />
@@ -59,7 +59,7 @@ export const Navigation = () => {
                 <Link
                   key={link.href}
                   to={link.href}
-                  className="text-foreground/80 hover:text-primary transition-colors font-medium relative group"
+                  className="text-foreground/80 hover:text-primary transition-colors font-medium relative group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded"
                 >
                   {link.label}
                   <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full" />
@@ -79,13 +79,16 @@ export const Navigation = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="bg-background border-border">
                 <DropdownMenuItem onClick={() => setLanguage('PL')} className="cursor-pointer">
-                  🇵🇱 Polski {language === 'PL' && '✓'}
+                  <Flag className="mr-2 h-4 w-4" />
+                  Polski {language === 'PL' && '✓'}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setLanguage('UA')} className="cursor-pointer">
-                  🇺🇦 Українська {language === 'UA' && '✓'}
+                  <Flag className="mr-2 h-4 w-4" />
+                  Українська {language === 'UA' && '✓'}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setLanguage('EN')} className="cursor-pointer">
-                  🇬🇧 English {language === 'EN' && '✓'}
+                  <Flag className="mr-2 h-4 w-4" />
+                  English {language === 'EN' && '✓'}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
