@@ -35,7 +35,7 @@ interface Message {
   };
 }
 
-const Chat = () => {
+export default function Chat() {
   const { user } = useAuth();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
@@ -291,6 +291,4 @@ const Chat = () => {
       </main>
     </div>
   );
-};
-
-export default Chat;
+}

@@ -38,7 +38,7 @@ interface Application {
   };
 }
 
-const Admin = () => {
+export default function Admin() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
@@ -370,6 +370,4 @@ const Admin = () => {
       </main>
     </div>
   );
-};
-
-export default Admin;
+}

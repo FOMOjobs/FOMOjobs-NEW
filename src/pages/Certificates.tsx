@@ -15,7 +15,7 @@ interface Certificate {
   hours_completed: number;
 }
 
-const Certificates = () => {
+export default function Certificates() {
   const { user } = useAuth();
   const [certificates, setCertificates] = useState<Certificate[]>([]);
   const [loading, setLoading] = useState(true);
@@ -145,6 +145,4 @@ Thank you for your dedication and service to the community!
       </main>
     </div>
   );
-};
-
-export default Certificates;
+}
