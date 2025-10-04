@@ -3,6 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Menu, X, Globe, Bell, User, LogOut } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
+import logo from '@/assets/mlody-krakow-logo.png';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,13 +31,8 @@ export const Navigation = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3">
-            <div className="h-10 w-10 bg-gradient-primary rounded-lg flex items-center justify-center text-white font-bold">
-              MK
-            </div>
-            <span className="font-bold text-lg hidden sm:block">
-              Młody <span className="text-secondary">Kraków</span>
-            </span>
+          <Link to="/" className="flex items-center gap-2">
+            <img src={logo} alt="Młody Kraków" className="h-12 w-auto" />
           </Link>
 
           {/* Desktop Navigation */}
@@ -106,9 +102,14 @@ export const Navigation = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Button onClick={() => navigate('/auth')}>
-                Zaloguj się
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" onClick={() => navigate('/auth')}>
+                  Zaloguj się
+                </Button>
+                <Button onClick={() => navigate('/auth')}>
+                  Zarejestruj się
+                </Button>
+              </div>
             )}
 
             {/* Mobile Menu Toggle */}

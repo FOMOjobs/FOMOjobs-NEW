@@ -2,6 +2,9 @@ import { Navigation } from '@/components/Navigation';
 import { AccessibilityBar } from '@/components/AccessibilityBar';
 import { HeroSection } from '@/components/HeroSection';
 import { MapView } from '@/components/MapView';
+import { FlashcardsSection } from '@/components/sections/FlashcardsSection';
+import { FAQSection } from '@/components/sections/FAQSection';
+import { ReviewsSection } from '@/components/sections/ReviewsSection';
 import { useVolunteerStore } from '@/stores/volunteerStore';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -33,6 +36,9 @@ const Index = () => {
       <Navigation />
       <main>
         <HeroSection />
+        
+        {/* How It Works - Flashcards */}
+        <FlashcardsSection />
       
       {/* Main Content Section */}
       <section className="py-16 bg-gradient-card">
@@ -139,6 +145,12 @@ const Index = () => {
           </Tabs>
         </div>
       </section>
+      
+      {/* FAQ Section */}
+      <FAQSection />
+      
+      {/* Reviews Section */}
+      <ReviewsSection />
       </main>
       
       <AccessibilityBar />

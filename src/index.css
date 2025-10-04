@@ -177,7 +177,7 @@
   .animated-gradient {
     background: linear-gradient(-45deg, hsl(var(--primary)), hsl(var(--secondary)), hsl(var(--accent)), hsl(var(--primary-glow)));
     background-size: 400% 400%;
-    animation: gradient-shift 8s ease infinite;
+    animation: gradient-shift 45s ease infinite;
   }
 
   .pulse-glow {
@@ -236,6 +236,23 @@
   100% {
     background-position: 0% 50%;
   }
+}
+
+/* 3D Flip Card Utilities for Flashcards */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
 }
 
 @keyframes pulse-glow {
