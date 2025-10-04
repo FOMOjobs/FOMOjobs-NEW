@@ -90,9 +90,7 @@ export const HeroSection = () => {
               </div>
               <div className="text-center">
                 <div className="flex items-center justify-center mb-2">
-                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 border border-white/20">
-                    <MapPin className="h-8 w-8 text-white pulse-glow" />
-                  </div>
+                  <MapPin className="h-8 w-8 text-white animate-pulse" />
                 </div>
                 <div className="text-2xl font-bold text-white">Kraków</div>
                 <div className="text-white/80">Cały miasto</div>
