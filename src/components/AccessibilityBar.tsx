@@ -16,6 +16,17 @@ export const AccessibilityBar = () => {
   const [contrast, setContrast] = useState<ContrastMode>('normal');
   const [fontSize, setFontSize] = useState<FontSize>('medium');
 
+  // Load from localStorage on mount
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme') as ThemeMode | null;
+    const savedContrast = localStorage.getItem('contrastMode') as ContrastMode | null;
+    const savedFontSize = localStorage.getItem('fontSize') as FontSize | null;
+    
+    if (savedTheme) setTheme(savedTheme);
+    if (savedContrast) setContrast(savedContrast);
+    if (savedFontSize) setFontSize(savedFontSize);
+  }, []);
+
   useEffect(() => {
     // Apply theme
     if (theme === 'dark') {
@@ -23,14 +34,11 @@ export const AccessibilityBar = () => {
     } else {
       document.documentElement.classList.remove('dark');
     }
+    localStorage.setItem('theme', theme);
 
-    // Apply contrast mode
-    document.documentElement.classList.remove('contrast-high', 'contrast-extra-high');
-    if (contrast === 'high') {
-      document.documentElement.classList.add('contrast-high');
-    } else if (contrast === 'extra-high') {
-      document.documentElement.classList.add('contrast-extra-high');
-    }
+    // Apply contrast mode using data-contrast attribute
+    document.documentElement.setAttribute('data-contrast', contrast);
+    localStorage.setItem('contrastMode', contrast);
 
     // Apply font size
     const root = document.documentElement;
@@ -44,6 +52,7 @@ export const AccessibilityBar = () => {
       default:
         root.style.fontSize = '16px';
     }
+    localStorage.setItem('fontSize', fontSize);
   }, [theme, contrast, fontSize]);
 
   const toggleTheme = () => {
@@ -53,8 +62,8 @@ export const AccessibilityBar = () => {
   const cycleContrast = () => {
     const modes: ContrastMode[] = ['normal', 'high', 'extra-high'];
     const currentIndex = modes.indexOf(contrast);
-    const nextIndex = (currentIndex + 1) % modes.length;
-    setContrast(modes[nextIndex]);
+    const nextMode = modes[(currentIndex + 1) % 3];
+    setContrast(nextMode);
   };
 
   const cycleFontSize = (direction: 'up' | 'down') => {

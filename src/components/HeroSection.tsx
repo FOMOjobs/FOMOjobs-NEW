@@ -1,8 +1,38 @@
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Heart, Users, MapPin } from 'lucide-react';
-import happyVolunteers from '@/assets/happy-volunteers.jpg';
+import { motion, AnimatePresence } from 'framer-motion';
+import { PhotoCarousel } from './hero/PhotoCarousel';
+import { MiniMapView } from './hero/MiniMapView';
+import { CalendarView } from './hero/CalendarView';
+
+type ViewType = 'photo' | 'map' | 'calendar';
 
 export const HeroSection = () => {
+  const [activeView, setActiveView] = useState<ViewType>('photo');
+  const [autoRotate, setAutoRotate] = useState(true);
+
+  // Auto-rotation through views
+  useEffect(() => {
+    if (!autoRotate) return;
+    
+    const views: ViewType[] = ['photo', 'map', 'calendar'];
+    const interval = setInterval(() => {
+      setActiveView(current => {
+        const currentIndex = views.indexOf(current);
+        return views[(currentIndex + 1) % 3];
+      });
+    }, 8000); // Change every 8 seconds
+
+    return () => clearInterval(interval);
+  }, [autoRotate]);
+
+  // Stop auto-rotation when user clicks a tab
+  const handleTabClick = (view: ViewType) => {
+    setAutoRotate(false);
+    setActiveView(view);
+  };
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Animated background */}
@@ -70,19 +100,58 @@ export const HeroSection = () => {
             </div>
           </div>
           
-          {/* Image */}
+          {/* Interactive Carousel */}
           <div className="relative animate-slide-in">
-            <div className="relative rounded-3xl overflow-hidden shadow-glow hover-lift">
-              <img 
-                src={happyVolunteers} 
-                alt="Szczęśliwi wolontariusze w Krakowie pracujący razem na rzecz społeczności"
-                className="w-full h-[600px] object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-              <div className="absolute bottom-6 left-6 text-white">
-                <h3 className="text-xl font-bold mb-2">Dołącz do nas!</h3>
-                <p className="text-white/90">Zmień świat razem z nami</p>
-              </div>
+            {/* Tab Navigation */}
+            <div className="flex gap-2 mb-4">
+              <button 
+                onClick={() => handleTabClick('photo')}
+                className={`px-6 py-3 rounded-lg font-semibold transition ${
+                  activeView === 'photo' 
+                    ? 'bg-secondary text-white' 
+                    : 'bg-white/20 text-white hover:bg-white/30'
+                }`}
+              >
+                📸 Zdjęcia
+              </button>
+              <button 
+                onClick={() => handleTabClick('map')}
+                className={`px-6 py-3 rounded-lg font-semibold transition ${
+                  activeView === 'map' 
+                    ? 'bg-secondary text-white' 
+                    : 'bg-white/20 text-white hover:bg-white/30'
+                }`}
+              >
+                🗺️ Mapa
+              </button>
+              <button 
+                onClick={() => handleTabClick('calendar')}
+                className={`px-6 py-3 rounded-lg font-semibold transition ${
+                  activeView === 'calendar' 
+                    ? 'bg-secondary text-white' 
+                    : 'bg-white/20 text-white hover:bg-white/30'
+                }`}
+              >
+                📅 Kalendarz
+              </button>
+            </div>
+
+            {/* Carousel Container */}
+            <div className="relative w-full h-[500px] rounded-2xl overflow-hidden shadow-glow">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeView}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="w-full h-full"
+                >
+                  {activeView === 'photo' && <PhotoCarousel />}
+                  {activeView === 'map' && <MiniMapView />}
+                  {activeView === 'calendar' && <CalendarView />}
+                </motion.div>
+              </AnimatePresence>
             </div>
           </div>
         </div>
