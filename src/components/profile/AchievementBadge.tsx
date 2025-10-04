@@ -1,4 +1,8 @@
-import { Crown, Flame, Shield, Music, Footprints } from 'lucide-react';
+import obwarzanekBrown from '@/assets/obwarzanek-brown.png';
+import obwarzanekSilver from '@/assets/obwarzanek-silver.png';
+import obwarzanekBronze from '@/assets/obwarzanek-bronze.png';
+import obwarzanekGold from '@/assets/obwarzanek-gold.png';
+import obwarzanekDiamond from '@/assets/obwarzanek-diamond.png';
 import { cn } from '@/lib/utils';
 
 export type BadgeTier = 'szewczyk' | 'lajkonik' | 'smok' | 'bugle' | 'ambasador';
@@ -11,48 +15,48 @@ interface AchievementBadgeProps {
 
 const badgeData: Record<BadgeTier, {
   name: string;
-  icon: typeof Crown;
+  image: string;
   color: string;
   minActivities: number;
   maxActivities?: number;
   description: string;
 }> = {
   szewczyk: {
-    name: 'Szewczyk Dratewka',
-    icon: Footprints,
-    color: 'from-education to-education-glow',
+    name: 'Odkrywca Krakowa',
+    image: obwarzanekBrown,
+    color: 'from-amber-700 to-amber-900',
     minActivities: 1,
     maxActivities: 1,
     description: 'Pierwszy wolontariat ukończony! Mały krok, wielka przygoda 🎉'
   },
   lajkonik: {
-    name: 'Rączący Lajkonik',
-    icon: Flame,
-    color: 'from-sport to-sport-glow',
+    name: 'Galopujący Pomocnik',
+    image: obwarzanekSilver,
+    color: 'from-slate-400 to-slate-600',
     minActivities: 2,
     maxActivities: 5,
     description: 'Galopujesz jak prawdziwy Lajkonik! 2-5 wolontariatów 🐴'
   },
   smok: {
     name: 'Strażnik Smoka',
-    icon: Shield,
-    color: 'from-ecology to-ecology-glow',
+    image: obwarzanekBronze,
+    color: 'from-orange-600 to-orange-800',
     minActivities: 6,
     maxActivities: 10,
     description: 'Chronisz miasto jak Smok Wawelski! 6-10 wolontariatów 🐉'
   },
   bugle: {
-    name: 'Mistrz Bugle',
-    icon: Music,
-    color: 'from-culture to-culture-glow',
+    name: 'Hejnalista Dobroci',
+    image: obwarzanekGold,
+    color: 'from-yellow-400 to-yellow-600',
     minActivities: 11,
     maxActivities: 20,
     description: 'Grasz jak hejnalista! 11-20 wolontariatów 🎺'
   },
   ambasador: {
     name: 'Ambasador Krakowa',
-    icon: Crown,
-    color: 'from-primary to-secondary',
+    image: obwarzanekDiamond,
+    color: 'from-blue-400 to-blue-600',
     minActivities: 21,
     description: 'Największy honor! 20+ wolontariatów 👑'
   }
@@ -60,7 +64,6 @@ const badgeData: Record<BadgeTier, {
 
 export function AchievementBadge({ tier, activitiesCompleted, className }: AchievementBadgeProps) {
   const badge = badgeData[tier];
-  const Icon = badge.icon;
   
   return (
     <div className={cn("relative group", className)}>
@@ -70,8 +73,13 @@ export function AchievementBadge({ tier, activitiesCompleted, className }: Achie
         flex items-center justify-center
         shadow-glow hover:scale-110 transition-transform duration-300
         cursor-pointer
+        p-2
       `}>
-        <Icon className="h-12 w-12 text-white" />
+        <img 
+          src={badge.image} 
+          alt={badge.name}
+          className="w-full h-full object-contain drop-shadow-lg"
+        />
       </div>
       
       {/* Tooltip on hover */}

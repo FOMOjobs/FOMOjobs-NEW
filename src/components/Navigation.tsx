@@ -20,10 +20,9 @@ export const Navigation = () => {
 
   const navLinks = [
     { label: 'Strona główna', href: '/' },
-    { label: 'Wolontariaty', href: '/' },
+    { label: 'Wolontariaty', href: '/', scrollTo: 'wolontariaty' },
     { label: 'Kalendarz', href: '/calendar' },
-    { label: 'Czat', href: '/chat' },
-    { label: 'Certyfikaty', href: '/certificates' },
+    { label: 'Osiągnięcia', href: '/achievements' },
   ];
 
   return (
@@ -38,14 +37,34 @@ export const Navigation = () => {
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-6">
             {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                to={link.href}
-                className="text-foreground/80 hover:text-primary transition-colors font-medium relative group"
-              >
-                {link.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full" />
-              </Link>
+              link.scrollTo ? (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const element = document.getElementById(link.scrollTo);
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth' });
+                    } else {
+                      navigate(link.href);
+                    }
+                  }}
+                  className="text-foreground/80 hover:text-primary transition-colors font-medium relative group cursor-pointer"
+                >
+                  {link.label}
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full" />
+                </a>
+              ) : (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  className="text-foreground/80 hover:text-primary transition-colors font-medium relative group"
+                >
+                  {link.label}
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full" />
+                </Link>
+              )
             ))}
           </div>
 
@@ -103,10 +122,10 @@ export const Navigation = () => {
               </DropdownMenu>
             ) : (
               <div className="flex items-center gap-2">
-                <Button variant="outline" onClick={() => navigate('/auth')}>
+                <Button onClick={() => navigate('/auth')}>
                   Zaloguj się
                 </Button>
-                <Button onClick={() => navigate('/auth')}>
+                <Button variant="outline" onClick={() => navigate('/auth')}>
                   Zarejestruj się
                 </Button>
               </div>
@@ -128,14 +147,32 @@ export const Navigation = () => {
         {mobileMenuOpen && (
           <div className="lg:hidden border-t border-border py-4 space-y-2">
             {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                to={link.href}
-                className="block px-4 py-2 text-foreground/80 hover:text-primary hover:bg-muted/50 rounded-md transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {link.label}
-              </Link>
+              link.scrollTo ? (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const element = document.getElementById(link.scrollTo);
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth' });
+                    }
+                    setMobileMenuOpen(false);
+                  }}
+                  className="block px-4 py-2 text-foreground/80 hover:text-primary hover:bg-muted/50 rounded-md transition-colors cursor-pointer"
+                >
+                  {link.label}
+                </a>
+              ) : (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  className="block px-4 py-2 text-foreground/80 hover:text-primary hover:bg-muted/50 rounded-md transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              )
             ))}
           </div>
         )}

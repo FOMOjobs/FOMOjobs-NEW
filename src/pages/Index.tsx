@@ -5,6 +5,7 @@ import { MapView } from '@/components/MapView';
 import { FlashcardsSection } from '@/components/sections/FlashcardsSection';
 import { FAQSection } from '@/components/sections/FAQSection';
 import { ReviewsSection } from '@/components/sections/ReviewsSection';
+import { ChatWidget } from '@/components/ChatWidget';
 import { useVolunteerStore } from '@/stores/volunteerStore';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,6 +13,27 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Calendar, MapPin, Users, Clock, Map, Grid3x3 } from 'lucide-react';
 import { useState } from 'react';
+
+const getCategoryLabel = (category: string) => {
+  const labels: Record<string, string> = {
+    'education': 'edukacja',
+    'ecology': 'ekologia',
+    'sport': 'sport',
+    'culture': 'kultura',
+    'social': 'pomoc społeczna',
+    'health': 'zdrowie',
+  };
+  return labels[category] || category;
+};
+
+const getDifficultyLabel = (difficulty: string) => {
+  const labels: Record<string, string> = {
+    'easy': 'łatwy',
+    'medium': 'średni',
+    'hard': 'trudny',
+  };
+  return labels[difficulty] || difficulty;
+};
 
 const Index = () => {
   const { getFilteredOpportunities, opportunities } = useVolunteerStore();
@@ -41,7 +63,7 @@ const Index = () => {
         <FlashcardsSection />
       
       {/* Main Content Section */}
-      <section className="py-16 bg-gradient-card">
+      <section id="wolontariaty" className="py-16 bg-gradient-card">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-8 text-gradient">
             Znajdź wolontariat w Krakowie
@@ -86,11 +108,11 @@ const Index = () => {
                     <CardHeader className="pb-3">
                       <div className="flex items-start justify-between mb-2">
                         <Badge className={`category-${opportunity.category} text-white font-medium`}>
-                          {opportunity.category}
+                          {getCategoryLabel(opportunity.category)}
                         </Badge>
-                        {opportunity.isUrgent && (
-                          <Badge variant="destructive" className="animate-pulse">
-                            Pilne!
+                        {opportunity.currentVolunteers >= opportunity.maxVolunteers * 0.8 && (
+                          <Badge className="bg-blue-700 text-white">
+                            Popularny
                           </Badge>
                         )}
                       </div>
@@ -122,7 +144,7 @@ const Index = () => {
                           {opportunity.currentVolunteers}/{opportunity.maxVolunteers}
                         </div>
                         <Badge variant={opportunity.difficulty === 'easy' ? 'secondary' : opportunity.difficulty === 'medium' ? 'default' : 'destructive'}>
-                          {opportunity.difficulty}
+                          {getDifficultyLabel(opportunity.difficulty)}
                         </Badge>
                       </div>
                     </CardContent>
@@ -153,6 +175,7 @@ const Index = () => {
       <ReviewsSection />
       </main>
       
+      <ChatWidget />
       <AccessibilityBar />
     </div>
   );

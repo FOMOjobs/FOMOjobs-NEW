@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { UserCheck, Search, MapPin, HeartHandshake } from 'lucide-react';
+import { UserCheck, Search, MapPin, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const FlashcardsSection = () => {
@@ -33,7 +33,7 @@ export const FlashcardsSection = () => {
     },
     {
       number: 3,
-      icon: HeartHandshake,
+      icon: Sparkles,
       title: "Aplikuj i działaj!",
       subtitle: "Jedno kliknięcie i jesteś wolontariuszem",
       details: [
