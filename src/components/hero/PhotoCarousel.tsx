@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import happyVolunteers from '@/assets/happy-volunteers.jpg';
+import volunteersGroup1 from '@/assets/volunteers-group-1.png';
+import volunteersGroup2 from '@/assets/volunteers-group-2.png';
 
 const photos = [
   {
@@ -9,12 +11,12 @@ const photos = [
     subtitle: '500+ wolontariuszy już pomaga'
   },
   {
-    url: happyVolunteers,
-    overlay: 'Zmień świat razem z nami!',
+    url: volunteersGroup1,
+    overlay: 'Zmieniajże Kraków razem z nami!',
     subtitle: '40+ inicjatyw czeka na Ciebie'
   },
   {
-    url: happyVolunteers,
+    url: volunteersGroup2,
     overlay: 'Znajdź swoją pasję',
     subtitle: 'Wolontariat w każdej dzielnicy Krakowa'
   }

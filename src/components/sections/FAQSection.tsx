@@ -21,15 +21,11 @@ export const FAQSection = () => {
     {
       question: "Czy otrzymam zaświadczenie o wolontariacie?",
       answer: "Tak! Po ukończeniu każdego wolontariatu organizacja automatycznie wygeneruje dla Ciebie zaświadczenie PDF z kodem QR do weryfikacji. Wszystkie zaświadczenia są przechowywane w Twoim profilu w sekcji \"Moje zaświadczenia\"."
-    },
-    {
-      question: "Jak zdobywam odznaki i osiągnięcia?",
-      answer: "Odznaki odblokowujesz automatycznie wykonując wolontariaty! System składa się z 5 poziomów inspirowanych legendami Krakowa - od \"Szewczyka Dratewki\" (pierwszy wolontariat) do \"Ambasadora Krakowa\" (20+ wolontariatów)."
     }
   ];
 
   return (
-    <section className="py-20 bg-background">
+    <section id="faq" className="py-20 bg-background">
       <div className="container mx-auto px-4 max-w-3xl">
         {/* Header */}
         <div className="text-center mb-12">

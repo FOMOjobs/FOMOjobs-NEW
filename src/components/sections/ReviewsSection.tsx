@@ -179,10 +179,6 @@ export const ReviewsSection = () => {
                         </p>
                         <div className="flex items-center gap-2 mt-1">
                           <span className="text-xs text-muted-foreground">
-                            🏅 {review.badgeName}
-                          </span>
-                          <span className="text-xs text-muted-foreground">•</span>
-                          <span className="text-xs text-muted-foreground">
                             {review.volunteersCompleted} wolontariatów
                           </span>
                         </div>

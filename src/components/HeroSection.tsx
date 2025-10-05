@@ -96,7 +96,7 @@ export const HeroSection = () => {
                   <MapPin className="h-8 w-8 text-white animate-pulse" />
                 </div>
                 <div className="text-2xl font-bold text-white">Kraków</div>
-                <div className="text-white/80">Cały miasto</div>
+                <div className="text-white/80">Całe miasto</div>
               </div>
             </div>
           </div>

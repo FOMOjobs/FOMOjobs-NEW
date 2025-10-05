@@ -22,6 +22,7 @@ export const Navigation = () => {
     { label: 'Strona główna', href: '/' },
     { label: 'Wolontariaty', href: '/', scrollTo: 'wolontariaty' },
     { label: 'Kalendarz', href: '/calendar' },
+    { label: 'FAQ', href: '/', scrollTo: 'faq' },
   ];
 
   return (
