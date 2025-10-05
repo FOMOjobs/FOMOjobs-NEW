@@ -95,31 +95,31 @@ export const FlashcardsSection = () => {
                   </div>
 
                   {/* Text */}
-                  <h3 className="text-2xl font-bold mb-3 text-black dark:text-white text-center">
+                  <h3 className="text-2xl font-bold mb-3 text-black dark:text-black text-center">
                     {step.title}
                   </h3>
-                  <p className="text-black/80 dark:text-white/80 text-center">
+                  <p className="text-black/80 dark:text-black/80 text-center">
                     {step.subtitle}
                   </p>
 
                   {/* Hover hint */}
-                  <p className="absolute bottom-6 text-sm text-black/60 dark:text-white/60">
+                  <p className="absolute bottom-6 text-sm text-black/60 dark:text-black/60">
                     Najedź aby zobaczyć więcej
                   </p>
                 </div>
 
                 {/* BACK SIDE */}
                 <div
-                  className={`absolute inset-0 backface-hidden rotate-y-180 rounded-2xl shadow-xl p-8 flex flex-col justify-center text-white step-back-${step.number}`}
+                  className={`absolute inset-0 backface-hidden rotate-y-180 rounded-2xl shadow-xl p-8 flex flex-col justify-center step-back-${step.number}`}
                 >
-                  <h4 className="text-xl font-bold mb-6 text-center">
+                  <h4 className="text-xl font-bold mb-6 text-center text-black">
                     {step.title}
                   </h4>
                   <ul className="space-y-4">
                     {step.details.map((detail, idx) => (
                       <li key={idx} className="flex items-start gap-3">
-                        <detail.icon className="w-6 h-6 flex-shrink-0 mt-1" strokeWidth={2} />
-                        <span className="text-lg">
+                        <detail.icon className="w-6 h-6 flex-shrink-0 mt-1 text-black" strokeWidth={2} />
+                        <span className="text-lg text-black">
                           {detail.text}
                         </span>
                       </li>

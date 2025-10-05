@@ -259,7 +259,7 @@ export const ReviewsSection = () => {
         {/* CTA */}
         <div className="text-center mt-12">
           <p className="text-lg text-muted-foreground mb-4">
-            Dołącz do naszej społeczności i zostaw swoją opinię!
+            Zmieniajże Kraków razem z nami!
           </p>
           <Link
             to="/auth"

@@ -71,8 +71,6 @@ const Index = () => {
     switch (sortBy) {
       case 'date':
         return new Date(a.date.start).getTime() - new Date(b.date.start).getTime();
-      case 'urgent':
-        return (b.isUrgent ? 1 : 0) - (a.isUrgent ? 1 : 0);
       case 'popular':
         const aPercentage = a.currentVolunteers / a.maxVolunteers;
         const bPercentage = b.currentVolunteers / b.maxVolunteers;
