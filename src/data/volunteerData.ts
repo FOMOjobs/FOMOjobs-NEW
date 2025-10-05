@@ -45,8 +45,7 @@ export const volunteerOpportunities: VolunteerOpportunity[] = [
     maxVolunteers: 8,
     currentVolunteers: 3,
     difficulty: 'hard',
-    timeCommitment: '4 godziny tygodniowo',
-    minAge: 18
+    timeCommitment: '4 godziny tygodniowo'
   },
   {
     id: 'edu-003',
@@ -269,8 +268,7 @@ export const volunteerOpportunities: VolunteerOpportunity[] = [
     maxVolunteers: 12,
     currentVolunteers: 7,
     difficulty: 'medium',
-    timeCommitment: '4 godziny tygodniowo',
-    minAge: 18
+    timeCommitment: '4 godziny tygodniowo'
   },
   {
     id: 'eco-006',
@@ -292,8 +290,7 @@ export const volunteerOpportunities: VolunteerOpportunity[] = [
     maxVolunteers: 6,
     currentVolunteers: 3,
     difficulty: 'hard',
-    timeCommitment: '2 godziny tygodniowo',
-    minAge: 18
+    timeCommitment: '2 godziny tygodniowo'
   },
   {
     id: 'eco-007',
@@ -406,8 +403,7 @@ export const volunteerOpportunities: VolunteerOpportunity[] = [
     currentVolunteers: 5,
     isUrgent: true,
     difficulty: 'hard',
-    timeCommitment: '4 godziny tygodniowo',
-    minAge: 18
+    timeCommitment: '4 godziny tygodniowo'
   },
   {
     id: 'sport-005',
@@ -655,8 +651,7 @@ export const volunteerOpportunities: VolunteerOpportunity[] = [
     currentVolunteers: 10,
     isUrgent: true,
     difficulty: 'medium',
-    timeCommitment: '4 godziny tygodniowo',
-    minAge: 18
+    timeCommitment: '4 godziny tygodniowo'
   },
   {
     id: 'soc-002',
@@ -788,8 +783,7 @@ export const volunteerOpportunities: VolunteerOpportunity[] = [
     maxVolunteers: 15,
     currentVolunteers: 9,
     difficulty: 'medium',
-    timeCommitment: '3 godziny tygodniowo',
-    minAge: 18
+    timeCommitment: '3 godziny tygodniowo'
   },
 
   // Health Opportunities
@@ -880,8 +874,7 @@ export const volunteerOpportunities: VolunteerOpportunity[] = [
     maxVolunteers: 10,
     currentVolunteers: 7,
     difficulty: 'hard',
-    timeCommitment: '4 godziny tygodniowo',
-    minAge: 18
+    timeCommitment: '4 godziny tygodniowo'
   },
   {
     id: 'health-005',

@@ -14,10 +14,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Calendar, MapPin, Users, Clock, Map, Grid3x3, Search, SlidersHorizontal } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
-import { supabase } from '@/integrations/supabase/client';
 
 const getCategoryLabel = (category: string) => {
   const labels: Record<string, string> = {
@@ -43,41 +41,9 @@ const getDifficultyLabel = (difficulty: string) => {
 const Index = () => {
   const { getFilteredOpportunities, opportunities } = useVolunteerStore();
   const navigate = useNavigate();
-  const { user } = useAuth();
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [sortBy, setSortBy] = useState<string>('date');
-  const [userAge, setUserAge] = useState<number | null>(null);
-
-  useEffect(() => {
-    const fetchUserAge = async () => {
-      if (user) {
-        const { data: profile, error } = await supabase
-          .from('profiles')
-          .select('date_of_birth')
-          .eq('id', user.id)
-          .single();
-        
-        console.log('Profile data:', profile, 'Error:', error);
-        
-        if (profile?.date_of_birth) {
-          const birthDate = new Date(profile.date_of_birth);
-          const today = new Date();
-          let age = today.getFullYear() - birthDate.getFullYear();
-          const monthDiff = today.getMonth() - birthDate.getMonth();
-          if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-            age--;
-          }
-          console.log('Calculated user age:', age);
-          setUserAge(age);
-        } else {
-          console.log('No date_of_birth found in profile');
-        }
-      }
-    };
-    
-    fetchUserAge();
-  }, [user]);
 
   // Multi-category filtering + search
   const filteredOpportunities = opportunities.filter(opp => {
@@ -314,14 +280,7 @@ const Index = () => {
                     <CardFooter className="flex gap-2">
                       <Button
                         className="flex-1 bg-gradient-primary hover:shadow-primary text-white border-0"
-                        onClick={() => {
-                          console.log('Button clicked. Opportunity:', opportunity.title, 'minAge:', opportunity.minAge, 'userAge:', userAge);
-                          navigate('/auth');
-                        }}
-                        disabled={opportunity.minAge !== undefined && userAge !== null && userAge < opportunity.minAge}
-                        title={opportunity.minAge !== undefined && userAge !== null && userAge < opportunity.minAge 
-                          ? `Ten wolontariat wymaga ukończenia ${opportunity.minAge} lat` 
-                          : ''}
+                        onClick={() => navigate('/auth')}
                       >
                         Aplikuj teraz
                       </Button>
