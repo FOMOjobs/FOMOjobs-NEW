@@ -29,6 +29,7 @@ export interface VolunteerOpportunity {
   isUrgent?: boolean;
   difficulty: 'easy' | 'medium' | 'hard';
   timeCommitment: string;
+  minAge?: number;
 }
 
 export interface VolunteerApplication {

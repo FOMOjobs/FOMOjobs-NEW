@@ -45,7 +45,8 @@ export const volunteerOpportunities: VolunteerOpportunity[] = [
     maxVolunteers: 8,
     currentVolunteers: 3,
     difficulty: 'hard',
-    timeCommitment: '4 godziny tygodniowo'
+    timeCommitment: '4 godziny tygodniowo',
+    minAge: 18
   },
   {
     id: 'edu-003',
@@ -268,7 +269,8 @@ export const volunteerOpportunities: VolunteerOpportunity[] = [
     maxVolunteers: 12,
     currentVolunteers: 7,
     difficulty: 'medium',
-    timeCommitment: '4 godziny tygodniowo'
+    timeCommitment: '4 godziny tygodniowo',
+    minAge: 18
   },
   {
     id: 'eco-006',
@@ -290,7 +292,8 @@ export const volunteerOpportunities: VolunteerOpportunity[] = [
     maxVolunteers: 6,
     currentVolunteers: 3,
     difficulty: 'hard',
-    timeCommitment: '2 godziny tygodniowo'
+    timeCommitment: '2 godziny tygodniowo',
+    minAge: 18
   },
   {
     id: 'eco-007',
@@ -403,7 +406,8 @@ export const volunteerOpportunities: VolunteerOpportunity[] = [
     currentVolunteers: 5,
     isUrgent: true,
     difficulty: 'hard',
-    timeCommitment: '4 godziny tygodniowo'
+    timeCommitment: '4 godziny tygodniowo',
+    minAge: 18
   },
   {
     id: 'sport-005',
