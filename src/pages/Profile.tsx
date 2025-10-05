@@ -277,11 +277,11 @@ export default function Profile() {
                           className="scale-75"
                         />
                         <div className="text-lg font-semibold">
-                          {currentBadge === 'szewczyk' && 'Szewczyk'}
-                          {currentBadge === 'lajkonik' && 'Lajkonik'}
-                          {currentBadge === 'smok' && 'Strażnik'}
-                          {currentBadge === 'bugle' && 'Mistrz'}
-                          {currentBadge === 'ambasador' && 'Ambasador'}
+                          {currentBadge === 'odkrywca' && 'Odkrywca Krakowa'}
+                          {currentBadge === 'galopujacy' && 'Galopujący Pomocnik'}
+                          {currentBadge === 'straznik' && 'Strażnik Smoka'}
+                          {currentBadge === 'hejnalista' && 'Hejnalista Dobroci'}
+                          {currentBadge === 'ambasador' && 'Ambasador Krakowa'}
                         </div>
                       </div>
                     </CardContent>
@@ -352,10 +352,10 @@ export default function Profile() {
                   <div className="flex justify-center gap-8 flex-wrap">
                     {getAllBadges().map((badgeTier, index) => {
                       const isUnlocked = activitiesCompleted >= (
-                        badgeTier === 'szewczyk' ? 1 :
-                        badgeTier === 'lajkonik' ? 2 :
-                        badgeTier === 'smok' ? 6 :
-                        badgeTier === 'bugle' ? 11 : 21
+                        badgeTier === 'odkrywca' ? 1 :
+                        badgeTier === 'galopujacy' ? 3 :
+                        badgeTier === 'straznik' ? 6 :
+                        badgeTier === 'hejnalista' ? 11 : 21
                       );
                       
                       return (
