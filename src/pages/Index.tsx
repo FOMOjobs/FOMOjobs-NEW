@@ -52,11 +52,13 @@ const Index = () => {
   useEffect(() => {
     const fetchUserAge = async () => {
       if (user) {
-        const { data: profile } = await supabase
+        const { data: profile, error } = await supabase
           .from('profiles')
           .select('date_of_birth')
           .eq('id', user.id)
           .single();
+        
+        console.log('Profile data:', profile, 'Error:', error);
         
         if (profile?.date_of_birth) {
           const birthDate = new Date(profile.date_of_birth);
@@ -66,7 +68,10 @@ const Index = () => {
           if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
             age--;
           }
+          console.log('Calculated user age:', age);
           setUserAge(age);
+        } else {
+          console.log('No date_of_birth found in profile');
         }
       }
     };
@@ -309,9 +314,12 @@ const Index = () => {
                     <CardFooter className="flex gap-2">
                       <Button
                         className="flex-1 bg-gradient-primary hover:shadow-primary text-white border-0"
-                        onClick={() => navigate('/auth')}
-                        disabled={opportunity.minAge && userAge !== null && userAge < opportunity.minAge}
-                        title={opportunity.minAge && userAge !== null && userAge < opportunity.minAge 
+                        onClick={() => {
+                          console.log('Button clicked. Opportunity:', opportunity.title, 'minAge:', opportunity.minAge, 'userAge:', userAge);
+                          navigate('/auth');
+                        }}
+                        disabled={opportunity.minAge !== undefined && userAge !== null && userAge < opportunity.minAge}
+                        title={opportunity.minAge !== undefined && userAge !== null && userAge < opportunity.minAge 
                           ? `Ten wolontariat wymaga ukończenia ${opportunity.minAge} lat` 
                           : ''}
                       >
