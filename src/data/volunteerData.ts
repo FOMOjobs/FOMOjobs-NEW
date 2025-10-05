@@ -655,7 +655,8 @@ export const volunteerOpportunities: VolunteerOpportunity[] = [
     currentVolunteers: 10,
     isUrgent: true,
     difficulty: 'medium',
-    timeCommitment: '4 godziny tygodniowo'
+    timeCommitment: '4 godziny tygodniowo',
+    minAge: 18
   },
   {
     id: 'soc-002',
@@ -787,7 +788,8 @@ export const volunteerOpportunities: VolunteerOpportunity[] = [
     maxVolunteers: 15,
     currentVolunteers: 9,
     difficulty: 'medium',
-    timeCommitment: '3 godziny tygodniowo'
+    timeCommitment: '3 godziny tygodniowo',
+    minAge: 18
   },
 
   // Health Opportunities
@@ -878,7 +880,8 @@ export const volunteerOpportunities: VolunteerOpportunity[] = [
     maxVolunteers: 10,
     currentVolunteers: 7,
     difficulty: 'hard',
-    timeCommitment: '4 godziny tygodniowo'
+    timeCommitment: '4 godziny tygodniowo',
+    minAge: 18
   },
   {
     id: 'health-005',
