@@ -1,2 +1,2 @@
-// Minimal entry point for Vite
-console.log("Static landing page loaded");
+// Entry point for static HTML
+console.log("Static landing page");
