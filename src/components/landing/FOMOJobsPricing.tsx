@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Check, Star, Crown } from "lucide-react";
 
-const PlantyPricing = () => {
+const FOMOJobsPricing = () => {
   const plans = [
     {
       name: "Freemium",
@@ -186,4 +186,4 @@ const PlantyPricing = () => {
   );
 };
 
-export default PlantyPricing;
+export default FOMOJobsPricing;

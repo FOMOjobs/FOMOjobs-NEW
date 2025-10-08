@@ -1,4 +1,4 @@
-import PlantyPageLayout from '@/components/PlantyPageLayout';
+import FOMOJobsPageLayout from '@/components/FOMOJobsPageLayout';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,8 +22,8 @@ import {
   ChevronDown
 } from 'lucide-react';
 import SEO from '@/components/SEO';
-import PlantyPricing from '@/components/landing/PlantyPricing';
-import PlantyBlogPreview from '@/components/landing/PlantyBlogPreview';
+import FOMOJobsPricing from '@/components/landing/FOMOJobsPricing';
+import FOMOJobsBlogPreview from '@/components/landing/FOMOJobsBlogPreview';
 import {
   Accordion,
   AccordionContent,
@@ -149,7 +149,7 @@ const Index = () => {
         title="FOMO Jobs - Nigdy nie przegap idealnej oferty pracy!"
         description="Nie trać czasu na przeszukiwanie stron karier pracodawców. FOMOjobs znajdzie najlepsze oferty pracy dla Ciebie i prześle je w codziennym alercie."
       />
-      <PlantyPageLayout>
+      <FOMOJobsPageLayout>
         {/* HERO SECTION */}
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
           {/* Animated gradient background - Circular, slower */}
@@ -506,10 +506,10 @@ const Index = () => {
         </section>
 
         {/* PRICING SECTION */}
-        <PlantyPricing />
+        <FOMOJobsPricing />
 
         {/* BLOG PREVIEW SECTION */}
-        <PlantyBlogPreview />
+        <FOMOJobsBlogPreview />
 
         {/* FAQ SECTION */}
         <section id="faq" className="py-20 bg-gradient-card dark:bg-muted/20">
@@ -624,7 +624,7 @@ const Index = () => {
             </motion.div>
           </div>
         </section>
-      </PlantyPageLayout>
+      </FOMOJobsPageLayout>
     </>
   );
 };

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import SEO from '@/components/SEO';
-import PlantyNavbar from '@/components/PlantyNavbar';
-import PlantyFooter from '@/components/landing/PlantyFooter';
+import FOMOJobsNavbar from '@/components/FOMOJobsNavbar';
+import FOMOJobsFooter from '@/components/landing/FOMOJobsFooter';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -142,7 +142,7 @@ const JobTracker = () => {
         description="Śledź swoje aplikacje o pracę, organizuj rozmowy i nie przegap żadnej okazji."
       />
 
-      <PlantyNavbar />
+      <FOMOJobsNavbar />
 
       <div className="min-h-screen bg-background pt-16">
         {/* Header */}
@@ -430,7 +430,7 @@ const JobTracker = () => {
         </div>
       </div>
 
-      <PlantyFooter />
+      <FOMOJobsFooter />
     </>
   );
 };

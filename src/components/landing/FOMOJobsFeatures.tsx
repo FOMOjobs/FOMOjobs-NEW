@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Search, Heart, Calendar, Award, Clock, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 
-const PlantyFeatures = () => {
+const FOMOJobsFeatures = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
 
@@ -155,4 +155,4 @@ const PlantyFeatures = () => {
   );
 };
 
-export default PlantyFeatures;
+export default FOMOJobsFeatures;

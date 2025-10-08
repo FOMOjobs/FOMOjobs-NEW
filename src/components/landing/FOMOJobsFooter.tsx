@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-const PlantyFooter = () => {
+const FOMOJobsFooter = () => {
   const [email, setEmail] = useState('');
 
   const scrollToSection = (id: string) => {
@@ -203,4 +203,4 @@ const PlantyFooter = () => {
   );
 };
 
-export default PlantyFooter;
+export default FOMOJobsFooter;

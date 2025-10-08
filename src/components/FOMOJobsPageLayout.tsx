@@ -1,20 +1,20 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import PlantyNavbar from '@/components/PlantyNavbar';
-import { PlantyFooter } from '@/components/landing';
+import FOMOJobsNavbar from '@/components/FOMOJobsNavbar';
+import { FOMOJobsFooter } from '@/components/landing';
 import { AccessibilityBar } from '@/components/AccessibilityBar';
 
-type PlantyPageLayoutProps = {
+type FOMOJobsPageLayoutProps = {
   children: React.ReactNode;
   showAccessibility?: boolean;
   showFooter?: boolean;
 };
 
-const PlantyPageLayout = ({
+const FOMOJobsPageLayout = ({
   children,
   showAccessibility = true,
   showFooter = true
-}: PlantyPageLayoutProps) => {
+}: FOMOJobsPageLayoutProps) => {
   const location = useLocation();
 
   // Scroll to top when route changes (like FOMO Jobs PageLayout)
@@ -24,14 +24,14 @@ const PlantyPageLayout = ({
 
   return (
     <div className="min-h-screen bg-background w-full max-w-[100vw] overflow-x-hidden">
-      <PlantyNavbar />
+      <FOMOJobsNavbar />
 
       {/* Main content with padding for fixed navbar */}
       <main className="pt-16">
         {children}
       </main>
 
-      {showFooter && <PlantyFooter />}
+      {showFooter && <FOMOJobsFooter />}
 
       {/* Fixed accessibility bar at bottom */}
       {showAccessibility && (
@@ -43,4 +43,4 @@ const PlantyPageLayout = ({
   );
 };
 
-export default PlantyPageLayout;
+export default FOMOJobsPageLayout;

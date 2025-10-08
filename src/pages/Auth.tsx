@@ -185,8 +185,8 @@ export default function Auth() {
   return (
     <>
       <SEO
-        title="Zaloguj się - Planty Możliwości"
-        description="Zaloguj się do swojego konta Planty Możliwości i dołącz do społeczności wolontariuszy w Krakowie."
+        title="Zaloguj się - FOMOjobs"
+        description="Zaloguj się do swojego konta FOMOjobs i dołącz do społeczności wolontariuszy w Krakowie."
       />
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary via-accent to-primary/90 dark:from-primary/80 dark:via-accent/80 dark:to-primary/70 p-4">
         <motion.div
@@ -199,7 +199,7 @@ export default function Auth() {
             <div className="flex items-center justify-center gap-2 mb-4">
               <Heart className="h-10 w-10 text-white fill-white drop-shadow-lg" />
               <h1 className="text-4xl font-bold text-white drop-shadow-md">
-                Planty <span className="text-secondary">Możliwości</span>
+                FOMO<span className="text-secondary">jobs</span>
               </h1>
             </div>
             <p className="text-white/95 text-lg font-medium drop-shadow">

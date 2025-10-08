@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { Sparkles, Heart, TrendingUp } from "lucide-react";
 
-const PlantyBenefits = () => {
+const FOMOJobsBenefits = () => {
   const [flippedCard, setFlippedCard] = useState<string | null>(null);
 
   const flippingCards = [
@@ -142,4 +142,4 @@ const PlantyBenefits = () => {
   );
 };
 
-export default PlantyBenefits;
+export default FOMOJobsBenefits;

@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 
-interface PlantyHeroProps {
+interface FOMOJobsHeroProps {
   onNavigate?: (section: string) => void;
 }
 
-const PlantyHero = ({ onNavigate }: PlantyHeroProps) => {
+const FOMOJobsHero = ({ onNavigate }: FOMOJobsHeroProps) => {
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
@@ -39,12 +39,12 @@ const PlantyHero = ({ onNavigate }: PlantyHeroProps) => {
           className="max-w-4xl mx-auto"
         >
           <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-            Odkryj Swoje{" "}
-            <span className="text-secondary drop-shadow-lg">Planty Możliwości</span>
+            Znajdź pracę{" "}
+            <span className="text-secondary drop-shadow-lg">szybciej niż inni</span>
           </h1>
 
           <p className="text-xl md:text-2xl mb-8 text-white/90 max-w-3xl mx-auto drop-shadow-md">
-            Znajdź najlepsze możliwości wolontariatu w Krakowie. Rozwijaj swoje umiejętności pomagając innym.
+            Automatyczne wyszukiwanie ofert, kreator CV, coaching rozmów i tracker aplikacji - wszystko w jednym miejscu.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -85,4 +85,4 @@ const PlantyHero = ({ onNavigate }: PlantyHeroProps) => {
   );
 };
 
-export default PlantyHero;
+export default FOMOJobsHero;

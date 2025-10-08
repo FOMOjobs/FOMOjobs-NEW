@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Heart, Users, Target } from "lucide-react";
 
-const PlantyAbout = () => {
+const FOMOJobsAbout = () => {
   return (
     <section id="about" className="py-20 bg-card">
       <div className="container mx-auto px-4">
@@ -13,10 +13,10 @@ const PlantyAbout = () => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold text-gradient mb-6">
-            Poznaj Planty Możliwości
+            Poznaj FOMOjobs
           </h2>
           <p className="text-muted-foreground text-lg max-w-3xl mx-auto">
-            Łączymy młodych ludzi z organizacjami potrzebującymi pomocy
+            Łączymy talenty z najlepszymi pracodawcami
           </p>
         </motion.div>
 
@@ -35,8 +35,8 @@ const PlantyAbout = () => {
               <div>
                 <h3 className="text-xl font-bold text-foreground mb-2">Nasza Misja</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  <span className="text-primary font-semibold">Planty Możliwości</span> to platforma stworzona przez program Młody Kraków,
-                  której celem jest inspirowanie młodych ludzi do aktywnego uczestnictwa w życiu społecznym poprzez wolontariat.
+                  <span className="text-primary font-semibold">FOMOjobs</span> to platforma pomagająca znaleźć wymarzoną pracę szybciej niż tradycyjne portale.
+                  Agregujemy oferty z wielu źródeł i dostarczamy narzędzia do skutecznego zarządzania procesem rekrutacji.
                 </p>
               </div>
             </div>
@@ -95,4 +95,4 @@ const PlantyAbout = () => {
   );
 };
 
-export default PlantyAbout;
+export default FOMOJobsAbout;

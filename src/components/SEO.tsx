@@ -17,51 +17,51 @@ interface SEOProps {
 }
 
 const SEO: React.FC<SEOProps> = ({
-  title = 'Planty Możliwości - Wolontariat w Krakowie',
-  description = 'Znajdź najlepsze możliwości wolontariatu w Krakowie. Dołącz do programu Młody Kraków i rozwijaj swoje umiejętności pomagając innym.',
+  title = 'FOMOjobs - Portal pracy i rozwoju kariery',
+  description = 'FOMOjobs - znajdź wymarzoną pracę szybciej niż inni. Automatyczne wyszukiwanie ofert, kreator CV, coaching rozmów kwalifikacyjnych i tracker aplikacji.',
   type = 'website',
-  name = 'Planty Możliwości',
+  name = 'FOMOjobs',
   imageUrl = '/og-image.png',
   publishDate,
   modifiedDate,
   author,
   category,
   keywords = [
-    'wolontariat Kraków',
-    'Młody Kraków',
-    'wolontariat młodzieżowy',
-    'możliwości wolontariatu',
-    'pomoc społeczna Kraków',
-    'ekologia Kraków',
-    'edukacja wolontariat',
-    'sport wolontariat',
-    'kultura Kraków',
-    'zdrowie wolontariat'
+    'praca Kraków',
+    'oferty pracy',
+    'szukanie pracy',
+    'kreator CV',
+    'rozmowa kwalifikacyjna',
+    'kariera',
+    'rozwój zawodowy',
+    'portal pracy',
+    'aplikacje o pracę',
+    'coaching kariery'
   ],
   isBlogPost = false
 }) => {
   const location = useLocation();
-  const currentUrl = `https://planty-mozliwosci.pl${location.pathname}`;
-  const absoluteImageUrl = imageUrl.startsWith('http') ? imageUrl : `https://planty-mozliwosci.pl${imageUrl}`;
+  const currentUrl = `https://fomojobs.pl${location.pathname}`;
+  const absoluteImageUrl = imageUrl.startsWith('http') ? imageUrl : `https://fomojobs.pl${imageUrl}`;
 
   // Create Organization JSON-LD structured data
   const organizationStructuredData = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'Planty Możliwości - Młody Kraków',
-    url: 'https://planty-mozliwosci.pl',
+    name: 'FOMOjobs',
+    url: 'https://fomojobs.pl',
     logo: absoluteImageUrl,
-    description: 'Platforma wolontariatu dla młodzieży w Krakowie',
+    description: 'Portal pracy i rozwoju kariery - znajdź pracę szybciej',
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'customer service',
-      email: 'kontakt@planty-mozliwosci.pl',
+      email: 'kontakt@fomojobs.pl',
       areaServed: 'PL',
       availableLanguage: 'Polish'
     },
     sameAs: [
-      'https://www.facebook.com/mlodykrakow',
-      'https://www.instagram.com/mlodykrakow'
+      'https://www.linkedin.com/company/fomojobs',
+      'https://www.facebook.com/fomojobs'
     ],
     address: {
       '@type': 'PostalAddress',
@@ -89,19 +89,19 @@ const SEO: React.FC<SEOProps> = ({
     dateModified: modifiedDate || publishDate,
     author: {
       '@type': 'Organization',
-      name: author || 'Planty Możliwości',
-      url: 'https://planty-mozliwosci.pl'
+      name: author || 'FOMOjobs',
+      url: 'https://fomojobs.pl'
     },
     publisher: {
       '@type': 'Organization',
-      name: 'Planty Możliwości - Młody Kraków',
+      name: 'FOMOjobs',
       logo: {
         '@type': 'ImageObject',
         url: absoluteImageUrl,
         width: 512,
         height: 512
       },
-      url: 'https://planty-mozliwosci.pl'
+      url: 'https://fomojobs.pl'
     },
     description: description,
     keywords: keywords.join(', '),
@@ -131,12 +131,12 @@ const SEO: React.FC<SEOProps> = ({
       <meta property="og:image" content={absoluteImageUrl} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
-      <meta property="og:site_name" content="Planty Możliwości" />
+      <meta property="og:site_name" content="FOMOjobs" />
       <meta property="og:locale" content="pl_PL" />
       {isBlogPost && category && <meta property="article:section" content={category} />}
       {isBlogPost && publishDate && <meta property="article:published_time" content={publishDate} />}
       {isBlogPost && modifiedDate && <meta property="article:modified_time" content={modifiedDate} />}
-      {isBlogPost && <meta property="article:publisher" content="https://planty-mozliwosci.pl" />}
+      {isBlogPost && <meta property="article:publisher" content="https://fomojobs.pl" />}
 
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />

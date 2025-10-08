@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { HelpCircle } from "lucide-react";
 
-const PlantyFAQ = () => {
+const FOMOJobsFAQ = () => {
   const faqItems = [
     {
       question: "Jak mogę zacząć wolontariat?",
@@ -85,4 +85,4 @@ const PlantyFAQ = () => {
   );
 };
 
-export default PlantyFAQ;
+export default FOMOJobsFAQ;

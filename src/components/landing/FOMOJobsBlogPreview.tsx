@@ -41,7 +41,7 @@ const blogPosts = [
   }
 ];
 
-const PlantyBlogPreview = () => {
+const FOMOJobsBlogPreview = () => {
   return (
     <section id="blog" className="py-20 bg-muted/30 dark:bg-muted/10">
       <div className="container mx-auto px-4">
@@ -114,4 +114,4 @@ const PlantyBlogPreview = () => {
   );
 };
 
-export default PlantyBlogPreview;
+export default FOMOJobsBlogPreview;

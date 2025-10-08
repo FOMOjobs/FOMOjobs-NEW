@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
-const PlantyNavbar = () => {
+const FOMOJobsNavbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isToolsOpen, setIsToolsOpen] = useState(false);
@@ -324,4 +324,4 @@ const PlantyNavbar = () => {
   );
 };
 
-export default PlantyNavbar;
+export default FOMOJobsNavbar;

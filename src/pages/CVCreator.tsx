@@ -11,8 +11,8 @@ import EducationSection from '@/components/cv/forms/EducationSection';
 import SkillsManager from '@/components/cv/forms/SkillsManager';
 import LanguagesManager from '@/components/cv/forms/LanguagesManager';
 import CVPreviewPlaceholder from '@/components/cv/CVPreviewPlaceholder';
-import PlantyNavbar from '@/components/PlantyNavbar';
-import PlantyFooter from '@/components/landing/PlantyFooter';
+import FOMOJobsNavbar from '@/components/FOMOJobsNavbar';
+import FOMOJobsFooter from '@/components/landing/FOMOJobsFooter';
 import { Helmet } from 'react-helmet-async';
 import { toast } from 'sonner';
 
@@ -80,7 +80,7 @@ const CVCreator = () => {
         <meta name="keywords" content="CV, kreator CV, życiorys, praca, kariera, aplikacje, rekrutacja" />
       </Helmet>
 
-      <PlantyNavbar />
+      <FOMOJobsNavbar />
 
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 pt-16">
         {/* Header */}
@@ -184,7 +184,7 @@ const CVCreator = () => {
         </div>
       </div>
 
-      <PlantyFooter />
+      <FOMOJobsFooter />
     </>
   );
 };

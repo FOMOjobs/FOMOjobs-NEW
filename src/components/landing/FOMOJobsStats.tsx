@@ -42,7 +42,7 @@ const AnimatedCounter = ({
   );
 };
 
-const PlantyStats = () => {
+const FOMOJobsStats = () => {
   return (
     <section id="stats" className="py-20 bg-gradient-card dark:bg-card/50">
       <div className="container mx-auto px-4">
@@ -115,4 +115,4 @@ const PlantyStats = () => {
   );
 };
 
-export default PlantyStats;
+export default FOMOJobsStats;

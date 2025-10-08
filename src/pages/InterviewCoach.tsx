@@ -18,8 +18,8 @@ import {
   ArrowRight,
   Sparkles
 } from "lucide-react";
-import PlantyNavbar from '@/components/PlantyNavbar';
-import PlantyFooter from '@/components/landing/PlantyFooter';
+import FOMOJobsNavbar from '@/components/FOMOJobsNavbar';
+import FOMOJobsFooter from '@/components/landing/FOMOJobsFooter';
 import { Helmet } from 'react-helmet-async';
 import { toast } from 'sonner';
 
@@ -130,7 +130,7 @@ const InterviewCoach = () => {
         <meta name="keywords" content="rozmowa kwalifikacyjna, trening, AI coach, przygotowanie, CV, kariera" />
       </Helmet>
 
-      <PlantyNavbar />
+      <FOMOJobsNavbar />
 
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 pt-16">
         {/* Hero Section */}
@@ -454,7 +454,7 @@ const InterviewCoach = () => {
         </div>
       </div>
 
-      <PlantyFooter />
+      <FOMOJobsFooter />
     </>
   );
 };
