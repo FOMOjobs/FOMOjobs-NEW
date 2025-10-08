@@ -23,7 +23,7 @@ const About = lazy(() => import("./pages/About"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Profile = lazy(() => import("./pages/Profile"));
-const CalendarPage = lazy(() => import("./pages/Calendar"));
+// const CalendarPage = lazy(() => import("./pages/Calendar")); // TODO: Migrate from volunteer to job events
 const Chat = lazy(() => import("./pages/Chat"));
 const Admin = lazy(() => import("./pages/Admin"));
 const Achievements = lazy(() => import("./pages/Achievements"));
@@ -63,7 +63,8 @@ const App = () => (
                   <Route path="/job-prompts" element={<ProtectedRoute><JobPrompts /></ProtectedRoute>} />
                   <Route path="/recruiter" element={<ProtectedRoute><Recruiter /></ProtectedRoute>} />
                   <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-                  <Route path="/calendar" element={<ProtectedRoute><CalendarPage /></ProtectedRoute>} />
+                  {/* TODO: Migrate Calendar from volunteer events to job events */}
+                  {/* <Route path="/calendar" element={<ProtectedRoute><CalendarPage /></ProtectedRoute>} /> */}
                   <Route path="/chat" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
                   <Route path="/achievements" element={<ProtectedRoute><Achievements /></ProtectedRoute>} />
 
