@@ -6,6 +6,7 @@ export interface PersonalInfo {
   summary: string;
   linkedIn?: string;
   portfolio?: string;
+  photo?: string; // Base64 or URL
 }
 
 export interface ExperienceItem {
@@ -48,6 +49,26 @@ export interface LanguageItem {
   certification?: string;
 }
 
+export type CVTemplate = 'modern' | 'classic' | 'minimal' | 'creative' | 'tech' | 'academic' | 'executive' | 'ats';
+
+export type CVSpacing = 'compact' | 'normal' | 'spacious';
+
+export interface CVCustomization {
+  template: CVTemplate;
+  primaryColor: string;
+  secondaryColor: string;
+  font: string;
+  spacing: CVSpacing;
+  showSections: {
+    personal: boolean;
+    summary: boolean;
+    experience: boolean;
+    education: boolean;
+    skills: boolean;
+    languages: boolean;
+  };
+}
+
 export interface CVData {
   id: string;
   personal: PersonalInfo;
@@ -55,11 +76,12 @@ export interface CVData {
   education: EducationItem[];
   skills: SkillItem[];
   languages: LanguageItem[];
+  customization: CVCustomization;
   createdAt: string;
   updatedAt: string;
 }
 
-export type CVSection = 'personal' | 'experience' | 'education' | 'skills' | 'languages';
+export type CVSection = 'personal' | 'experience' | 'education' | 'skills' | 'languages' | 'settings';
 
 export interface CVFormErrors {
   [key: string]: string | undefined;
