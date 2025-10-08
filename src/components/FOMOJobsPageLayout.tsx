@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import FOMOJobsNavbar from '@/components/FOMOJobsNavbar';
 import { FOMOJobsFooter } from '@/components/landing';
 import { AccessibilityBar } from '@/components/AccessibilityBar';
+import { ChatWidget } from '@/components/ChatWidget';
 
 type FOMOJobsPageLayoutProps = {
   children: React.ReactNode;
@@ -39,6 +40,9 @@ const FOMOJobsPageLayout = ({
           <AccessibilityBar />
         </div>
       )}
+
+      {/* Chat Widget */}
+      <ChatWidget />
     </div>
   );
 };

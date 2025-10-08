@@ -110,10 +110,7 @@ const FOMOJobsNavbar = () => {
           <div className="flex-shrink-0">
             <Link to="/" className="flex items-center gap-2">
               <div className="flex items-center">
-                <Briefcase className={cn(
-                  "w-8 h-8",
-                  isScrolled ? "text-primary" : "text-secondary"
-                )} />
+                <img src="/fomo-bell-logo.png" alt="FOMO Jobs" className="w-8 h-8" />
                 <span className={cn(
                   "ml-2 text-xl font-bold",
                   isScrolled ? "text-foreground" : "text-primary-foreground"
