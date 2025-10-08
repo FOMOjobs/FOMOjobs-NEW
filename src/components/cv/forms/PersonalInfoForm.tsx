@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { User, Mail, Phone, MapPin, Globe, Link as LinkIcon } from 'lucide-react';
 import { useCVStore } from '@/stores/cvStore';
+import AISuggestionButton from '@/components/cv/AISuggestionButton';
 
 const PersonalInfoForm: React.FC = () => {
   const { cvData, updatePersonalInfo } = useCVStore();
@@ -103,7 +104,15 @@ const PersonalInfoForm: React.FC = () => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="summary">O mnie *</Label>
+          <div className="flex items-center justify-between">
+            <Label htmlFor="summary">O mnie *</Label>
+            <AISuggestionButton
+              label="Generuj podsumowanie"
+              onClick={() => {
+                // Will be enabled when AI is configured
+              }}
+            />
+          </div>
           <Textarea
             id="summary"
             placeholder="Krótkie podsumowanie Twoich kwalifikacji i celów zawodowych..."

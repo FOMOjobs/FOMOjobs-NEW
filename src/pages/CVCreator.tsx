@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
-import { Plus, Download, Eye, Save, RotateCcw } from "lucide-react";
+import { Plus, Download, Eye, Save, RotateCcw, FileText, FileDown } from "lucide-react";
 import { useCVStore } from '@/stores/cvStore';
 import { autoSaveCVData, loadAutoSavedCVData } from '@/lib/cvStorage';
 import CVSectionNavigation from '@/components/cv/CVSectionNavigation';
@@ -15,9 +15,18 @@ import FOMOJobsNavbar from '@/components/FOMOJobsNavbar';
 import FOMOJobsFooter from '@/components/landing/FOMOJobsFooter';
 import { Helmet } from 'react-helmet-async';
 import { toast } from 'sonner';
+import { exportToPDF } from '@/utils/cvExport/pdfExport';
+import { exportToDOCX } from '@/utils/cvExport/docxExport';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const CVCreator = () => {
   const { activeSection, cvData, isDirty, setDirty, loadCVData, resetCV } = useCVStore();
+  const [isExporting, setIsExporting] = useState(false);
 
   // Auto-load from localStorage on mount
   useEffect(() => {
@@ -69,6 +78,32 @@ const CVCreator = () => {
     toast.success('CV zapisane!');
   };
 
+  const handleExportPDF = async () => {
+    try {
+      setIsExporting(true);
+      await exportToPDF(cvData);
+      toast.success('CV wyeksportowane jako PDF!');
+    } catch (error) {
+      console.error('PDF export error:', error);
+      toast.error('Błąd podczas eksportu PDF');
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const handleExportDOCX = async () => {
+    try {
+      setIsExporting(true);
+      await exportToDOCX(cvData);
+      toast.success('CV wyeksportowane jako DOCX!');
+    } catch (error) {
+      console.error('DOCX export error:', error);
+      toast.error('Błąd podczas eksportu DOCX');
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   return (
     <>
       <Helmet>
@@ -99,6 +134,29 @@ const CVCreator = () => {
                 Profesjonalne narzędzie do tworzenia CV dopasowane do polskiego rynku pracy.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      size="lg"
+                      className="text-lg px-8 py-6 bg-gradient-to-r from-primary to-secondary hover:opacity-90"
+                      disabled={isExporting}
+                    >
+                      <Download className="mr-2 h-5 w-5" />
+                      {isExporting ? 'Eksportowanie...' : 'Pobierz CV'}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="center" className="w-48">
+                    <DropdownMenuItem onClick={handleExportPDF}>
+                      <FileText className="mr-2 h-4 w-4" />
+                      Eksportuj jako PDF
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleExportDOCX}>
+                      <FileDown className="mr-2 h-4 w-4" />
+                      Eksportuj jako DOCX
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
                 <Button
                   size="lg"
                   variant="secondary"
@@ -107,14 +165,6 @@ const CVCreator = () => {
                 >
                   <RotateCcw className="mr-2 h-5 w-5" />
                   Nowe CV
-                </Button>
-                <Button
-                  size="lg"
-                  className="text-lg px-8 py-6 bg-white/90 hover:bg-white text-primary font-semibold"
-                  onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
-                >
-                  <Eye className="mr-2 h-5 w-5" />
-                  Zobacz przykłady
                 </Button>
               </div>
             </motion.div>
