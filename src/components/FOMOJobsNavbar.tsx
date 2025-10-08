@@ -56,28 +56,40 @@ const FOMOJobsNavbar = () => {
 
   const toolsMenuItems = [
     {
+      to: '/cv-creator',
+      icon: FileText,
+      label: 'FOMO.cvcreator',
+      description: 'Kreator CV z AI'
+    },
+    {
       to: '/job-tracker',
       icon: BarChart,
-      label: 'Job Tracker',
+      label: 'FOMO.jobstracker',
       description: 'Śledź swoje aplikacje'
     },
     {
-      to: '/cv-creator',
-      icon: FileText,
-      label: 'CV Creator',
-      description: 'Stwórz profesjonalne CV'
+      to: '/recruiter',
+      icon: User,
+      label: 'FOMO.recruiter',
+      description: 'Portal dla rekruterów'
     },
     {
       to: '/interview-coach',
       icon: MessageSquare,
-      label: 'Interview Coach',
-      description: 'Przygotuj się do rozmowy'
+      label: 'FOMO.coach',
+      description: 'Trening rozmów kwalifikacyjnych'
+    },
+    {
+      to: '/job-prompts',
+      icon: BookOpen,
+      label: 'FOMO.jobprompts',
+      description: 'Prompty AI do poszukiwania pracy'
     },
     {
       to: '/dashboard',
       icon: Award,
       label: 'Dashboard',
-      description: 'Analityka kariery'
+      description: 'Twój panel analityczny'
     }
   ];
 

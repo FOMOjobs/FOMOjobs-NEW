@@ -55,16 +55,16 @@ const App = () => (
                   <Route path="/about" element={<About />} />
                   <Route path="/privacy-policy" element={<PrivacyPolicy />} />
 
-                  {/* Protected routes - require authentication */}
-                  <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-                  <Route path="/job-tracker" element={<ProtectedRoute><JobTracker /></ProtectedRoute>} />
-                  <Route path="/cv-creator" element={<ProtectedRoute><CVCreator /></ProtectedRoute>} />
-                  <Route path="/interview-coach" element={<ProtectedRoute><InterviewCoach /></ProtectedRoute>} />
-                  <Route path="/job-prompts" element={<ProtectedRoute><JobPrompts /></ProtectedRoute>} />
-                  <Route path="/recruiter" element={<ProtectedRoute><Recruiter /></ProtectedRoute>} />
+                  {/* Tool pages - PUBLIC (users can explore demo without login) */}
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/job-tracker" element={<JobTracker />} />
+                  <Route path="/cv-creator" element={<CVCreator />} />
+                  <Route path="/interview-coach" element={<InterviewCoach />} />
+                  <Route path="/job-prompts" element={<JobPrompts />} />
+                  <Route path="/recruiter" element={<Recruiter />} />
+
+                  {/* User pages - keep protected */}
                   <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-                  {/* TODO: Migrate Calendar from volunteer events to job events */}
-                  {/* <Route path="/calendar" element={<ProtectedRoute><CalendarPage /></ProtectedRoute>} /> */}
                   <Route path="/chat" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
                   <Route path="/achievements" element={<ProtectedRoute><Achievements /></ProtectedRoute>} />
 
