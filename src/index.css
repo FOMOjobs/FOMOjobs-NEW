@@ -11,18 +11,18 @@
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 18%;
     
-    /* Młody Kraków Brand Colors */
-    --primary: 330 84% 52%; /* Magenta #E91E8C */
+    /* Planty Brand Colors - Purple & Yellow */
+    --primary: 258 90% 66%; /* Purple #8B5CF6 */
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 330 84% 62%;
-    
-    --secondary: 82 61% 59%; /* Green #8BC53F */
-    --secondary-foreground: 0 0% 18%;
-    --secondary-glow: 82 61% 69%;
-    
-    --accent: 258 38% 46%; /* Purple #5B4B9C */
+    --primary-glow: 258 90% 76%;
+
+    --secondary: 45 93% 58%; /* Yellow #F4D03F */
+    --secondary-foreground: 0 0% 10%;
+    --secondary-glow: 45 93% 68%;
+
+    --accent: 258 50% 55%; /* Purple Accent #9F7AEA */
     --accent-foreground: 0 0% 100%;
-    --accent-glow: 258 38% 56%;
+    --accent-glow: 258 50% 65%;
     
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
@@ -30,20 +30,20 @@
     --destructive-foreground: 0 0% 100%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 330 84% 52%;
+    --ring: 258 90% 66%;
     
-    /* Category colors */
-    --education: 221 83% 53%;
+    /* Category colors - Updated for purple/yellow theme */
+    --education: 221 83% 53%; /* Blue */
     --education-glow: 221 83% 63%;
-    --ecology: 82 61% 59%; /* Use brand green */
-    --ecology-glow: 82 61% 69%;
-    --sport: 24 95% 53%;
+    --ecology: 120 61% 50%; /* Green */
+    --ecology-glow: 120 61% 60%;
+    --sport: 24 95% 53%; /* Orange */
     --sport-glow: 24 95% 63%;
-    --culture: 258 38% 46%; /* Use brand purple */
-    --culture-glow: 258 38% 56%;
-    --social: 330 84% 52%; /* Use brand magenta */
-    --social-glow: 330 84% 62%;
-    --health: 0 72% 51%;
+    --culture: 258 90% 66%; /* Purple (brand primary) */
+    --culture-glow: 258 90% 76%;
+    --social: 330 81% 60%; /* Pink */
+    --social-glow: 330 81% 70%;
+    --health: 0 72% 51%; /* Red */
     --health-glow: 0 72% 61%;
 
     /* Flashcard step colors */
@@ -54,11 +54,11 @@
     --step-3: 142 47% 54%;
     --step-3-bg: hsl(142 47% 54% / 0.12);
 
-    /* Gradients - Młody Kraków Brand */
-    --gradient-primary: linear-gradient(135deg, hsl(330, 84%, 52%), hsl(258, 38%, 46%)); /* Magenta to Purple */
-    --gradient-secondary: linear-gradient(135deg, hsl(82, 61%, 59%), hsl(330, 84%, 52%)); /* Green to Magenta */
-    --gradient-accent: linear-gradient(135deg, hsl(258, 38%, 46%), hsl(330, 84%, 52%)); /* Purple to Magenta */
-    --gradient-hero: linear-gradient(135deg, hsl(330, 84%, 52%), hsl(258, 38%, 46%)); /* Magenta to Purple */
+    /* Gradients - Planty Purple & Yellow */
+    --gradient-primary: linear-gradient(135deg, hsl(258, 90%, 66%), hsl(45, 93%, 58%)); /* Purple to Yellow */
+    --gradient-secondary: linear-gradient(135deg, hsl(45, 93%, 58%), hsl(258, 90%, 66%)); /* Yellow to Purple */
+    --gradient-accent: linear-gradient(135deg, hsl(258, 50%, 55%), hsl(258, 90%, 76%)); /* Purple Accent */
+    --gradient-hero: linear-gradient(135deg, hsl(258, 90%, 66%), hsl(45, 93%, 58%)); /* Purple to Yellow */
     --gradient-card: linear-gradient(to bottom, hsl(var(--card)), hsl(var(--muted)));
 
     /* Shadows with glow effects */
@@ -82,18 +82,18 @@
     --popover: 0 0% 18%;
     --popover-foreground: 0 0% 90%;
     
-    /* Młody Kraków Brand Colors - Dark Mode (slightly muted) */
-    --primary: 330 75% 48%; /* Magenta darker */
+    /* Planty Brand Colors - Dark Mode (muted for contrast) */
+    --primary: 258 85% 60%; /* Purple darker */
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 330 75% 58%;
-    
-    --secondary: 82 55% 52%; /* Green darker */
+    --primary-glow: 258 85% 70%;
+
+    --secondary: 45 85% 52%; /* Yellow darker */
     --secondary-foreground: 0 0% 10%;
-    --secondary-glow: 82 55% 62%;
-    
-    --accent: 258 35% 42%; /* Purple darker */
+    --secondary-glow: 45 85% 62%;
+
+    --accent: 258 45% 50%; /* Purple accent darker */
     --accent-foreground: 0 0% 100%;
-    --accent-glow: 258 35% 52%;
+    --accent-glow: 258 45% 60%;
     
     --muted: 0 0% 18%;
     --muted-foreground: 0 0% 65%;
@@ -101,10 +101,12 @@
     --destructive-foreground: 0 0% 100%;
     --border: 0 0% 25%;
     --input: 0 0% 25%;
-    --ring: 330 75% 48%;
+    --ring: 258 85% 60%;
 
     /* Dark mode gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(330, 75%, 48%), hsl(258, 35%, 42%));
+    --gradient-hero: linear-gradient(135deg, hsl(258, 85%, 60%), hsl(45, 85%, 52%));
+    --gradient-primary: linear-gradient(135deg, hsl(258, 85%, 60%), hsl(45, 85%, 52%));
+    --gradient-secondary: linear-gradient(135deg, hsl(45, 85%, 52%), hsl(258, 85%, 60%));
     --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.3);
   }
 }
@@ -142,11 +144,11 @@
   .bg-gradient-hero {
     background: var(--gradient-hero);
   }
-  
+
   .bg-gradient-primary {
     background: var(--gradient-primary);
   }
-  
+
   .bg-gradient-secondary {
     background: var(--gradient-secondary);
   }
@@ -387,7 +389,7 @@
 }
 
 /* ========================================
-   CONTRAST MODES
+   CONTRAST MODES - Enhanced for Accessibility
    ======================================== */
 
 /* HIGH CONTRAST MODE */
@@ -408,29 +410,41 @@
 [data-contrast="high"] .shadow,
 [data-contrast="high"] .shadow-sm,
 [data-contrast="high"] .shadow-md,
-[data-contrast="high"] .shadow-lg {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+[data-contrast="high"] .shadow-lg,
+[data-contrast="high"] .shadow-card,
+[data-contrast="high"] .shadow-glow {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5) !important;
 }
 
-[data-contrast="high"] .bg-primary {
-  filter: saturate(1.3) brightness(1.1);
+[data-contrast="high"] .bg-primary,
+[data-contrast="high"] .bg-gradient-primary,
+[data-contrast="high"] .bg-gradient-hero {
+  filter: saturate(1.4) brightness(1.15) contrast(1.2);
 }
 
-[data-contrast="high"] .text-gray-600 {
-  color: #374151 !important;
+[data-contrast="high"] .text-muted-foreground {
+  color: hsl(var(--foreground)) !important;
+  opacity: 0.9;
 }
 
-[data-contrast="high"] .border {
-  border-color: #000000 !important;
+[data-contrast="high"] .border,
+[data-contrast="high"] .border-border {
+  border-color: hsl(var(--foreground) / 0.3) !important;
 }
 
-/* EXTRA HIGH CONTRAST MODE */
+/* Enhanced focus states for high contrast */
+[data-contrast="high"] *:focus-visible {
+  outline: 3px solid hsl(var(--primary)) !important;
+  outline-offset: 3px !important;
+}
+
+/* EXTRA HIGH CONTRAST MODE - Updated for Purple/Yellow */
 [data-contrast="extra-high"] {
   filter: contrast(1.5);
 }
 
 [data-contrast="extra-high"] body,
-[data-contrast="extra-high"] .bg-white {
+[data-contrast="extra-high"] .bg-background {
   background-color: #000000 !important;
   color: #FFFFFF !important;
 }
@@ -439,53 +453,87 @@
 [data-contrast="extra-high"] [class*="rounded"],
 [data-contrast="extra-high"] .border {
   background-color: #1a1a1a !important;
-  border: 2px solid #FFFFFF !important;
+  border: 3px solid #FFFFFF !important;
   color: #FFFFFF !important;
 }
 
-[data-contrast="extra-high"] *:not(button):not(a) {
+[data-contrast="extra-high"] *:not(button):not(a):not(.badge) {
   color: #FFFFFF !important;
 }
 
-[data-contrast="extra-high"] button:not(.secondary),
-[data-contrast="extra-high"] .bg-primary {
-  background-color: #FF1493 !important;
+/* Purple buttons for primary actions */
+[data-contrast="extra-high"] button:not(.secondary):not([variant="outline"]),
+[data-contrast="extra-high"] .bg-primary,
+[data-contrast="extra-high"] .bg-gradient-primary,
+[data-contrast="extra-high"] .bg-gradient-hero {
+  background: #8B5CF6 !important; /* Purple */
+  background-image: none !important;
   color: #FFFFFF !important;
   border: 3px solid #FFFFFF !important;
   font-weight: 700 !important;
 }
 
 [data-contrast="extra-high"] button:not(.secondary):hover {
-  background-color: #FF69B4 !important;
+  background: #A78BFA !important; /* Lighter purple */
 }
 
-[data-contrast="extra-high"] .bg-green-500 {
-  background-color: #FFD700 !important;
+/* Yellow for secondary/accent elements */
+[data-contrast="extra-high"] .bg-secondary,
+[data-contrast="extra-high"] .badge,
+[data-contrast="extra-high"] .bg-gradient-secondary {
+  background: #F4D03F !important; /* Yellow */
+  background-image: none !important;
   color: #000000 !important;
   border: 3px solid #000000 !important;
+  font-weight: 700 !important;
 }
 
+/* Yellow links for visibility */
 [data-contrast="extra-high"] a {
-  color: #FFD700 !important;
+  color: #F4D03F !important; /* Yellow */
   text-decoration: underline !important;
+  text-decoration-thickness: 2px !important;
   font-weight: 600 !important;
 }
 
+[data-contrast="extra-high"] a:hover {
+  color: #FFE066 !important; /* Lighter yellow */
+}
+
+/* Remove all gradients */
 [data-contrast="extra-high"] [class*="gradient"],
 [data-contrast="extra-high"] .bg-gradient-to-r,
-[data-contrast="extra-high"] .bg-gradient-to-b {
+[data-contrast="extra-high"] .bg-gradient-to-b,
+[data-contrast="extra-high"] .bg-gradient-card,
+[data-contrast="extra-high"] .animated-gradient {
   background-image: none !important;
   background-color: #000000 !important;
 }
 
+/* High contrast images */
 [data-contrast="extra-high"] img {
-  filter: grayscale(100%) contrast(1.5) !important;
+  filter: grayscale(100%) contrast(1.6) brightness(1.1) !important;
+  border: 2px solid #FFFFFF !important;
 }
 
+/* Enhanced focus indicators with yellow */
 [data-contrast="extra-high"] *:focus,
 [data-contrast="extra-high"] *:focus-visible {
-  outline: 4px solid #FFD700 !important;
+  outline: 4px solid #F4D03F !important; /* Yellow */
   outline-offset: 4px !important;
+  box-shadow: 0 0 0 6px rgba(244, 208, 63, 0.3) !important;
+}
+
+/* Category badges in extra-high contrast */
+[data-contrast="extra-high"] .category-education,
+[data-contrast="extra-high"] .category-ecology,
+[data-contrast="extra-high"] .category-sport,
+[data-contrast="extra-high"] .category-culture,
+[data-contrast="extra-high"] .category-social,
+[data-contrast="extra-high"] .category-health {
+  background: #F4D03F !important;
+  color: #000000 !important;
+  border: 2px solid #000000 !important;
 }
 
 /* OSMBuildings styles */
