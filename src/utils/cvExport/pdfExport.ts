@@ -48,7 +48,7 @@ const exportATSTemplateToPDF = (cvData: CVData) => {
   });
 
   // Set language for Polish charset
-  doc.setLanguage('pl-PL');
+  doc.setLanguage('pl');
 
   const pageWidth = doc.internal.pageSize.width;
   let yPos = 20;
@@ -207,7 +207,7 @@ const exportExecutiveTemplateToPDF = (cvData: CVData) => {
   });
 
   // Set language for Polish charset
-  doc.setLanguage('pl-PL');
+  doc.setLanguage('pl');
 
   const pageWidth = doc.internal.pageSize.width;
   let yPos = 20;
@@ -329,7 +329,7 @@ const exportDefaultTemplateToPDF = (cvData: CVData) => {
   });
 
   // Set language for Polish charset
-  doc.setLanguage('pl-PL');
+  doc.setLanguage('pl');
 
   const pageWidth = doc.internal.pageSize.width;
   let yPos = 20;
