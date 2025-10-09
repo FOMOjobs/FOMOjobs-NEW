@@ -10,7 +10,8 @@ import ExperienceSection from '@/components/cv/forms/ExperienceSection';
 import EducationSection from '@/components/cv/forms/EducationSection';
 import SkillsManager from '@/components/cv/forms/SkillsManager';
 import LanguagesManager from '@/components/cv/forms/LanguagesManager';
-import CVPreviewPlaceholder from '@/components/cv/CVPreviewPlaceholder';
+import CVPreview from '@/components/cv-creator/CVPreview';
+import CustomizationPanel from '@/components/cv-creator/CustomizationPanel';
 import FOMOJobsNavbar from '@/components/FOMOJobsNavbar';
 import FOMOJobsFooter from '@/components/landing/FOMOJobsFooter';
 import { Helmet } from 'react-helmet-async';
@@ -221,14 +222,15 @@ const CVCreator = () => {
               </div>
             </motion.div>
 
-            {/* Right Sidebar - Preview */}
+            {/* Right Sidebar - Preview & Customization */}
             <motion.div
-              className="lg:col-span-1"
+              className="lg:col-span-1 space-y-6"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
-              <CVPreviewPlaceholder />
+              <CustomizationPanel />
+              <CVPreview />
             </motion.div>
           </div>
         </div>

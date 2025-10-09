@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { CVData, ExperienceItem, EducationItem, SkillItem, LanguageItem, PersonalInfo } from '@/types/cv';
+import { CVData, ExperienceItem, EducationItem, SkillItem, LanguageItem, PersonalInfo, CVTemplate, CVCustomization } from '@/types/cv';
 import { createEmptyCVData } from '@/lib/cvStorage';
 
 interface CVStore {
@@ -11,6 +11,11 @@ interface CVStore {
 
   // Personal Info Actions
   updatePersonalInfo: (info: Partial<PersonalInfo>) => void;
+
+  // Customization Actions
+  updateCustomization: (customization: Partial<CVCustomization>) => void;
+  setTemplate: (template: CVTemplate) => void;
+  setColors: (primaryColor: string, secondaryColor: string) => void;
 
   // Experience Actions
   addExperience: (experience: Omit<ExperienceItem, 'id'>) => void;
@@ -55,6 +60,44 @@ export const useCVStore = create<CVStore>((set, get) => ({
       cvData: {
         ...state.cvData,
         personal: { ...state.cvData.personal, ...info },
+        updatedAt: new Date().toISOString()
+      },
+      isDirty: true
+    }));
+  },
+
+  // Customization Actions
+  updateCustomization: (customization) => {
+    set((state) => ({
+      cvData: {
+        ...state.cvData,
+        customization: { ...state.cvData.customization, ...customization },
+        updatedAt: new Date().toISOString()
+      },
+      isDirty: true
+    }));
+  },
+
+  setTemplate: (template) => {
+    set((state) => ({
+      cvData: {
+        ...state.cvData,
+        customization: { ...state.cvData.customization, template },
+        updatedAt: new Date().toISOString()
+      },
+      isDirty: true
+    }));
+  },
+
+  setColors: (primaryColor, secondaryColor) => {
+    set((state) => ({
+      cvData: {
+        ...state.cvData,
+        customization: {
+          ...state.cvData.customization,
+          primaryColor,
+          secondaryColor
+        },
         updatedAt: new Date().toISOString()
       },
       isDirty: true
