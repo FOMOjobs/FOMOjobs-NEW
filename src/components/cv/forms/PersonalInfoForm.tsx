@@ -6,6 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { User, Mail, Phone, MapPin, Globe, Link as LinkIcon } from 'lucide-react';
 import { useCVStore } from '@/stores/cvStore';
 import AISuggestionButton from '@/components/cv/AISuggestionButton';
+import { PhotoUpload } from '@/components/cv/PhotoUpload';
 
 const PersonalInfoForm: React.FC = () => {
   const { cvData, updatePersonalInfo } = useCVStore();
@@ -20,19 +21,28 @@ const PersonalInfoForm: React.FC = () => {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
+        <div className="space-y-2">
+          <Label htmlFor="fullName" className="flex items-center gap-2">
+            <User className="h-4 w-4" />
+            Imię i nazwisko *
+          </Label>
+          <Input
+            id="fullName"
+            placeholder="Jan Kowalski"
+            value={personal.fullName}
+            onChange={(e) => updatePersonalInfo({ fullName: e.target.value })}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label>Zdjęcie profilowe</Label>
+          <PhotoUpload
+            value={personal.photo || undefined}
+            onChange={(photo) => updatePersonalInfo({ photo })}
+          />
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="fullName" className="flex items-center gap-2">
-              <User className="h-4 w-4" />
-              Imię i nazwisko *
-            </Label>
-            <Input
-              id="fullName"
-              placeholder="Jan Kowalski"
-              value={personal.fullName}
-              onChange={(e) => updatePersonalInfo({ fullName: e.target.value })}
-            />
-          </div>
 
           <div className="space-y-2">
             <Label htmlFor="email" className="flex items-center gap-2">

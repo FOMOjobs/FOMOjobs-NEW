@@ -65,7 +65,9 @@ export const createEmptyCVData = (): CVData => ({
     address: '',
     summary: '',
     linkedIn: '',
-    portfolio: ''
+    portfolio: '',
+    photo: null,
+    photoPosition: 'left'
   },
   experience: [],
   education: [],

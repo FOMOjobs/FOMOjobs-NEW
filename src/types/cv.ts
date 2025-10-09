@@ -6,7 +6,8 @@ export interface PersonalInfo {
   summary: string;
   linkedIn?: string;
   portfolio?: string;
-  photo?: string; // Base64 or URL
+  photo?: string | null; // Base64 or URL
+  photoPosition?: 'left' | 'right' | 'top';
 }
 
 export interface ExperienceItem {
