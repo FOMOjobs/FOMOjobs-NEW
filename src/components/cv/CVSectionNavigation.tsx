@@ -9,6 +9,7 @@ import {
   GraduationCap,
   Zap,
   Globe,
+  Settings,
   CheckCircle,
   AlertCircle,
   Circle
@@ -49,6 +50,12 @@ const CVSectionNavigation: React.FC = () => {
       icon: Globe,
       title: 'Języki',
       description: 'Znajomość języków'
+    },
+    {
+      id: 'settings' as CVSection,
+      icon: Settings,
+      title: '⚙️ Personalizacja',
+      description: 'Szablony i kolory'
     }
   ];
 
@@ -72,6 +79,10 @@ const CVSectionNavigation: React.FC = () => {
 
       case 'languages':
         return cvData.languages.length > 0 ? 100 : 0;
+
+      case 'settings':
+        // Settings is always accessible, mark as complete if template is selected
+        return cvData.customization.template ? 100 : 0;
 
       default:
         return 0;

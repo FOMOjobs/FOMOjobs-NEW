@@ -10,6 +10,7 @@ import ExperienceSection from '@/components/cv/forms/ExperienceSection';
 import EducationSection from '@/components/cv/forms/EducationSection';
 import SkillsManager from '@/components/cv/forms/SkillsManager';
 import LanguagesManager from '@/components/cv/forms/LanguagesManager';
+import SettingsSection from '@/components/cv/forms/SettingsSection';
 import CVPreview from '@/components/cv-creator/CVPreview';
 import CustomizationPanel from '@/components/cv-creator/CustomizationPanel';
 import FOMOJobsNavbar from '@/components/FOMOJobsNavbar';
@@ -61,6 +62,8 @@ const CVCreator = () => {
         return <SkillsManager />;
       case 'languages':
         return <LanguagesManager />;
+      case 'settings':
+        return <SettingsSection />;
       default:
         return <PersonalInfoForm />;
     }
