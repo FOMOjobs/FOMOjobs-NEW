@@ -131,18 +131,18 @@ const CVCreator = () => {
               <h1 className="text-4xl md:text-6xl font-bold mb-6">
                 <span className="text-white">FOMO</span>.<span className="text-secondary drop-shadow-lg">cvcreator</span>
               </h1>
-              <p className="text-xl md:text-2xl mb-8 opacity-90 max-w-3xl mx-auto">
+              <p className="text-lg md:text-xl lg:text-2xl mb-6 md:mb-8 opacity-90 max-w-3xl mx-auto">
                 Profesjonalne narzędzie do tworzenia CV dopasowane do polskiego rynku pracy.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center max-w-2xl mx-auto">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button
                       size="lg"
-                      className="text-lg px-8 py-6 bg-gradient-to-r from-primary to-secondary hover:opacity-90"
+                      className="text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 bg-gradient-to-r from-primary to-secondary hover:opacity-90 w-full sm:w-auto"
                       disabled={isExporting}
                     >
-                      <Download className="mr-2 h-5 w-5" />
+                      <Download className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                       {isExporting ? 'Eksportowanie...' : 'Pobierz CV'}
                     </Button>
                   </DropdownMenuTrigger>
@@ -161,10 +161,10 @@ const CVCreator = () => {
                 <Button
                   size="lg"
                   variant="secondary"
-                  className="text-lg px-8 py-6"
+                  className="text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 w-full sm:w-auto"
                   onClick={handleReset}
                 >
-                  <RotateCcw className="mr-2 h-5 w-5" />
+                  <RotateCcw className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                   Nowe CV
                 </Button>
               </div>
@@ -172,28 +172,28 @@ const CVCreator = () => {
           </div>
         </div>
 
-        <div className="container mx-auto px-4 py-12">
-          <div className="grid lg:grid-cols-4 gap-8">
-            {/* Left Sidebar - CV Sections */}
-            <motion.div
-              className="lg:col-span-1"
+        <div className="container mx-auto px-4 py-6 sm:py-12">
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+            {/* Left Sidebar - CV Sections Navigation */}
+            <motion.aside
+              className="w-full lg:w-80 xl:w-96 shrink-0"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
               <CVSectionNavigation />
-            </motion.div>
+            </motion.aside>
 
             {/* Main Content - CV Editor */}
-            <motion.div
-              className="lg:col-span-2"
+            <motion.main
+              className="flex-1 min-w-0"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
             >
               <div className="space-y-4">
                 {/* Save Status */}
-                <div className="flex items-center justify-between bg-card/50 backdrop-blur-sm p-3 rounded-lg shadow-card border-0">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-card/50 backdrop-blur-sm p-3 rounded-lg shadow-card border-0 gap-3 sm:gap-0">
                   <div className="text-sm text-muted-foreground">
                     {isDirty ? (
                       <span className="flex items-center gap-2">
@@ -211,6 +211,7 @@ const CVCreator = () => {
                     variant="outline"
                     size="sm"
                     onClick={handleManualSave}
+                    className="w-full sm:w-auto"
                   >
                     <Save className="h-4 w-4 mr-2" />
                     Zapisz teraz
@@ -220,18 +221,18 @@ const CVCreator = () => {
                 {/* Active Section Content */}
                 {renderActiveSection()}
               </div>
-            </motion.div>
+            </motion.main>
 
-            {/* Right Sidebar - Preview & Customization */}
-            <motion.div
-              className="lg:col-span-1 space-y-6"
+            {/* Right Sidebar - Preview & Customization (hidden on tablets, visible on lg+) */}
+            <motion.aside
+              className="hidden lg:block lg:w-80 xl:w-96 shrink-0 space-y-6"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
               <CustomizationPanel />
               <CVPreview />
-            </motion.div>
+            </motion.aside>
           </div>
         </div>
       </div>

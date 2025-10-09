@@ -39,9 +39,17 @@ export const exportToPDF = (cvData: CVData) => {
  * - Black text on white background
  * - NO colors, graphics, or fancy formatting
  * - Maximum ATS compatibility
+ * - Polish characters support
  */
 const exportATSTemplateToPDF = (cvData: CVData) => {
-  const doc = new jsPDF();
+  const doc = new jsPDF({
+    putOnlyUsedFonts: true,
+    compress: true
+  });
+
+  // Set language for Polish charset
+  doc.setLanguage('pl-PL');
+
   const pageWidth = doc.internal.pageSize.width;
   let yPos = 20;
 
@@ -190,9 +198,17 @@ const exportATSTemplateToPDF = (cvData: CVData) => {
  * - Navy blue accents
  * - Elegant serif fonts for headers
  * - Professional styling
+ * - Polish characters support
  */
 const exportExecutiveTemplateToPDF = (cvData: CVData) => {
-  const doc = new jsPDF();
+  const doc = new jsPDF({
+    putOnlyUsedFonts: true,
+    compress: true
+  });
+
+  // Set language for Polish charset
+  doc.setLanguage('pl-PL');
+
   const pageWidth = doc.internal.pageSize.width;
   let yPos = 20;
 
@@ -304,9 +320,17 @@ const exportExecutiveTemplateToPDF = (cvData: CVData) => {
 
 /**
  * Default Template PDF Export (fallback for Modern, Classic, etc.)
+ * - Polish characters support
  */
 const exportDefaultTemplateToPDF = (cvData: CVData) => {
-  const doc = new jsPDF();
+  const doc = new jsPDF({
+    putOnlyUsedFonts: true,
+    compress: true
+  });
+
+  // Set language for Polish charset
+  doc.setLanguage('pl-PL');
+
   const pageWidth = doc.internal.pageSize.width;
   let yPos = 20;
 
