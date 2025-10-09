@@ -71,6 +71,21 @@ export const createEmptyCVData = (): CVData => ({
   education: [],
   skills: [],
   languages: [],
+  customization: {
+    template: 'modern',
+    primaryColor: '#8B5CF6',
+    secondaryColor: '#EC4899',
+    font: 'Inter',
+    spacing: 'normal',
+    showSections: {
+      personal: true,
+      summary: true,
+      experience: true,
+      education: true,
+      skills: true,
+      languages: true
+    }
+  },
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString()
 });

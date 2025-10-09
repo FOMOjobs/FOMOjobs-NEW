@@ -19,7 +19,7 @@ export const exportToDOCX = async (cvData: CVData) => {
         bottom: {
           color: '8B5CF6',
           space: 1,
-          value: 'single',
+          style: 'single',
           size: 6,
         },
       },
@@ -30,7 +30,7 @@ export const exportToDOCX = async (cvData: CVData) => {
   const createParagraph = (text: string, options?: {
     bold?: boolean;
     spacing?: { before?: number; after?: number };
-    alignment?: AlignmentType;
+    alignment?: typeof AlignmentType[keyof typeof AlignmentType];
   }): Paragraph => {
     return new Paragraph({
       children: [

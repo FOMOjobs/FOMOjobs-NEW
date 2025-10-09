@@ -38,12 +38,12 @@ const LoadingSpinner = () => (
 const queryClient = new QueryClient();
 
 const App = () => (
-  <ErrorBoundary>
-    <HelmetProvider>
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <Toaster />
-          <BrowserRouter>
+  <HelmetProvider>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <BrowserRouter>
+          <ErrorBoundary>
             <AuthProvider>
               <Suspense fallback={<LoadingSpinner />}>
                 <Routes>
@@ -76,11 +76,11 @@ const App = () => (
                 </Routes>
               </Suspense>
             </AuthProvider>
-          </BrowserRouter>
-        </TooltipProvider>
-      </QueryClientProvider>
-    </HelmetProvider>
-  </ErrorBoundary>
+          </ErrorBoundary>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  </HelmetProvider>
 );
 
 export default App;
