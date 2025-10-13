@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -20,10 +20,13 @@ import { useCVStore } from '@/stores/cvStore';
 import { CVTemplate } from '@/types/cv';
 import ATSTemplate from './templates/ATSTemplate';
 import ExecutiveTemplate from './templates/ExecutiveTemplate';
+import ModernTemplate from './templates/ModernTemplate';
+import ProfessionalTemplate from './templates/ProfessionalTemplate';
+import MinimalistTemplate from './templates/MinimalistTemplate';
 import { toast } from 'sonner';
 
-const CVPreview: React.FC = () => {
-  const { cvData, setTemplate } = useCVStore();
+const CVPreview: React.FC = memo(() => {
+  const { cvData, setTemplate, updateCustomization } = useCVStore();
   const [zoom, setZoom] = useState(1);
 
   const template = cvData.customization.template;
@@ -59,7 +62,8 @@ const CVPreview: React.FC = () => {
       tech: 'Tech',
       academic: 'Akademicki',
       executive: 'Executive',
-      ats: 'ATS-Friendly'
+      ats: 'ATS-Friendly',
+      professional: 'Professional'
     };
     return names[template] || template;
   };
@@ -72,8 +76,12 @@ const CVPreview: React.FC = () => {
       case 'executive':
         return <ExecutiveTemplate data={cvData} primaryColor={primaryColor} secondaryColor={secondaryColor} />;
       case 'modern':
-      case 'classic':
+        return <ModernTemplate data={cvData} primaryColor={primaryColor} secondaryColor={secondaryColor} />;
+      case 'professional':
+        return <ProfessionalTemplate data={cvData} primaryColor={primaryColor} secondaryColor={secondaryColor} />;
       case 'minimal':
+        return <MinimalistTemplate data={cvData} primaryColor={primaryColor} secondaryColor={secondaryColor} />;
+      case 'classic':
       case 'creative':
       case 'tech':
       case 'academic':
@@ -84,7 +92,7 @@ const CVPreview: React.FC = () => {
             <div className="text-center text-gray-400 py-20">
               <FileText className="h-16 w-16 mx-auto mb-4 opacity-50" />
               <p className="text-lg font-medium">Szablon "{getTemplateName(template)}" będzie dostępny wkrótce!</p>
-              <p className="text-sm mt-2">Wypróbuj ATS-Friendly lub Executive</p>
+              <p className="text-sm mt-2">Wypróbuj dostępne szablony z menu</p>
             </div>
           </div>
         );
@@ -117,20 +125,43 @@ const CVPreview: React.FC = () => {
               <SelectItem value="ats">
                 🤖 ATS-Friendly - Maksymalne szanse w systemach rekrutacyjnych!
               </SelectItem>
+              <SelectItem value="professional">
+                💼 Professional - Klasyczny korporacyjny styl
+              </SelectItem>
               <SelectItem value="executive">
                 👔 Executive - Elegancki, dla doświadczonych profesjonalistów
               </SelectItem>
               <SelectItem value="modern">
-                ✨ Nowoczesny - Świeży i dynamiczny (wkrótce)
+                ✨ Nowoczesny - Świeży i dynamiczny z gradientami
               </SelectItem>
               <SelectItem value="classic">
                 📋 Klasyczny - Tradycyjny i sprawdzony (wkrótce)
               </SelectItem>
               <SelectItem value="minimal">
-                ⚪ Minimalistyczny - Prostota i elegancja (wkrótce)
+                ⚪ Minimalistyczny - Skandynawski, maksimum białej przestrzeni
               </SelectItem>
             </SelectContent>
           </Select>
+
+          {/* Language Selector */}
+          <div>
+            <label className="text-sm font-medium mb-2 block">Język CV / CV Language</label>
+            <Select
+              value={cvData.customization.language}
+              onValueChange={(value: 'pl' | 'en') => {
+                updateCustomization({ language: value });
+                toast.success(value === 'pl' ? 'Zmieniono na Polski' : 'Changed to English');
+              }}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="pl">🇵🇱 Polski</SelectItem>
+                <SelectItem value="en">🇬🇧 English</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
           {/* ATS Info Tooltip */}
           {template === 'ats' && (
@@ -210,6 +241,6 @@ const CVPreview: React.FC = () => {
       </Card>
     </div>
   );
-};
+});
 
 export default CVPreview;

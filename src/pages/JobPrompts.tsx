@@ -197,7 +197,7 @@ Dla każdego scenariusza stwórz wiadomość/tekst, która jest:
     },
     {
       id: 'cover-letter',
-      title: 'List motywacyjny',
+      title: 'List motywacyjny / Od A do Z rekrutacji',
       icon: Mail,
       color: 'from-yellow-500 to-yellow-600',
       prompts: [
@@ -1136,9 +1136,9 @@ Długość: 1-1.5 minuty mówienia.`
           </div>
         </div>
 
-        {/* Categories with Accordion */}
+        {/* Categories with Accordion - 2 Column Grid */}
         <div className="container mx-auto px-4 py-12">
-          <Accordion type="single" collapsible className="space-y-6">
+          <Accordion type="single" collapsible className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {categories.map((category, categoryIndex) => (
               <motion.div
                 key={category.id}
@@ -1148,7 +1148,7 @@ Długość: 1-1.5 minuty mówienia.`
               >
                 <AccordionItem
                   value={category.id}
-                  className="border-2 border-border rounded-lg bg-card shadow-md hover:shadow-xl transition-all overflow-hidden"
+                  className="border-2 border-border rounded-lg bg-card shadow-md hover:shadow-xl transition-all overflow-hidden h-full"
                 >
                   <AccordionTrigger className="px-6 py-4 hover:no-underline group">
                     <div className="flex items-center gap-4 w-full">
@@ -1167,42 +1167,52 @@ Długość: 1-1.5 minuty mówienia.`
                   </AccordionTrigger>
                   <AccordionContent className="px-6 pb-6">
                     <div className="grid gap-4 mt-4">
-                      {category.prompts.map((prompt) => (
-                        <Card
-                          key={prompt.id}
-                          className="border-l-4 border-l-primary/50 hover:border-l-primary transition-all hover:shadow-md"
-                        >
-                          <CardHeader className="pb-3">
-                            <div className="flex items-start justify-between gap-4">
-                              <div className="flex-1">
-                                <CardTitle className="text-lg mb-1">{prompt.title}</CardTitle>
-                                <CardDescription>{prompt.description}</CardDescription>
+                      {category.prompts.map((prompt) => {
+                        // Get first 2-3 sentences for preview
+                        const getPreview = (text: string) => {
+                          const sentences = text.split(/[.!?]+/).filter(s => s.trim());
+                          return sentences.slice(0, 2).join('. ') + '...';
+                        };
+
+                        return (
+                          <Card
+                            key={prompt.id}
+                            className="border-l-4 border-l-primary/50 hover:border-l-primary transition-all hover:shadow-lg hover:scale-[1.02]"
+                          >
+                            <CardHeader className="pb-3">
+                              <div className="flex items-start justify-between gap-4">
+                                <div className="flex-1">
+                                  <CardTitle className="text-lg mb-2 font-bold">{prompt.title}</CardTitle>
+                                  <CardDescription className="mb-3">{prompt.description}</CardDescription>
+
+                                  {/* NEW: Prompt Preview */}
+                                  <p className="text-sm text-muted-foreground italic leading-relaxed line-clamp-3">
+                                    "{getPreview(prompt.prompt)}"
+                                  </p>
+                                </div>
                               </div>
-                              <Badge className={`${getLevelColor(prompt.level)} border`}>
-                                {prompt.level}
-                              </Badge>
-                            </div>
-                          </CardHeader>
-                          <CardContent>
-                            <Button
-                              className="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-opacity"
-                              onClick={() => copyToClipboard(prompt.prompt, prompt.id)}
-                            >
-                              {copiedId === prompt.id ? (
-                                <>
-                                  <CheckCircle className="mr-2 h-4 w-4" />
-                                  Skopiowano!
-                                </>
-                              ) : (
-                                <>
-                                  <Copy className="mr-2 h-4 w-4" />
-                                  Kopiuj prompt
-                                </>
-                              )}
-                            </Button>
-                          </CardContent>
-                        </Card>
-                      ))}
+                            </CardHeader>
+                            <CardContent>
+                              <Button
+                                className="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-opacity"
+                                onClick={() => copyToClipboard(prompt.prompt, prompt.id)}
+                              >
+                                {copiedId === prompt.id ? (
+                                  <>
+                                    <CheckCircle className="mr-2 h-4 w-4" />
+                                    Skopiowano!
+                                  </>
+                                ) : (
+                                  <>
+                                    <Copy className="mr-2 h-4 w-4" />
+                                    Kopiuj prompt
+                                  </>
+                                )}
+                              </Button>
+                            </CardContent>
+                          </Card>
+                        );
+                      })}
                     </div>
                   </AccordionContent>
                 </AccordionItem>

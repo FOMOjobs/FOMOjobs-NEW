@@ -6,7 +6,7 @@ import { HelmetProvider } from "react-helmet-async";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, memo } from "react";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 
@@ -28,12 +28,12 @@ const Chat = lazy(() => import("./pages/Chat"));
 const Admin = lazy(() => import("./pages/Admin"));
 const Achievements = lazy(() => import("./pages/Achievements"));
 
-// Loading spinner component
-const LoadingSpinner = () => (
+// Loading spinner component - memoized
+const LoadingSpinner = memo(() => (
   <div className="min-h-screen flex items-center justify-center bg-background">
     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
   </div>
-);
+));
 
 const queryClient = new QueryClient();
 

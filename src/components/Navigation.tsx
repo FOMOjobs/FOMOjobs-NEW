@@ -3,7 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Menu, X, Globe, Bell, User, LogOut, Flag } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
-import logo from '@/assets/mlody-krakow-logo.png';
+// Using fomo-bell-logo from public directory
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,7 +31,7 @@ export const Navigation = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <img src={logo} alt="Młody Kraków" className="h-12 w-auto" />
+            <img src="/fomo-bell-logo.png" alt="FOMO Jobs" className="h-12 w-auto" loading="lazy" />
           </Link>
 
           {/* Desktop Navigation */}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { CVData } from '@/types/cv';
 
 interface ExecutiveTemplateProps {
@@ -24,7 +24,7 @@ interface ExecutiveTemplateProps {
  * - Comfortable spacing - not cramped
  */
 
-const ExecutiveTemplate: React.FC<ExecutiveTemplateProps> = ({
+const ExecutiveTemplate: React.FC<ExecutiveTemplateProps> = memo(({
   data,
   primaryColor = '#1e3a8a', // Navy blue
   secondaryColor = '#475569'  // Gray
@@ -422,6 +422,6 @@ const ExecutiveTemplate: React.FC<ExecutiveTemplateProps> = ({
       />
     </div>
   );
-};
+});
 
 export default ExecutiveTemplate;

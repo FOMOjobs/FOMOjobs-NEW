@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, memo } from 'react';
 import Cropper, { Area } from 'react-easy-crop';
 import { Upload, X, Camera } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -64,7 +64,7 @@ const getCroppedImg = async (
   });
 };
 
-export function PhotoUpload({ value, onChange }: PhotoUploadProps) {
+export const PhotoUpload = memo(function PhotoUpload({ value, onChange }: PhotoUploadProps) {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
@@ -221,4 +221,4 @@ export function PhotoUpload({ value, onChange }: PhotoUploadProps) {
       </Dialog>
     </div>
   );
-}
+});

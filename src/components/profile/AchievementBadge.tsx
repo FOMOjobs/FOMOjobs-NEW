@@ -1,8 +1,3 @@
-import obwarzanekBrown from '@/assets/obwarzanek-brown.png';
-import obwarzanekSilver from '@/assets/obwarzanek-silver.png';
-import obwarzanekBronze from '@/assets/obwarzanek-bronze.png';
-import obwarzanekGold from '@/assets/obwarzanek-gold.png';
-import obwarzanekDiamond from '@/assets/obwarzanek-diamond.png';
 import { cn } from '@/lib/utils';
 
 export type BadgeTier = 'szewczyk' | 'lajkonik' | 'smok' | 'bugle' | 'ambasador';
@@ -15,7 +10,7 @@ interface AchievementBadgeProps {
 
 const badgeData: Record<BadgeTier, {
   name: string;
-  image: string;
+  icon: string;
   color: string;
   minActivities: number;
   maxActivities?: number;
@@ -23,7 +18,7 @@ const badgeData: Record<BadgeTier, {
 }> = {
   szewczyk: {
     name: 'Odkrywca Krakowa',
-    image: obwarzanekBrown,
+    icon: '🥨',
     color: 'from-amber-700 to-amber-900',
     minActivities: 1,
     maxActivities: 1,
@@ -31,7 +26,7 @@ const badgeData: Record<BadgeTier, {
   },
   lajkonik: {
     name: 'Galopujący Pomocnik',
-    image: obwarzanekSilver,
+    icon: '🐴',
     color: 'from-slate-400 to-slate-600',
     minActivities: 2,
     maxActivities: 5,
@@ -39,7 +34,7 @@ const badgeData: Record<BadgeTier, {
   },
   smok: {
     name: 'Strażnik Smoka',
-    image: obwarzanekBronze,
+    icon: '🐉',
     color: 'from-orange-600 to-orange-800',
     minActivities: 6,
     maxActivities: 10,
@@ -47,7 +42,7 @@ const badgeData: Record<BadgeTier, {
   },
   bugle: {
     name: 'Hejnalista Dobroci',
-    image: obwarzanekGold,
+    icon: '🎺',
     color: 'from-yellow-400 to-yellow-600',
     minActivities: 11,
     maxActivities: 20,
@@ -55,7 +50,7 @@ const badgeData: Record<BadgeTier, {
   },
   ambasador: {
     name: 'Ambasador Krakowa',
-    image: obwarzanekDiamond,
+    icon: '👑',
     color: 'from-blue-400 to-blue-600',
     minActivities: 21,
     description: 'Największy honor! 20+ wolontariatów 👑'
@@ -75,11 +70,7 @@ export function AchievementBadge({ tier, activitiesCompleted, className }: Achie
         cursor-pointer
         p-2
       `}>
-        <img 
-          src={badge.image} 
-          alt={badge.name}
-          className="w-full h-full object-contain drop-shadow-lg"
-        />
+        <span className="text-5xl">{badge.icon}</span>
       </div>
       
       {/* Tooltip on hover */}

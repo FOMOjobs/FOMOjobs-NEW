@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { CVData } from '@/types/cv';
 
 interface ATSTemplateProps {
@@ -23,7 +23,7 @@ interface ATSTemplateProps {
  * - Standard date format (MM/YYYY)
  */
 
-const ATSTemplate: React.FC<ATSTemplateProps> = ({ data }) => {
+const ATSTemplate: React.FC<ATSTemplateProps> = memo(({ data }) => {
   const { personal, experience, education, skills, languages } = data;
 
   // Format date to MM/YYYY (ATS standard)
@@ -288,6 +288,6 @@ const ATSTemplate: React.FC<ATSTemplateProps> = ({ data }) => {
       </div>
     </div>
   );
-};
+});
 
 export default ATSTemplate;

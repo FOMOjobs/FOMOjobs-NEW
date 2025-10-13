@@ -79,6 +79,7 @@ export const createEmptyCVData = (): CVData => ({
     secondaryColor: '#EC4899',
     font: 'Inter',
     spacing: 'normal',
+    language: 'pl',
     showSections: {
       personal: true,
       summary: true,

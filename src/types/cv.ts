@@ -50,7 +50,7 @@ export interface LanguageItem {
   certification?: string;
 }
 
-export type CVTemplate = 'modern' | 'classic' | 'minimal' | 'creative' | 'tech' | 'academic' | 'executive' | 'ats';
+export type CVTemplate = 'modern' | 'classic' | 'minimal' | 'creative' | 'tech' | 'academic' | 'executive' | 'ats' | 'professional';
 
 export type CVSpacing = 'compact' | 'normal' | 'spacious';
 
@@ -60,6 +60,7 @@ export interface CVCustomization {
   secondaryColor: string;
   font: string;
   spacing: CVSpacing;
+  language: 'pl' | 'en';
   showSections: {
     personal: boolean;
     summary: boolean;
