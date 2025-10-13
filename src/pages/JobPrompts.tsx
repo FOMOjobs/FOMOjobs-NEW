@@ -192,6 +192,13 @@ Dla każdego scenariusza stwórz wiadomość/tekst, która jest:
 - Konkretna (z przykładami)
 - Profesjonalna
 - Około 150-200 słów`
+        },
+        {
+          id: 'cv-summary',
+          title: 'Podsumowanie profilu (Summary)',
+          description: 'Krótkie, przyciągające uwagę podsumowanie do CV',
+          level: 'Beginner',
+          prompt: `Jesteś ekspertem od pisania profesjonalnych CV. Stwórz zwięzłe, przyciągające uwagę podsumowanie profilu (2-3 zdania) dla stanowiska [NAZWA STANOWISKA]. Uwzględnij: moją specjalizację w [OBSZAR], [X] lat doświadczenia, kluczowe umiejętności: [LISTA], oraz główne osiągnięcia: [PRZYKŁADY]. Podsumowanie powinno być konkretne, mierzalne i pokazywać unikalną wartość, jaką wnoszę.`
         }
       ]
     },
@@ -320,6 +327,13 @@ Email powinien:
 Ton: ciepły, wdzięczny, profesjonalny, stanowczy.
 Długość: 100-150 słów.
 Wysłać: jak najszybciej po podjęciu decyzji.`
+        },
+        {
+          id: 'job-change-motivation',
+          title: 'Motywacja zmiany pracy',
+          description: 'Jak elegancko wyjaśnić powody zmiany',
+          level: 'Beginner',
+          prompt: `Pomóż mi sformułować profesjonalne wyjaśnienie powodów zmiany pracy dla stanowiska [NAZWA STANOWISKA]. Obecna sytuacja: [KRÓTKI OPIS - np. 'szukam większych wyzwań', 'relokacja', 'zmiana branży']. Napisz to w sposób pozytywny, skupiając się na rozwoju i aspiracjach, a nie na krytyce obecnego pracodawcy. 2-3 zdania, które brzmią szczerze ale profesjonalnie.`
         }
       ]
     },
@@ -539,6 +553,13 @@ Wygeneruj plan działania:
    - Kiedy uznać za porażkę i iść dalej
 
 Wszystko z zachowaniem profesjonalizmu i dobrych relacji.`
+        },
+        {
+          id: 'questions-for-recruiter',
+          title: 'Pytania do rekrutera',
+          description: 'Inteligentne pytania na koniec rozmowy',
+          level: 'Intermediate',
+          prompt: `Zaproponuj 5 inteligentnych pytań, które mogę zadać rekruterowi na koniec rozmowy kwalifikacyjnej na stanowisko [NAZWA STANOWISKA] w firmie z branży [BRANŻA]. Pytania powinny pokazać moje zainteresowanie firmą, zrozumienie roli i ambicje rozwojowe. Unikaj pytań o wynagrodzenie (to na później). Każde pytanie z krótkim wyjaśnieniem, dlaczego warto je zadać.`
         }
       ]
     },
@@ -709,6 +730,13 @@ Przeanalizuj i podaj:
    - Jak uzasadnić
 
 Cel: iść na rozmowę wiedząc swoją wartość.`
+        },
+        {
+          id: 'company-culture-analysis',
+          title: 'Analiza kultury organizacyjnej',
+          description: 'Sprawdź czy firma do Ciebie pasuje',
+          level: 'Intermediate',
+          prompt: `Pomóż mi przeanalizować kulturę organizacyjną firmy [NAZWA FIRMY] na podstawie dostępnych informacji. Sprawdź: (1) wartości deklarowane na stronie, (2) opinie pracowników (Glassdoor, Gowork), (3) aktywność w social media, (4) benefity i polityki HR. Podsumuj w 3 kategoriach: PLUSY (co mi pasuje), MINUSY (red flags), PYTANIA (co sprawdzić na rozmowie). Bądź obiektywny i konkretny.`
         }
       ]
     },
@@ -1077,25 +1105,6 @@ Długość: 1-1.5 minuty mówienia.`
     }
   ];
 
-  const copyToClipboard = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedId(id);
-    toast.success('✅ Prompt skopiowany!');
-    setTimeout(() => setCopiedId(null), 2000);
-  };
-
-  const getLevelColor = (level: string) => {
-    switch (level) {
-      case 'Beginner':
-        return 'bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20';
-      case 'Intermediate':
-        return 'bg-yellow-500/10 text-yellow-700 dark:text-yellow-400 border-yellow-500/20';
-      case 'Advanced':
-        return 'bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20';
-      default:
-        return 'bg-gray-500/10 text-gray-700 dark:text-gray-400 border-gray-500/20';
-    }
-  };
 
   return (
     <>
@@ -1136,9 +1145,9 @@ Długość: 1-1.5 minuty mówienia.`
           </div>
         </div>
 
-        {/* Categories with Accordion - 2 Column Grid */}
+        {/* Categories with Accordion - Full Width */}
         <div className="container mx-auto px-4 py-12">
-          <Accordion type="single" collapsible className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Accordion type="single" collapsible className="space-y-6">
             {categories.map((category, categoryIndex) => (
               <motion.div
                 key={category.id}
@@ -1166,50 +1175,57 @@ Długość: 1-1.5 minuty mówienia.`
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="px-6 pb-6">
-                    <div className="grid gap-4 mt-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
                       {category.prompts.map((prompt) => {
-                        // Get first 2-3 sentences for preview
+                        // Extract preview (first 120-150 characters)
                         const getPreview = (text: string) => {
-                          const sentences = text.split(/[.!?]+/).filter(s => s.trim());
-                          return sentences.slice(0, 2).join('. ') + '...';
+                          const cleanText = text.trim();
+                          if (cleanText.length <= 150) return cleanText;
+                          return cleanText.slice(0, 150).trim() + '...';
                         };
 
                         return (
                           <Card
                             key={prompt.id}
-                            className="border-l-4 border-l-primary/50 hover:border-l-primary transition-all hover:shadow-lg hover:scale-[1.02]"
+                            className="p-4 hover:shadow-lg hover:scale-105 transition-all cursor-pointer flex flex-col"
                           >
-                            <CardHeader className="pb-3">
-                              <div className="flex items-start justify-between gap-4">
-                                <div className="flex-1">
-                                  <CardTitle className="text-lg mb-2 font-bold">{prompt.title}</CardTitle>
-                                  <CardDescription className="mb-3">{prompt.description}</CardDescription>
+                            <h3 className="font-semibold text-lg mb-2">{prompt.title}</h3>
+                            <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">{prompt.description}</p>
 
-                                  {/* NEW: Prompt Preview */}
-                                  <p className="text-sm text-muted-foreground italic leading-relaxed line-clamp-3">
-                                    "{getPreview(prompt.prompt)}"
-                                  </p>
-                                </div>
-                              </div>
-                            </CardHeader>
-                            <CardContent>
-                              <Button
-                                className="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-opacity"
-                                onClick={() => copyToClipboard(prompt.prompt, prompt.id)}
-                              >
-                                {copiedId === prompt.id ? (
-                                  <>
-                                    <CheckCircle className="mr-2 h-4 w-4" />
-                                    Skopiowano!
-                                  </>
-                                ) : (
-                                  <>
-                                    <Copy className="mr-2 h-4 w-4" />
-                                    Kopiuj prompt
-                                  </>
-                                )}
-                              </Button>
-                            </CardContent>
+                            {/* Divider */}
+                            <div className="border-t border-gray-200 dark:border-gray-700 my-3"></div>
+
+                            {/* Preview */}
+                            <p className="text-sm text-gray-600 dark:text-gray-500 italic mb-4 flex-grow leading-relaxed">
+                              "{getPreview(prompt.prompt)}"
+                            </p>
+
+                            {/* Divider */}
+                            <div className="border-t border-gray-200 dark:border-gray-700 mb-3"></div>
+
+                            <Button
+                              onClick={() => {
+                                navigator.clipboard.writeText(prompt.prompt);
+                                setCopiedId(prompt.id);
+                                const preview = prompt.prompt.slice(0, 50).trim() + '...';
+                                toast.success(`Prompt skopiowany! ✓\n${preview}`, {
+                                  duration: 3000,
+                                });
+                                setTimeout(() => setCopiedId(null), 2000);
+                              }}
+                              className="w-full bg-gradient-to-r from-purple-600 to-yellow-500 hover:opacity-90 transition-opacity"
+                            >
+                              {copiedId === prompt.id ? (
+                                <>
+                                  <CheckCircle className="mr-2 h-4 w-4" />
+                                  Skopiowano!
+                                </>
+                              ) : (
+                                <>
+                                  📋 Skopiuj prompt
+                                </>
+                              )}
+                            </Button>
                           </Card>
                         );
                       })}
