@@ -2,6 +2,8 @@ import { useState, useEffect, useMemo } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 import FOMOJobsNavbar from '@/components/FOMOJobsNavbar';
 import SEO from '@/components/SEO';
 import {
@@ -104,6 +106,12 @@ const INDUSTRIES = [
   'Mobility',
 ];
 
+const WORK_MODES = ['Remote', 'Hybrid', 'Office'];
+
+const LOCATIONS = ['Warszawa', 'Kraków', 'Wrocław', 'Gdańsk', 'Poznań', 'Remote'];
+
+const CONTRACT_TYPES = ['B2B', 'Umowa o pracę', 'Umowa zlecenie'];
+
 const CHART_COLORS = {
   purple: '#8B5CF6',
   yellow: '#F4D03F',
@@ -137,6 +145,12 @@ export default function B2BAnalytics() {
   const [selectedIndustries, setSelectedIndustries] = useState<string[]>([]);
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([]);
   const [dateRange, setDateRange] = useState<'7d' | '30d' | '90d'>('30d');
+  const [selectedWorkModes, setSelectedWorkModes] = useState<string[]>([]);
+  const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
+  const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
+  const [selectedContractTypes, setSelectedContractTypes] = useState<string[]>([]);
+  const [salaryMin, setSalaryMin] = useState<number>(0);
+  const [salaryMax, setSalaryMax] = useState<number>(100000);
 
   // Fetch data
   useEffect(() => {
@@ -211,8 +225,56 @@ export default function B2BAnalytics() {
       );
     }
 
+    // Filter by work mode
+    if (selectedWorkModes.length > 0) {
+      filtered = filtered.filter((job) =>
+        selectedWorkModes.includes(job.work_mode)
+      );
+    }
+
+    // Filter by location
+    if (selectedLocations.length > 0) {
+      filtered = filtered.filter((job) =>
+        selectedLocations.includes(job.location)
+      );
+    }
+
+    // Filter by seniority level
+    if (selectedLevels.length > 0) {
+      filtered = filtered.filter((job) =>
+        selectedLevels.includes(job.level)
+      );
+    }
+
+    // Filter by contract type
+    if (selectedContractTypes.length > 0) {
+      filtered = filtered.filter((job) =>
+        selectedContractTypes.includes(job.contract_type)
+      );
+    }
+
+    // Filter by salary range
+    if (salaryMin > 0 || salaryMax < 100000) {
+      filtered = filtered.filter((job) => {
+        if (!job.salary_min || !job.salary_max) return false;
+        const avgSalary = (job.salary_min + job.salary_max) / 2;
+        return avgSalary >= salaryMin && avgSalary <= salaryMax;
+      });
+    }
+
     return filtered;
-  }, [jobListings, selectedIndustries, selectedCompanies, companies]);
+  }, [
+    jobListings,
+    selectedIndustries,
+    selectedCompanies,
+    companies,
+    selectedWorkModes,
+    selectedLocations,
+    selectedLevels,
+    selectedContractTypes,
+    salaryMin,
+    salaryMax,
+  ]);
 
   // Calculate statistics
   const stats = useMemo(() => {
@@ -535,6 +597,163 @@ export default function B2BAnalytics() {
             </div>
           </div>
 
+          {/* Additional Filters Row 2 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+            {/* Work Mode Filter */}
+            <div>
+              <Label className="mb-2 block">
+                <MapPin className="w-4 h-4 inline mr-2" />
+                Tryb pracy
+              </Label>
+              <Select
+                value={selectedWorkModes[0] || 'all'}
+                onValueChange={(value) =>
+                  setSelectedWorkModes(value === 'all' ? [] : [value])
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Wszystkie" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Wszystkie</SelectItem>
+                  {WORK_MODES.map((mode) => (
+                    <SelectItem key={mode} value={mode}>
+                      {mode}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Location Filter */}
+            <div>
+              <Label className="mb-2 block">
+                <Building2 className="w-4 h-4 inline mr-2" />
+                Lokalizacja
+              </Label>
+              <Select
+                value={selectedLocations[0] || 'all'}
+                onValueChange={(value) =>
+                  setSelectedLocations(value === 'all' ? [] : [value])
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Wszystkie" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Wszystkie</SelectItem>
+                  {LOCATIONS.map((location) => (
+                    <SelectItem key={location} value={location}>
+                      {location}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Seniority Level Filter */}
+            <div>
+              <Label className="mb-2 block">
+                <Users className="w-4 h-4 inline mr-2" />
+                Poziom doświadczenia
+              </Label>
+              <Select
+                value={selectedLevels[0] || 'all'}
+                onValueChange={(value) =>
+                  setSelectedLevels(value === 'all' ? [] : [value])
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Wszystkie" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Wszystkie</SelectItem>
+                  {SENIORITY_LEVELS.map((level) => (
+                    <SelectItem key={level} value={level}>
+                      {level}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Contract Type Filter */}
+            <div>
+              <Label className="mb-2 block">
+                <Briefcase className="w-4 h-4 inline mr-2" />
+                Typ umowy
+              </Label>
+              <Select
+                value={selectedContractTypes[0] || 'all'}
+                onValueChange={(value) =>
+                  setSelectedContractTypes(value === 'all' ? [] : [value])
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Wszystkie" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Wszystkie</SelectItem>
+                  {CONTRACT_TYPES.map((type) => (
+                    <SelectItem key={type} value={type}>
+                      {type}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {/* Salary Range Filter Row 3 */}
+          <div className="mt-4 p-4 bg-purple-50 dark:bg-gray-900 rounded-lg">
+            <Label className="mb-3 block font-semibold">
+              <TrendingUp className="w-4 h-4 inline mr-2" />
+              Zakres wynagrodzenia (PLN/miesiąc)
+            </Label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label className="mb-2 block text-sm text-gray-600 dark:text-gray-400">
+                  Min
+                </Label>
+                <Input
+                  type="number"
+                  min={0}
+                  max={100000}
+                  step={1000}
+                  value={salaryMin}
+                  onChange={(e) => setSalaryMin(Number(e.target.value))}
+                  placeholder="0"
+                  className="w-full"
+                />
+              </div>
+              <div>
+                <Label className="mb-2 block text-sm text-gray-600 dark:text-gray-400">
+                  Max
+                </Label>
+                <Input
+                  type="number"
+                  min={0}
+                  max={100000}
+                  step={1000}
+                  value={salaryMax}
+                  onChange={(e) => setSalaryMax(Number(e.target.value))}
+                  placeholder="100000"
+                  className="w-full"
+                />
+              </div>
+            </div>
+            <div className="mt-2 flex gap-2">
+              <Badge variant="outline" className="text-xs">
+                {salaryMin > 0 ? `${(salaryMin / 1000).toFixed(0)}k` : '0'} PLN
+              </Badge>
+              <span className="text-gray-400">-</span>
+              <Badge variant="outline" className="text-xs">
+                {salaryMax < 100000 ? `${(salaryMax / 1000).toFixed(0)}k` : '100k+'} PLN
+              </Badge>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
           <div className="flex gap-2 mt-4">
             <Button
               variant="outline"
@@ -542,11 +761,17 @@ export default function B2BAnalytics() {
               onClick={() => {
                 setSelectedIndustries([]);
                 setSelectedCompanies([]);
+                setSelectedWorkModes([]);
+                setSelectedLocations([]);
+                setSelectedLevels([]);
+                setSelectedContractTypes([]);
+                setSalaryMin(0);
+                setSalaryMax(100000);
                 setDateRange('30d');
                 fetchData();
               }}
             >
-              Wyczyść filtry
+              Wyczyść wszystkie filtry
             </Button>
             <Button
               variant="outline"
