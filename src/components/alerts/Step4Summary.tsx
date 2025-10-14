@@ -244,12 +244,29 @@ const Step4Summary = ({ editMode = false, alertId }: Step4SummaryProps) => {
         </div>
       )}
 
-      {/* Validation Message */}
-      {!canSave && (
-        <p className="text-sm text-red-600">
-          ⚠️ Uzupełnij wszystkie pola, aby zapisać alert
-        </p>
-      )}
+      {/* Validation Errors */}
+      <div className="space-y-2">
+        {!alertName && (
+          <p className="text-sm text-red-600">
+            ⚠️ Podaj nazwę alertu
+          </p>
+        )}
+        {selectedCompanies.length === 0 && (
+          <p className="text-sm text-red-600">
+            ⚠️ Nie wybrano firm
+          </p>
+        )}
+        {selectedLevels.length === 0 && (
+          <p className="text-sm text-red-600">
+            ⚠️ Nie wybrano poziomów doświadczenia
+          </p>
+        )}
+        {selectedCategories.length === 0 && (
+          <p className="text-sm text-red-600">
+            ⚠️ Nie wybrano kategorii stanowisk
+          </p>
+        )}
+      </div>
     </div>
   );
 };

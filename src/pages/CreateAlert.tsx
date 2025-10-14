@@ -243,7 +243,7 @@ const CreateAlert = () => {
 
         {/* Progress Bar */}
         <div className="container mx-auto px-4 -mt-4">
-          <ProgressBar currentStep={currentStep} steps={STEPS} />
+          <ProgressBar currentStep={currentStep} />
         </div>
 
         {/* Step Content */}
@@ -277,9 +277,9 @@ const CreateAlert = () => {
                 <Button
                   onClick={handleSave}
                   disabled={!canProceed() || isSaving}
-                  className="bg-green-600 hover:bg-green-700 text-white"
+                  className="bg-yellow-500 hover:bg-yellow-600 text-purple-900 font-semibold"
                 >
-                  {isSaving ? 'Zapisywanie...' : '✓ Zapisz alert'}
+                  {isSaving ? 'Zapisywanie...' : 'Zapisz Alert'}
                 </Button>
               )}
             </div>
