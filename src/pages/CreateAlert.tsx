@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAlertStore } from '@/stores/alertStore';
 import { COMPANIES, EXPERIENCE_LEVELS, JOB_CATEGORIES } from '@/data/alertData';
+import { Button } from '@/components/ui/button';
 import FOMOJobsNavbar from '@/components/FOMOJobsNavbar';
 import ProgressBar from '@/components/alerts/ProgressBar';
 import Step1Companies from '@/components/alerts/Step1Companies';
@@ -27,9 +28,17 @@ const CreateAlert = () => {
   const navigate = useNavigate();
   const [isEditMode, setIsEditMode] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   const {
     currentStep,
+    selectedCompanies,
+    selectedLevels,
+    selectedCategories,
+    alertName,
+    notificationTime,
+    nextStep,
+    prevStep,
     setCompanies,
     setLevels,
     setCategories,
@@ -98,6 +107,100 @@ const CreateAlert = () => {
     }
   };
 
+  const handleSave = async () => {
+    setIsSaving(true);
+
+    try {
+      // Get current user
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError || !user) {
+        toast.error('Musisz być zalogowany, aby utworzyć alert');
+        navigate('/auth');
+        return;
+      }
+
+      // Convert IDs to names for storage
+      const companyNames = COMPANIES
+        .filter((c) => selectedCompanies.includes(c.id.toString()))
+        .map((c) => c.name);
+
+      const levelNames = EXPERIENCE_LEVELS
+        .filter((l) => selectedLevels.includes(l.id.toString()))
+        .map((l) => l.name);
+
+      const allPositions = JOB_CATEGORIES.flatMap((g) => g.positions);
+      const categoryNames = allPositions
+        .filter((p) => selectedCategories.includes(p.id.toString()))
+        .map((p) => p.name);
+
+      const alertData = {
+        user_id: user.id,
+        alert_name: alertName.trim(),
+        notification_time: notificationTime,
+        selected_companies: companyNames,
+        selected_levels: levelNames,
+        selected_categories: categoryNames,
+        is_active: true,
+      };
+
+      let result;
+      if (isEditMode && alertId) {
+        // UPDATE existing alert
+        result = await supabase
+          .from('user_alerts' as any)
+          .update(alertData)
+          .eq('id', alertId);
+      } else {
+        // INSERT new alert
+        result = await supabase.from('user_alerts' as any).insert(alertData);
+      }
+
+      if (result.error) {
+        console.error('Error saving alert:', result.error);
+        toast.error('Nie udało się zapisać alertu. Spróbuj ponownie.');
+        return;
+      }
+
+      // Success
+      toast.success(
+        isEditMode
+          ? 'Alert zaktualizowany pomyślnie! 🎉'
+          : 'Alert utworzony pomyślnie! 🎉',
+        {
+          description: `"${alertName}" został pomyślnie ${
+            isEditMode ? 'zaktualizowany' : 'utworzony'
+          }`,
+        }
+      );
+      resetAlert();
+      navigate('/alerts');
+    } catch (error) {
+      console.error('Unexpected error:', error);
+      toast.error('Wystąpił nieoczekiwany błąd');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // Validation for each step
+  const canProceed = () => {
+    if (currentStep === 1) return selectedCompanies.length > 0;
+    if (currentStep === 2) return selectedLevels.length > 0;
+    if (currentStep === 3) return selectedCategories.length > 0;
+    if (currentStep === 4)
+      return (
+        alertName.trim().length >= 3 &&
+        selectedCompanies.length > 0 &&
+        selectedLevels.length > 0 &&
+        selectedCategories.length > 0
+      );
+    return false;
+  };
+
   if (isLoading) {
     return (
       <>
@@ -150,6 +253,36 @@ const CreateAlert = () => {
             {currentStep === 2 && <Step2Levels />}
             {currentStep === 3 && <Step3Categories />}
             {currentStep === 4 && <Step4Summary editMode={isEditMode} alertId={alertId} />}
+
+            {/* Navigation Buttons */}
+            <div className="flex justify-between items-center mt-8 pt-6 border-t border-gray-200">
+              <Button
+                onClick={prevStep}
+                disabled={currentStep === 1 || isSaving}
+                variant="outline"
+                className="bg-white hover:bg-gray-100 text-gray-700 border-gray-300"
+              >
+                ← Wstecz
+              </Button>
+
+              {currentStep < 4 ? (
+                <Button
+                  onClick={nextStep}
+                  disabled={!canProceed() || isSaving}
+                  className="bg-purple-600 hover:bg-purple-700 text-white"
+                >
+                  Dalej →
+                </Button>
+              ) : (
+                <Button
+                  onClick={handleSave}
+                  disabled={!canProceed() || isSaving}
+                  className="bg-green-600 hover:bg-green-700 text-white"
+                >
+                  {isSaving ? 'Zapisywanie...' : '✓ Zapisz alert'}
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       </div>

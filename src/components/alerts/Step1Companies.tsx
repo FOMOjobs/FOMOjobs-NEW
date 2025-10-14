@@ -1,118 +1,59 @@
-// Step 1: Company Selection - Checkbox Grid with Tooltips
+// Step 1: Company Selection - Improved design with tooltips
 // Allows users to select companies to monitor for job alerts
 
 import { useAlertStore } from '@/stores/alertStore';
 import { COMPANIES } from '@/data/alertData';
-import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { Building2, ChevronRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 const Step1Companies = () => {
-  const { selectedCompanies, toggleCompany, setCompanies, nextStep } = useAlertStore();
+  const { selectedCompanies, toggleCompany } = useAlertStore();
 
-  const handleSelectAll = () => {
-    if (selectedCompanies.length === COMPANIES.length) {
-      setCompanies([]);
-    } else {
-      setCompanies(COMPANIES.map((c) => c.id.toString()));
-    }
+  const handleToggle = (id: number) => {
+    toggleCompany(id.toString());
   };
-
-  const canProceed = selectedCompanies.length > 0;
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div>
-        <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
-          <Building2 className="w-6 h-6 text-purple-500" />
-          Wybierz firmy do monitorowania
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">
+          1. Wybierz firmy, które Cię interesują:
         </h2>
-        <p className="text-muted-foreground mt-2">
-          Zaznacz firmy, których oferty pracy chcesz śledzić ({selectedCompanies.length}/
-          {COMPANIES.length} wybranych)
-        </p>
-      </div>
 
-      {/* Select All Button */}
-      <div className="flex justify-end">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleSelectAll}
-          className="text-xs"
-        >
-          {selectedCompanies.length === COMPANIES.length
-            ? 'Odznacz wszystkie'
-            : 'Zaznacz wszystkie'}
-        </Button>
-      </div>
-
-      {/* Companies Grid */}
-      <TooltipProvider>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {COMPANIES.map((company) => {
-            const isSelected = selectedCompanies.includes(company.id.toString());
-
-            return (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+          <TooltipProvider delayDuration={200}>
+            {COMPANIES.map(company => (
               <Tooltip key={company.id}>
                 <TooltipTrigger asChild>
-                  <div
-                    onClick={() => toggleCompany(company.id.toString())}
-                    className={cn(
-                      'flex items-start gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md',
-                      isSelected
-                        ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20 shadow-sm'
-                        : 'border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-600'
-                    )}
-                  >
+                  <label className="flex items-center gap-2 text-sm text-gray-700 hover:text-gray-900 transition-colors duration-200 cursor-pointer py-1 px-2 rounded hover:bg-gray-50">
                     <Checkbox
-                      checked={isSelected}
-                      onCheckedChange={() => toggleCompany(company.id.toString())}
-                      className="mt-0.5"
+                      checked={selectedCompanies.includes(company.id.toString())}
+                      onCheckedChange={() => handleToggle(company.id)}
+                      className="data-[state=checked]:bg-purple-600 data-[state=checked]:border-purple-600"
                     />
-                    <Label
-                      htmlFor={company.id.toString()}
-                      className="flex-1 cursor-pointer font-medium text-sm leading-tight"
-                    >
-                      {company.name}
-                    </Label>
-                  </div>
+                    <span className="flex-1">{company.name}</span>
+                  </label>
                 </TooltipTrigger>
-                <TooltipContent side="top" className="max-w-xs">
-                  <p className="text-xs">{company.tooltip}</p>
+                <TooltipContent
+                  side="top"
+                  className="max-w-xs bg-purple-600 text-white"
+                >
+                  <p className="text-sm">{company.tooltip}</p>
                 </TooltipContent>
               </Tooltip>
-            );
-          })}
+            ))}
+          </TooltipProvider>
         </div>
-      </TooltipProvider>
-
-      {/* Navigation */}
-      <div className="flex justify-end pt-6">
-        <Button
-          onClick={nextStep}
-          disabled={!canProceed}
-          size="lg"
-          className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold shadow-lg disabled:opacity-50"
-        >
-          Dalej: Poziom doświadczenia
-          <ChevronRight className="ml-2 w-5 h-5" />
-        </Button>
       </div>
 
-      {/* Helper text */}
-      {!canProceed && (
-        <p className="text-sm text-red-500 text-center">
-          Wybierz przynajmniej jedną firmę, aby kontynuować
+      {selectedCompanies.length === 0 && (
+        <p className="text-sm text-red-600">
+          ⚠️ Wybierz przynajmniej jedną firmę
         </p>
       )}
     </div>
