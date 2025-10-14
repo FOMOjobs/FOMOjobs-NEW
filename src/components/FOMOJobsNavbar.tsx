@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
-import { Menu, X, ChevronDown, User, Calendar, Award, MessageSquare, Briefcase, Home, FileText, BarChart, BookOpen, BarChart2 } from "lucide-react";
+import { Menu, X, ChevronDown, User, Calendar, Award, MessageSquare, Briefcase, Home, FileText, BarChart, BookOpen, BarChart2, Bell } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -66,6 +66,12 @@ const FOMOJobsNavbar = () => {
       icon: BarChart,
       label: 'FOMO.jobstracker',
       description: 'Śledź swoje aplikacje'
+    },
+    {
+      to: '/alerts',
+      icon: Bell,
+      label: 'FOMO.alerts',
+      description: 'Zarządzaj alertami pracy'
     },
     {
       to: '/b2b/analytics',
@@ -219,6 +225,22 @@ const FOMOJobsNavbar = () => {
               FAQ
             </button>
 
+            <Link to="/alerts/create">
+              <Button
+                size="sm"
+                variant="outline"
+                className={cn(
+                  "font-semibold shadow-md hover:shadow-lg transition-all border-2",
+                  isScrolled
+                    ? "border-purple-500 text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-900/20"
+                    : "border-white text-white hover:bg-white/10"
+                )}
+              >
+                <Bell className="w-4 h-4 mr-2" />
+                Ustaw alert
+              </Button>
+            </Link>
+
             <Link to="/auth">
               <Button
                 size="sm"
@@ -320,10 +342,21 @@ const FOMOJobsNavbar = () => {
               FAQ
             </button>
 
+            <Link to="/alerts/create" onClick={() => setIsMenuOpen(false)}>
+              <Button
+                size="sm"
+                variant="outline"
+                className="w-full border-2 border-purple-500 text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-900/20 mt-4 font-semibold"
+              >
+                <Bell className="w-4 h-4 mr-2" />
+                Ustaw alert
+              </Button>
+            </Link>
+
             <Link to="/auth" onClick={() => setIsMenuOpen(false)}>
               <Button
                 size="sm"
-                className="w-full bg-secondary hover:bg-secondary/90 text-secondary-foreground mt-4 font-semibold"
+                className="w-full bg-secondary hover:bg-secondary/90 text-secondary-foreground mt-2 font-semibold"
               >
                 Zaloguj się
               </Button>

@@ -981,7 +981,6 @@ const JobTracker = () => {
             </div>
           </div>
         </div>
-        </div>
       </div>
 
       <FOMOJobsFooter />
