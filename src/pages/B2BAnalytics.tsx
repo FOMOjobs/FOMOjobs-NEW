@@ -1,0 +1,587 @@
+import { useState, useEffect, useMemo } from 'react';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  BarChart,
+  Bar,
+  LineChart,
+  Line,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts';
+import {
+  TrendingUp,
+  TrendingDown,
+  Briefcase,
+  Users,
+  Building2,
+  MapPin,
+  Calendar,
+  Filter,
+  Download,
+  RefreshCcw,
+} from 'lucide-react';
+import { supabase } from '@/lib/supabaseClient';
+import { toast } from 'sonner';
+
+// Types
+interface Company {
+  id: string;
+  name: string;
+  industry: string;
+  size: string;
+  city: string;
+  is_monitored: boolean;
+}
+
+interface JobListing {
+  id: string;
+  company_id: string;
+  title: string;
+  level: string;
+  category: string;
+  location: string;
+  work_mode: string;
+  contract_type: string;
+  salary_min: number | null;
+  salary_max: number | null;
+  technologies: string[];
+  benefits: string[];
+  posted_at: string;
+  is_active: boolean;
+}
+
+interface DailyStats {
+  date: string;
+  company_id: string;
+  total_active: number;
+  new_listings: number;
+  closed_listings: number;
+  by_level: Record<string, number>;
+  by_category: Record<string, number>;
+}
+
+const SENIORITY_LEVELS = [
+  'Stażysta/Praktykant',
+  'Junior',
+  'Mid/Regular',
+  'Senior',
+  'Lead/Principal',
+  'Manager/Head',
+  'Director/VP',
+  'C-level',
+];
+
+const INDUSTRIES = [
+  'IT Services',
+  'Consulting',
+  'FinTech',
+  'E-commerce',
+  'Healthcare',
+  'Gaming',
+  'Logistics',
+  'Food Delivery',
+  'Mobility',
+];
+
+const CHART_COLORS = {
+  purple: '#8B5CF6',
+  yellow: '#F4D03F',
+  blue: '#3B82F6',
+  green: '#10B981',
+  red: '#EF4444',
+  orange: '#F97316',
+  pink: '#EC4899',
+  indigo: '#6366F1',
+};
+
+const PIE_COLORS = [
+  CHART_COLORS.purple,
+  CHART_COLORS.yellow,
+  CHART_COLORS.blue,
+  CHART_COLORS.green,
+  CHART_COLORS.orange,
+  CHART_COLORS.pink,
+  CHART_COLORS.indigo,
+  CHART_COLORS.red,
+];
+
+export default function B2BAnalytics() {
+  // State
+  const [companies, setCompanies] = useState<Company[]>([]);
+  const [jobListings, setJobListings] = useState<JobListing[]>([]);
+  const [dailyStats, setDailyStats] = useState<DailyStats[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Filters
+  const [selectedIndustries, setSelectedIndustries] = useState<string[]>([]);
+  const [selectedCompanies, setSelectedCompanies] = useState<string[]>([]);
+  const [dateRange, setDateRange] = useState<'7d' | '30d' | '90d'>('30d');
+
+  // Fetch data
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+
+      // Fetch companies
+      const { data: companiesData, error: companiesError } = await supabase
+        .from('companies')
+        .select('*')
+        .eq('is_monitored', true)
+        .order('name');
+
+      if (companiesError) throw companiesError;
+      setCompanies(companiesData || []);
+
+      // Fetch job listings
+      const daysAgo = dateRange === '7d' ? 7 : dateRange === '30d' ? 30 : 90;
+      const startDate = new Date();
+      startDate.setDate(startDate.getDate() - daysAgo);
+
+      const { data: jobsData, error: jobsError } = await supabase
+        .from('job_listings')
+        .select('*')
+        .gte('posted_at', startDate.toISOString().split('T')[0])
+        .order('posted_at', { ascending: false });
+
+      if (jobsError) throw jobsError;
+      setJobListings(jobsData || []);
+
+      // Fetch daily stats
+      const { data: statsData, error: statsError } = await supabase
+        .from('daily_stats')
+        .select('*')
+        .gte('date', startDate.toISOString().split('T')[0])
+        .order('date');
+
+      if (statsError) throw statsError;
+      setDailyStats(statsData || []);
+
+      toast.success('Dane załadowane pomyślnie');
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      toast.error('Błąd podczas ładowania danych');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Filtered data based on selected filters
+  const filteredJobListings = useMemo(() => {
+    let filtered = jobListings;
+
+    // Filter by industry
+    if (selectedIndustries.length > 0) {
+      const companyIdsInSelectedIndustries = companies
+        .filter((c) => selectedIndustries.includes(c.industry))
+        .map((c) => c.id);
+      filtered = filtered.filter((job) =>
+        companyIdsInSelectedIndustries.includes(job.company_id)
+      );
+    }
+
+    // Filter by company
+    if (selectedCompanies.length > 0) {
+      filtered = filtered.filter((job) =>
+        selectedCompanies.includes(job.company_id)
+      );
+    }
+
+    return filtered;
+  }, [jobListings, selectedIndustries, selectedCompanies, companies]);
+
+  // Calculate statistics
+  const stats = useMemo(() => {
+    const total = filteredJobListings.length;
+    const active = filteredJobListings.filter((j) => j.is_active).length;
+
+    // New this week
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    const newThisWeek = filteredJobListings.filter(
+      (j) => new Date(j.posted_at) >= oneWeekAgo
+    ).length;
+
+    // Average salary
+    const jobsWithSalary = filteredJobListings.filter(
+      (j) => j.salary_min && j.salary_max
+    );
+    const avgSalary =
+      jobsWithSalary.length > 0
+        ? Math.round(
+            jobsWithSalary.reduce(
+              (sum, j) => sum + ((j.salary_min || 0) + (j.salary_max || 0)) / 2,
+              0
+            ) / jobsWithSalary.length
+          )
+        : 0;
+
+    // Remote percentage
+    const remoteCount = filteredJobListings.filter(
+      (j) => j.work_mode === 'Remote'
+    ).length;
+    const remotePercentage =
+      total > 0 ? Math.round((remoteCount / total) * 100) : 0;
+
+    // Top hiring companies
+    const companyCounts: Record<string, number> = {};
+    filteredJobListings.forEach((job) => {
+      companyCounts[job.company_id] = (companyCounts[job.company_id] || 0) + 1;
+    });
+    const topCompanies = Object.entries(companyCounts)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 5)
+      .map(([companyId, count]) => ({
+        company: companies.find((c) => c.id === companyId)?.name || 'Unknown',
+        count,
+      }));
+
+    return {
+      total,
+      active,
+      newThisWeek,
+      avgSalary,
+      remotePercentage,
+      topCompanies,
+    };
+  }, [filteredJobListings, companies]);
+
+  // Chart data: Job Postings Over Time
+  const timeSeriesData = useMemo(() => {
+    const dateMap: Record<string, number> = {};
+
+    filteredJobListings.forEach((job) => {
+      const date = job.posted_at;
+      dateMap[date] = (dateMap[date] || 0) + 1;
+    });
+
+    return Object.entries(dateMap)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([date, count]) => ({
+        date: new Date(date).toLocaleDateString('pl-PL', {
+          month: 'short',
+          day: 'numeric',
+        }),
+        count,
+      }));
+  }, [filteredJobListings]);
+
+  // Chart data: Top Hiring Companies
+  const topCompaniesData = useMemo(() => {
+    return stats.topCompanies.map((item) => ({
+      name: item.company.split(' ')[0], // Shorten name for chart
+      value: item.count,
+    }));
+  }, [stats.topCompanies]);
+
+  // Chart data: Jobs by Seniority Level
+  const seniorityData = useMemo(() => {
+    const levelCounts: Record<string, number> = {};
+
+    filteredJobListings.forEach((job) => {
+      levelCounts[job.level] = (levelCounts[job.level] || 0) + 1;
+    });
+
+    return SENIORITY_LEVELS.filter((level) => levelCounts[level] > 0).map(
+      (level) => ({
+        name: level,
+        value: levelCounts[level] || 0,
+      })
+    );
+  }, [filteredJobListings]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 pt-16 px-4 flex items-center justify-center">
+        <div className="text-center">
+          <RefreshCcw className="w-12 h-12 animate-spin text-purple-600 mx-auto mb-4" />
+          <p className="text-lg text-gray-600 dark:text-gray-400">
+            Ładowanie danych...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 pt-16 px-4 pb-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-yellow-500 bg-clip-text text-transparent">
+            Analityka Konkurencji
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            Monitoruj rynek pracy i śledź działania konkurencji w czasie rzeczywistym
+          </p>
+        </div>
+
+        {/* Filters */}
+        <Card className="p-6 mb-8 bg-white dark:bg-gray-800 border-2 border-purple-200 dark:border-purple-800">
+          <div className="flex items-center gap-2 mb-4">
+            <Filter className="w-5 h-5 text-purple-600" />
+            <h2 className="text-xl font-semibold">Filtry</h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Date Range */}
+            <div>
+              <Label className="mb-2 block">
+                <Calendar className="w-4 h-4 inline mr-2" />
+                Okres czasu
+              </Label>
+              <Select
+                value={dateRange}
+                onValueChange={(value: '7d' | '30d' | '90d') => {
+                  setDateRange(value);
+                  fetchData();
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="7d">Ostatnie 7 dni</SelectItem>
+                  <SelectItem value="30d">Ostatnie 30 dni</SelectItem>
+                  <SelectItem value="90d">Ostatnie 90 dni</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Industry Filter */}
+            <div>
+              <Label className="mb-2 block">
+                <Building2 className="w-4 h-4 inline mr-2" />
+                Branża
+              </Label>
+              <Select
+                value={selectedIndustries[0] || 'all'}
+                onValueChange={(value) =>
+                  setSelectedIndustries(value === 'all' ? [] : [value])
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Wszystkie branże" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Wszystkie branże</SelectItem>
+                  {INDUSTRIES.map((industry) => (
+                    <SelectItem key={industry} value={industry}>
+                      {industry}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Company Filter */}
+            <div>
+              <Label className="mb-2 block">
+                <Users className="w-4 h-4 inline mr-2" />
+                Firma
+              </Label>
+              <Select
+                value={selectedCompanies[0] || 'all'}
+                onValueChange={(value) =>
+                  setSelectedCompanies(value === 'all' ? [] : [value])
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Wszystkie firmy" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Wszystkie firmy</SelectItem>
+                  {companies.map((company) => (
+                    <SelectItem key={company.id} value={company.id}>
+                      {company.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="flex gap-2 mt-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setSelectedIndustries([]);
+                setSelectedCompanies([]);
+                setDateRange('30d');
+                fetchData();
+              }}
+            >
+              Wyczyść filtry
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={fetchData}
+              className="ml-auto"
+            >
+              <RefreshCcw className="w-4 h-4 mr-2" />
+              Odśwież dane
+            </Button>
+          </div>
+        </Card>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {/* Total Jobs */}
+          <Card className="p-6 bg-gradient-to-br from-purple-500 to-purple-600 text-white border-0">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-purple-100 text-sm mb-1">Ofert w bazie</p>
+                <p className="text-3xl font-bold">{stats.total}</p>
+                <p className="text-purple-100 text-xs mt-2">
+                  {stats.active} aktywnych
+                </p>
+              </div>
+              <Briefcase className="w-12 h-12 text-purple-200" />
+            </div>
+          </Card>
+
+          {/* New This Week */}
+          <Card className="p-6 bg-gradient-to-br from-yellow-400 to-yellow-500 text-white border-0">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-yellow-100 text-sm mb-1">Nowe w tym tygodniu</p>
+                <p className="text-3xl font-bold">{stats.newThisWeek}</p>
+                <div className="flex items-center text-yellow-100 text-xs mt-2">
+                  <TrendingUp className="w-4 h-4 mr-1" />
+                  Trend rosnący
+                </div>
+              </div>
+              <Calendar className="w-12 h-12 text-yellow-200" />
+            </div>
+          </Card>
+
+          {/* Average Salary */}
+          <Card className="p-6 bg-gradient-to-br from-blue-500 to-blue-600 text-white border-0">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-blue-100 text-sm mb-1">Średnie wynagrodzenie</p>
+                <p className="text-3xl font-bold">
+                  {stats.avgSalary > 0
+                    ? `${(stats.avgSalary / 1000).toFixed(0)}k`
+                    : 'N/A'}
+                </p>
+                <p className="text-blue-100 text-xs mt-2">PLN / miesiąc</p>
+              </div>
+              <TrendingUp className="w-12 h-12 text-blue-200" />
+            </div>
+          </Card>
+
+          {/* Remote Percentage */}
+          <Card className="p-6 bg-gradient-to-br from-green-500 to-green-600 text-white border-0">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-green-100 text-sm mb-1">Praca zdalna</p>
+                <p className="text-3xl font-bold">{stats.remotePercentage}%</p>
+                <p className="text-green-100 text-xs mt-2">ofert zdalnych</p>
+              </div>
+              <MapPin className="w-12 h-12 text-green-200" />
+            </div>
+          </Card>
+        </div>
+
+        {/* Charts Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          {/* Job Postings Over Time */}
+          <Card className="p-6 bg-white dark:bg-gray-800 border-2 border-purple-200 dark:border-purple-800">
+            <h3 className="text-xl font-semibold mb-4 flex items-center">
+              <TrendingUp className="w-5 h-5 mr-2 text-purple-600" />
+              Oferty w czasie
+            </h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={timeSeriesData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="count"
+                  stroke={CHART_COLORS.purple}
+                  strokeWidth={2}
+                  name="Liczba ofert"
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </Card>
+
+          {/* Top Hiring Companies */}
+          <Card className="p-6 bg-white dark:bg-gray-800 border-2 border-purple-200 dark:border-purple-800">
+            <h3 className="text-xl font-semibold mb-4 flex items-center">
+              <Building2 className="w-5 h-5 mr-2 text-purple-600" />
+              Top 5 firm rekrutujących
+            </h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={topCompaniesData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="value" fill={CHART_COLORS.yellow} name="Ofert" />
+              </BarChart>
+            </ResponsiveContainer>
+          </Card>
+        </div>
+
+        {/* Jobs by Seniority Level */}
+        <Card className="p-6 bg-white dark:bg-gray-800 border-2 border-purple-200 dark:border-purple-800">
+          <h3 className="text-xl font-semibold mb-4 flex items-center">
+            <Users className="w-5 h-5 mr-2 text-purple-600" />
+            Oferty według poziomu doświadczenia
+          </h3>
+          <ResponsiveContainer width="100%" height={400}>
+            <PieChart>
+              <Pie
+                data={seniorityData}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                label={({ name, percent }) =>
+                  `${name}: ${(percent * 100).toFixed(0)}%`
+                }
+                outerRadius={120}
+                fill="#8884d8"
+                dataKey="value"
+              >
+                {seniorityData.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={PIE_COLORS[index % PIE_COLORS.length]}
+                  />
+                ))}
+              </Pie>
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
+        </Card>
+      </div>
+    </div>
+  );
+}

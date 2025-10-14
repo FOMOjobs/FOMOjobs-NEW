@@ -27,6 +27,7 @@ const Profile = lazy(() => import("./pages/Profile"));
 const Chat = lazy(() => import("./pages/Chat"));
 const Admin = lazy(() => import("./pages/Admin"));
 const Achievements = lazy(() => import("./pages/Achievements"));
+const B2BAnalytics = lazy(() => import("./pages/B2BAnalytics"));
 
 // Loading spinner component - memoized
 const LoadingSpinner = memo(() => (
@@ -62,6 +63,7 @@ const App = () => (
                   <Route path="/interview-coach" element={<InterviewCoach />} />
                   <Route path="/job-prompts" element={<JobPrompts />} />
                   <Route path="/recruiter" element={<Recruiter />} />
+                  <Route path="/b2b/analytics" element={<B2BAnalytics />} />
 
                   {/* User pages - keep protected */}
                   <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
