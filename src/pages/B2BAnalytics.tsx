@@ -2,6 +2,8 @@ import { useState, useEffect, useMemo } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import FOMOJobsNavbar from '@/components/FOMOJobsNavbar';
+import SEO from '@/components/SEO';
 import {
   Select,
   SelectContent,
@@ -36,7 +38,7 @@ import {
   Download,
   RefreshCcw,
 } from 'lucide-react';
-import { supabase } from '@/lib/supabaseClient';
+import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 // Types
@@ -311,27 +313,40 @@ export default function B2BAnalytics() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 pt-16 px-4 flex items-center justify-center">
-        <div className="text-center">
-          <RefreshCcw className="w-12 h-12 animate-spin text-purple-600 mx-auto mb-4" />
-          <p className="text-lg text-gray-600 dark:text-gray-400">
-            Ładowanie danych...
-          </p>
+      <>
+        <SEO
+          title="FOMO.analytics - FOMOjobs"
+          description="Inteligentna analiza rynku pracy dla HR i rekruterów. Śledź konkurencję, trendy wynagrodzeń i najpopularniejsze oferty pracy w Polsce."
+        />
+        <FOMOJobsNavbar />
+        <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 pt-16 px-4 flex items-center justify-center">
+          <div className="text-center">
+            <RefreshCcw className="w-12 h-12 animate-spin text-purple-600 mx-auto mb-4" />
+            <p className="text-lg text-gray-600 dark:text-gray-400">
+              Ładowanie danych...
+            </p>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 pt-16 px-4 pb-8">
-      <div className="max-w-7xl mx-auto">
+    <>
+      <SEO
+        title="FOMO.analytics - FOMOjobs"
+        description="Inteligentna analiza rynku pracy dla HR i rekruterów. Śledź konkurencję, trendy wynagrodzeń i najpopularniejsze oferty pracy w Polsce."
+      />
+      <FOMOJobsNavbar />
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 pt-16 px-4 pb-8">
+        <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-yellow-500 bg-clip-text text-transparent">
-            Analityka Konkurencji
+            FOMO.analytics
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
-            Monitoruj rynek pracy i śledź działania konkurencji w czasie rzeczywistym
+            Inteligentna analiza rynku pracy - śledź konkurencję i wyróżnij się w rekrutacji
           </p>
         </div>
 
@@ -583,5 +598,6 @@ export default function B2BAnalytics() {
         </Card>
       </div>
     </div>
+    </>
   );
 }
