@@ -22,7 +22,7 @@ const Step1Companies = () => {
     if (selectedCompanies.length === COMPANIES.length) {
       setCompanies([]);
     } else {
-      setCompanies(COMPANIES.map((c) => c.id));
+      setCompanies(COMPANIES.map((c) => c.id.toString()));
     }
   };
 
@@ -60,13 +60,13 @@ const Step1Companies = () => {
       <TooltipProvider>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {COMPANIES.map((company) => {
-            const isSelected = selectedCompanies.includes(company.id);
+            const isSelected = selectedCompanies.includes(company.id.toString());
 
             return (
               <Tooltip key={company.id}>
                 <TooltipTrigger asChild>
                   <div
-                    onClick={() => toggleCompany(company.id)}
+                    onClick={() => toggleCompany(company.id.toString())}
                     className={cn(
                       'flex items-start gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md',
                       isSelected
@@ -76,11 +76,11 @@ const Step1Companies = () => {
                   >
                     <Checkbox
                       checked={isSelected}
-                      onCheckedChange={() => toggleCompany(company.id)}
+                      onCheckedChange={() => toggleCompany(company.id.toString())}
                       className="mt-0.5"
                     />
                     <Label
-                      htmlFor={company.id}
+                      htmlFor={company.id.toString()}
                       className="flex-1 cursor-pointer font-medium text-sm leading-tight"
                     >
                       {company.name}

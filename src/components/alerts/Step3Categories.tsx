@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils';
 const Step3Categories = () => {
   const { selectedCategories, toggleCategory, setCategories, prevStep, nextStep } = useAlertStore();
   const [expandedGroups, setExpandedGroups] = useState<string[]>(
-    JOB_CATEGORIES.map((g) => g.id) // All groups expanded by default
+    JOB_CATEGORIES.map((g) => g.groupId) // All groups expanded by default
   );
 
   const toggleGroup = (groupId: string) => {
@@ -24,7 +24,7 @@ const Step3Categories = () => {
 
   const handleSelectAll = () => {
     const allPositionIds = JOB_CATEGORIES.flatMap((group) =>
-      group.positions.map((p) => p.id)
+      group.positions.map((p) => p.id.toString())
     );
 
     if (selectedCategories.length === allPositionIds.length) {
@@ -35,10 +35,10 @@ const Step3Categories = () => {
   };
 
   const handleSelectGroup = (groupId: string) => {
-    const group = JOB_CATEGORIES.find((g) => g.id === groupId);
+    const group = JOB_CATEGORIES.find((g) => g.groupId === groupId);
     if (!group) return;
 
-    const groupPositionIds = group.positions.map((p) => p.id);
+    const groupPositionIds = group.positions.map((p) => p.id.toString());
     const allSelected = groupPositionIds.every((id) =>
       selectedCategories.includes(id)
     );
@@ -59,16 +59,16 @@ const Step3Categories = () => {
   };
 
   const isGroupFullySelected = (groupId: string) => {
-    const group = JOB_CATEGORIES.find((g) => g.id === groupId);
+    const group = JOB_CATEGORIES.find((g) => g.groupId === groupId);
     if (!group) return false;
-    return group.positions.every((p) => selectedCategories.includes(p.id));
+    return group.positions.every((p) => selectedCategories.includes(p.id.toString()));
   };
 
   const isGroupPartiallySelected = (groupId: string) => {
-    const group = JOB_CATEGORIES.find((g) => g.id === groupId);
+    const group = JOB_CATEGORIES.find((g) => g.groupId === groupId);
     if (!group) return false;
     const selectedCount = group.positions.filter((p) =>
-      selectedCategories.includes(p.id)
+      selectedCategories.includes(p.id.toString())
     ).length;
     return selectedCount > 0 && selectedCount < group.positions.length;
   };
@@ -106,13 +106,13 @@ const Step3Categories = () => {
       {/* Categories Accordion */}
       <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2">
         {JOB_CATEGORIES.map((group) => {
-          const isExpanded = expandedGroups.includes(group.id);
-          const isFullySelected = isGroupFullySelected(group.id);
-          const isPartiallySelected = isGroupPartiallySelected(group.id);
+          const isExpanded = expandedGroups.includes(group.groupId);
+          const isFullySelected = isGroupFullySelected(group.groupId);
+          const isPartiallySelected = isGroupPartiallySelected(group.groupId);
 
           return (
             <div
-              key={group.id}
+              key={group.groupId}
               className={cn(
                 'border-2 rounded-lg overflow-hidden transition-all duration-200',
                 isFullySelected && 'border-purple-500 shadow-md',
@@ -128,7 +128,7 @@ const Step3Categories = () => {
                   isPartiallySelected && !isFullySelected && 'bg-yellow-50 dark:bg-yellow-900/20'
                 )}
               >
-                <div className="flex items-center gap-3 flex-1" onClick={() => toggleGroup(group.id)}>
+                <div className="flex items-center gap-3 flex-1" onClick={() => toggleGroup(group.groupId)}>
                   <button className="text-muted-foreground hover:text-foreground">
                     {isExpanded ? (
                       <ChevronUp className="w-5 h-5" />
@@ -136,9 +136,9 @@ const Step3Categories = () => {
                       <ChevronDown className="w-5 h-5" />
                     )}
                   </button>
-                  <h3 className="font-bold text-lg">{group.name}</h3>
+                  <h3 className="font-bold text-lg">{group.groupName}</h3>
                   <span className="text-xs text-muted-foreground">
-                    ({group.positions.filter((p) => selectedCategories.includes(p.id)).length}/
+                    ({group.positions.filter((p) => selectedCategories.includes(p.id.toString())).length}/
                     {group.positions.length})
                   </span>
                 </div>
@@ -149,7 +149,7 @@ const Step3Categories = () => {
                   size="sm"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleSelectGroup(group.id);
+                    handleSelectGroup(group.groupId);
                   }}
                   className="text-xs"
                 >
@@ -161,12 +161,12 @@ const Step3Categories = () => {
               {isExpanded && (
                 <div className="p-4 pt-0 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                   {group.positions.map((position) => {
-                    const isSelected = selectedCategories.includes(position.id);
+                    const isSelected = selectedCategories.includes(position.id.toString());
 
                     return (
                       <div
                         key={position.id}
-                        onClick={() => toggleCategory(position.id)}
+                        onClick={() => toggleCategory(position.id.toString())}
                         className={cn(
                           'flex items-start gap-2 p-3 border rounded-md cursor-pointer transition-all duration-150 hover:shadow-sm',
                           isSelected
@@ -176,14 +176,14 @@ const Step3Categories = () => {
                       >
                         <Checkbox
                           checked={isSelected}
-                          onCheckedChange={() => toggleCategory(position.id)}
+                          onCheckedChange={() => toggleCategory(position.id.toString())}
                           className="mt-0.5"
                         />
                         <Label
-                          htmlFor={position.id}
+                          htmlFor={position.id.toString()}
                           className="flex-1 cursor-pointer text-sm font-medium leading-tight"
                         >
-                          {position.name}
+                          {position.name} ({position.count})
                         </Label>
                       </div>
                     );

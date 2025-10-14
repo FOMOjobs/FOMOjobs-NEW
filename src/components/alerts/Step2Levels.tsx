@@ -14,7 +14,7 @@ const Step2Levels = () => {
     if (selectedLevels.length === EXPERIENCE_LEVELS.length) {
       setLevels([]);
     } else {
-      setLevels(EXPERIENCE_LEVELS.map((l) => l.id));
+      setLevels(EXPERIENCE_LEVELS.map((l) => l.id.toString()));
     }
   };
 
@@ -51,12 +51,12 @@ const Step2Levels = () => {
       {/* Experience Levels Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {EXPERIENCE_LEVELS.map((level) => {
-          const isSelected = selectedLevels.includes(level.id);
+          const isSelected = selectedLevels.includes(level.id.toString());
 
           return (
             <div
               key={level.id}
-              onClick={() => toggleLevel(level.id)}
+              onClick={() => toggleLevel(level.id.toString())}
               className={cn(
                 'p-5 border-2 rounded-lg cursor-pointer transition-all duration-200 hover:shadow-lg',
                 isSelected
@@ -72,9 +72,9 @@ const Step2Levels = () => {
                 {level.name}
               </h3>
 
-              {/* Description */}
+              {/* Tooltip */}
               <p className="text-sm text-muted-foreground leading-relaxed">
-                {level.description}
+                {level.tooltip}
               </p>
 
               {/* Selected Indicator */}

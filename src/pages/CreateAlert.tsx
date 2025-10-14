@@ -69,20 +69,20 @@ const CreateAlert = () => {
 
       // Convert company names back to IDs (reverse lookup)
       const companyIds = (alert.selected_companies || [])
-        .map((name: string) => COMPANIES.find((c) => c.name === name)?.id)
+        .map((name: string) => COMPANIES.find((c) => c.name === name)?.id.toString())
         .filter(Boolean);
       setCompanies(companyIds);
 
       // Convert level names back to IDs
       const levelIds = (alert.selected_levels || [])
-        .map((name: string) => EXPERIENCE_LEVELS.find((l) => l.name === name)?.id)
+        .map((name: string) => EXPERIENCE_LEVELS.find((l) => l.name === name)?.id.toString())
         .filter(Boolean);
       setLevels(levelIds);
 
       // Convert category names back to position IDs
       const allPositions = JOB_CATEGORIES.flatMap((group) => group.positions);
       const categoryIds = (alert.selected_categories || [])
-        .map((name: string) => allPositions.find((p) => p.name === name)?.id)
+        .map((name: string) => allPositions.find((p) => p.name === name)?.id.toString())
         .filter(Boolean);
       setCategories(categoryIds);
 
