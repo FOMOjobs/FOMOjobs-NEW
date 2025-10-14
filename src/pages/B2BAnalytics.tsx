@@ -163,13 +163,13 @@ export default function B2BAnalytics() {
 
       // Fetch companies
       const { data: companiesData, error: companiesError } = await supabase
-        .from('companies')
+        .from('companies' as any)
         .select('*')
         .eq('is_monitored', true)
         .order('name');
 
       if (companiesError) throw companiesError;
-      setCompanies(companiesData || []);
+      setCompanies((companiesData as any) || []);
 
       // Fetch job listings
       const daysAgo = dateRange === '7d' ? 7 : dateRange === '30d' ? 30 : 90;
@@ -177,23 +177,23 @@ export default function B2BAnalytics() {
       startDate.setDate(startDate.getDate() - daysAgo);
 
       const { data: jobsData, error: jobsError } = await supabase
-        .from('job_listings')
+        .from('job_listings' as any)
         .select('*')
         .gte('posted_at', startDate.toISOString().split('T')[0])
         .order('posted_at', { ascending: false });
 
       if (jobsError) throw jobsError;
-      setJobListings(jobsData || []);
+      setJobListings((jobsData as any) || []);
 
       // Fetch daily stats
       const { data: statsData, error: statsError } = await supabase
-        .from('daily_stats')
+        .from('daily_stats' as any)
         .select('*')
         .gte('date', startDate.toISOString().split('T')[0])
         .order('date');
 
       if (statsError) throw statsError;
-      setDailyStats(statsData || []);
+      setDailyStats((statsData as any) || []);
 
       toast.success('Dane załadowane pomyślnie');
     } catch (error) {
