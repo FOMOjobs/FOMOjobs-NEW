@@ -143,6 +143,26 @@ const FOMOJobsNavbar = () => {
               Oferty Pracy
             </button>
 
+            <Link
+              to="/alert-wizard"
+              className={cn(
+                "hover:text-secondary transition-colors font-medium",
+                isScrolled ? "text-foreground" : "text-primary-foreground"
+              )}
+            >
+              Ustaw alert
+            </Link>
+
+            <Link
+              to="/profile"
+              className={cn(
+                "hover:text-secondary transition-colors font-medium",
+                isScrolled ? "text-foreground" : "text-primary-foreground"
+              )}
+            >
+              Mój profil
+            </Link>
+
             {/* Tools Dropdown */}
             <div
               className="relative"
