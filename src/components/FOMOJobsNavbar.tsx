@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
-import { Menu, X, ChevronDown, User, Calendar, Award, MessageSquare, Briefcase, Home, FileText, BarChart, BookOpen } from "lucide-react";
+import { Menu, X, ChevronDown, User, Calendar, Award, MessageSquare, Briefcase, Home, FileText, BarChart, BookOpen, BarChart2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -68,6 +68,12 @@ const FOMOJobsNavbar = () => {
       description: 'Śledź swoje aplikacje'
     },
     {
+      to: '/b2b/analytics',
+      icon: BarChart2,
+      label: 'FOMO.analytics',
+      description: 'Analiza rynku pracy dla HR'
+    },
+    {
       to: '/recruiter',
       icon: User,
       label: 'FOMO.recruiter',
@@ -84,12 +90,6 @@ const FOMOJobsNavbar = () => {
       icon: BookOpen,
       label: 'FOMO.jobprompts',
       description: 'Prompty AI do poszukiwania pracy'
-    },
-    {
-      to: '/dashboard',
-      icon: Award,
-      label: 'Dashboard',
-      description: 'Twój panel analityczny'
     }
   ];
 
