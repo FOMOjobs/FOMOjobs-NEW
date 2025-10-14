@@ -37,6 +37,9 @@ import {
   Filter,
   Download,
   RefreshCcw,
+  Award,
+  Sparkles,
+  Target,
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -257,6 +260,50 @@ export default function B2BAnalytics() {
         count,
       }));
 
+    // Top hiring company (for card)
+    const topHiringCompany = topCompanies.length > 0 ? topCompanies[0] : null;
+
+    // Most in-demand role
+    const titleCounts: Record<string, number> = {};
+    filteredJobListings.forEach((job) => {
+      titleCounts[job.title] = (titleCounts[job.title] || 0) + 1;
+    });
+    const mostInDemandRole = Object.entries(titleCounts)
+      .sort(([, a], [, b]) => b - a)[0] || ['N/A', 0];
+
+    // Salary growth (compare current period vs previous period)
+    const currentPeriodDays = dateRange === '7d' ? 7 : dateRange === '30d' ? 30 : 90;
+    const previousPeriodStart = new Date();
+    previousPeriodStart.setDate(previousPeriodStart.getDate() - (currentPeriodDays * 2));
+    const previousPeriodEnd = new Date();
+    previousPeriodEnd.setDate(previousPeriodEnd.getDate() - currentPeriodDays);
+
+    const previousPeriodJobs = jobListings.filter((j) => {
+      const jobDate = new Date(j.posted_at);
+      return jobDate >= previousPeriodStart && jobDate < previousPeriodEnd && j.salary_min && j.salary_max;
+    });
+
+    const prevAvgSalary = previousPeriodJobs.length > 0
+      ? Math.round(
+          previousPeriodJobs.reduce(
+            (sum, j) => sum + ((j.salary_min || 0) + (j.salary_max || 0)) / 2,
+            0
+          ) / previousPeriodJobs.length
+        )
+      : 0;
+
+    const salaryGrowth = prevAvgSalary > 0
+      ? Math.round(((avgSalary - prevAvgSalary) / prevAvgSalary) * 100)
+      : 0;
+
+    // Competitive index (avg jobs per company / market avg)
+    const activeCompanies = new Set(filteredJobListings.map(j => j.company_id)).size;
+    const avgJobsPerCompany = activeCompanies > 0 ? total / activeCompanies : 0;
+    const marketAvg = 15; // Baseline: assume market avg is 15 jobs per company
+    const competitiveIndex = marketAvg > 0
+      ? Math.round((avgJobsPerCompany / marketAvg) * 100)
+      : 100;
+
     return {
       total,
       active,
@@ -264,8 +311,12 @@ export default function B2BAnalytics() {
       avgSalary,
       remotePercentage,
       topCompanies,
+      topHiringCompany,
+      mostInDemandRole,
+      salaryGrowth,
+      competitiveIndex,
     };
-  }, [filteredJobListings, companies]);
+  }, [filteredJobListings, companies, jobListings, dateRange]);
 
   // Chart data: Job Postings Over Time
   const timeSeriesData = useMemo(() => {
@@ -309,6 +360,55 @@ export default function B2BAnalytics() {
         value: levelCounts[level] || 0,
       })
     );
+  }, [filteredJobListings]);
+
+  // Chart data: Top Technologies
+  const technologiesData = useMemo(() => {
+    const techCounts: Record<string, number> = {};
+
+    filteredJobListings.forEach((job) => {
+      if (job.technologies && Array.isArray(job.technologies)) {
+        job.technologies.forEach((tech) => {
+          techCounts[tech] = (techCounts[tech] || 0) + 1;
+        });
+      }
+    });
+
+    const total = filteredJobListings.length;
+
+    return Object.entries(techCounts)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 20)
+      .map(([tech, count]) => ({
+        name: tech,
+        count,
+        percentage: total > 0 ? Math.round((count / total) * 100) : 0,
+      }));
+  }, [filteredJobListings]);
+
+  // Chart data: Top Benefits
+  const benefitsData = useMemo(() => {
+    const benefitCounts: Record<string, number> = {};
+
+    filteredJobListings.forEach((job) => {
+      if (job.benefits && Array.isArray(job.benefits)) {
+        job.benefits.forEach((benefit) => {
+          benefitCounts[benefit] = (benefitCounts[benefit] || 0) + 1;
+        });
+      }
+    });
+
+    const total = filteredJobListings.length;
+
+    return Object.entries(benefitCounts)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 15)
+      .map(([benefit, count]) => ({
+        name: benefit.length > 30 ? benefit.substring(0, 30) + '...' : benefit,
+        fullName: benefit,
+        count,
+        percentage: total > 0 ? Math.round((count / total) * 100) : 0,
+      }));
   }, [filteredJobListings]);
 
   if (loading) {
@@ -520,6 +620,79 @@ export default function B2BAnalytics() {
           </Card>
         </div>
 
+        {/* Stats Cards - Row 2 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {/* Top Hiring Company */}
+          <Card className="p-6 bg-gradient-to-br from-purple-500 to-purple-600 text-white border-0">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-purple-100 text-sm mb-1">Top firma rekrutująca</p>
+                <p className="text-2xl font-bold">
+                  {stats.topHiringCompany?.company.split(' ')[0] || 'N/A'}
+                </p>
+                <p className="text-purple-100 text-xs mt-2">
+                  {stats.topHiringCompany?.count || 0} ofert
+                </p>
+              </div>
+              <Award className="w-12 h-12 text-purple-200" />
+            </div>
+          </Card>
+
+          {/* Most In-Demand Role */}
+          <Card className="p-6 bg-gradient-to-br from-yellow-400 to-yellow-500 text-white border-0">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-yellow-100 text-sm mb-1">Najpopularniejsza rola</p>
+                <p className="text-xl font-bold">
+                  {stats.mostInDemandRole[0]}
+                </p>
+                <p className="text-yellow-100 text-xs mt-2">
+                  {stats.mostInDemandRole[1]} ofert
+                </p>
+              </div>
+              <Sparkles className="w-12 h-12 text-yellow-200" />
+            </div>
+          </Card>
+
+          {/* Salary Growth */}
+          <Card className="p-6 bg-gradient-to-br from-blue-500 to-blue-600 text-white border-0">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-blue-100 text-sm mb-1">Wzrost wynagrodzeń</p>
+                <p className="text-3xl font-bold">
+                  {stats.salaryGrowth > 0 ? '+' : ''}{stats.salaryGrowth}%
+                </p>
+                <p className="text-blue-100 text-xs mt-2 flex items-center">
+                  {stats.salaryGrowth >= 0 ? (
+                    <><TrendingUp className="w-3 h-3 mr-1" />vs. poprzedni okres</>
+                  ) : (
+                    <><TrendingDown className="w-3 h-3 mr-1" />vs. poprzedni okres</>
+                  )}
+                </p>
+              </div>
+              {stats.salaryGrowth >= 0 ? (
+                <TrendingUp className="w-12 h-12 text-blue-200" />
+              ) : (
+                <TrendingDown className="w-12 h-12 text-blue-200" />
+              )}
+            </div>
+          </Card>
+
+          {/* Competitive Index */}
+          <Card className="p-6 bg-gradient-to-br from-green-500 to-green-600 text-white border-0">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-green-100 text-sm mb-1">Indeks konkurencyjności</p>
+                <p className="text-3xl font-bold">{stats.competitiveIndex}</p>
+                <p className="text-green-100 text-xs mt-2">
+                  {stats.competitiveIndex > 100 ? 'Powyżej' : 'Poniżej'} średniej rynku
+                </p>
+              </div>
+              <Target className="w-12 h-12 text-green-200" />
+            </div>
+          </Card>
+        </div>
+
         {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           {/* Job Postings Over Time */}
@@ -566,7 +739,7 @@ export default function B2BAnalytics() {
         </div>
 
         {/* Jobs by Seniority Level */}
-        <Card className="p-6 bg-white dark:bg-gray-800 border-2 border-purple-200 dark:border-purple-800">
+        <Card className="p-6 bg-white dark:bg-gray-800 border-2 border-purple-200 dark:border-purple-800 mb-8">
           <h3 className="text-xl font-semibold mb-4 flex items-center">
             <Users className="w-5 h-5 mr-2 text-purple-600" />
             Oferty według poziomu doświadczenia
@@ -596,6 +769,81 @@ export default function B2BAnalytics() {
             </PieChart>
           </ResponsiveContainer>
         </Card>
+
+        {/* Technologies & Benefits Charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          {/* Top Technologies */}
+          <Card className="p-6 bg-white dark:bg-gray-800 border-2 border-purple-200 dark:border-purple-800">
+            <h3 className="text-xl font-semibold mb-4 flex items-center">
+              <Building2 className="w-5 h-5 mr-2 text-purple-600" />
+              Najpopularniejsze technologie (Top 20)
+            </h3>
+            <ResponsiveContainer width="100%" height={500}>
+              <BarChart data={technologiesData} layout="vertical">
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis type="number" />
+                <YAxis
+                  dataKey="name"
+                  type="category"
+                  width={100}
+                  style={{ fontSize: '12px' }}
+                />
+                <Tooltip
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                      return (
+                        <div className="bg-white dark:bg-gray-800 border border-purple-200 p-3 rounded shadow-lg">
+                          <p className="font-semibold">{payload[0].payload.name}</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            {payload[0].value} ofert ({payload[0].payload.percentage}%)
+                          </p>
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
+                />
+                <Bar dataKey="count" fill={CHART_COLORS.purple} />
+              </BarChart>
+            </ResponsiveContainer>
+          </Card>
+
+          {/* Top Benefits */}
+          <Card className="p-6 bg-white dark:bg-gray-800 border-2 border-purple-200 dark:border-purple-800">
+            <h3 className="text-xl font-semibold mb-4 flex items-center">
+              <Sparkles className="w-5 h-5 mr-2 text-purple-600" />
+              Najczęstsze benefity (Top 15)
+            </h3>
+            <ResponsiveContainer width="100%" height={500}>
+              <BarChart data={benefitsData} layout="vertical">
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis type="number" />
+                <YAxis
+                  dataKey="name"
+                  type="category"
+                  width={120}
+                  style={{ fontSize: '11px' }}
+                />
+                <Tooltip
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                      return (
+                        <div className="bg-white dark:bg-gray-800 border border-purple-200 p-3 rounded shadow-lg max-w-xs">
+                          <p className="font-semibold text-sm">{payload[0].payload.fullName}</p>
+                          <p className="text-xs text-gray-600 dark:text-gray-400">
+                            {payload[0].value} ofert ({payload[0].payload.percentage}%)
+                          </p>
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
+                />
+                <Bar dataKey="count" fill={CHART_COLORS.yellow} />
+              </BarChart>
+            </ResponsiveContainer>
+          </Card>
+        </div>
       </div>
     </div>
     </>
