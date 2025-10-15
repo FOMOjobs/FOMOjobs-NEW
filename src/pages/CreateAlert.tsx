@@ -4,6 +4,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAlertStore } from '@/stores/alertStore';
+import { useAlerts } from '@/hooks/useAlerts';
 import { COMPANIES, EXPERIENCE_LEVELS, JOB_CATEGORIES } from '@/data/alertData';
 import { Button } from '@/components/ui/button';
 import FOMOJobsNavbar from '@/components/FOMOJobsNavbar';
@@ -13,7 +14,6 @@ import Step2Levels from '@/components/alerts/Step2Levels';
 import Step3Categories from '@/components/alerts/Step3Categories';
 import Step4Summary from '@/components/alerts/Step4Summary';
 import { Helmet } from 'react-helmet-async';
-import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 const STEPS = [
@@ -29,6 +29,8 @@ const CreateAlert = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+
+  const { createAlert, updateAlert, getAlertById } = useAlerts();
 
   const {
     currentStep,
@@ -59,38 +61,34 @@ const CreateAlert = () => {
   const loadAlertForEdit = async (id: string) => {
     setIsLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('user_alerts' as any)
-        .select('*')
-        .eq('id', id)
-        .single();
+      const alert = await getAlertById(Number(id));
 
-      if (error) throw error;
-
-      const alert = data as any;
+      if (!alert) {
+        throw new Error('Alert not found');
+      }
 
       // Set edit mode
       setIsEditMode(true);
 
       // Pre-fill form with alert data
       setAlertName(alert.alert_name);
-      setNotificationTime(alert.notification_time.substring(0, 5)); // HH:mm
+      setNotificationTime(alert.alert_time.substring(0, 5)); // HH:mm
 
       // Convert company names back to IDs (reverse lookup)
-      const companyIds = (alert.selected_companies || [])
+      const companyIds = (alert.companies || [])
         .map((name: string) => COMPANIES.find((c) => c.name === name)?.id.toString())
         .filter(Boolean);
       setCompanies(companyIds);
 
       // Convert level names back to IDs
-      const levelIds = (alert.selected_levels || [])
+      const levelIds = (alert.experience_levels || [])
         .map((name: string) => EXPERIENCE_LEVELS.find((l) => l.name === name)?.id.toString())
         .filter(Boolean);
       setLevels(levelIds);
 
       // Convert category names back to position IDs
       const allPositions = JOB_CATEGORIES.flatMap((group) => group.positions);
-      const categoryIds = (alert.selected_categories || [])
+      const categoryIds = (alert.job_categories || [])
         .map((name: string) => allPositions.find((p) => p.name === name)?.id.toString())
         .filter(Boolean);
       setCategories(categoryIds);
@@ -111,18 +109,6 @@ const CreateAlert = () => {
     setIsSaving(true);
 
     try {
-      // Get current user
-      const {
-        data: { user },
-        error: userError,
-      } = await supabase.auth.getUser();
-
-      if (userError || !user) {
-        toast.error('Musisz być zalogowany, aby utworzyć alert');
-        navigate('/auth');
-        return;
-      }
-
       // Convert IDs to names for storage
       const companyNames = COMPANIES
         .filter((c) => selectedCompanies.includes(c.id.toString()))
@@ -138,49 +124,29 @@ const CreateAlert = () => {
         .map((p) => p.name);
 
       const alertData = {
-        user_id: user.id,
         alert_name: alertName.trim(),
-        notification_time: notificationTime,
-        selected_companies: companyNames,
-        selected_levels: levelNames,
-        selected_categories: categoryNames,
+        alert_time: notificationTime,
+        companies: companyNames,
+        experience_levels: levelNames,
+        job_categories: categoryNames,
         is_active: true,
+        last_sent_at: null,
       };
 
-      let result;
       if (isEditMode && alertId) {
         // UPDATE existing alert
-        result = await supabase
-          .from('user_alerts' as any)
-          .update(alertData)
-          .eq('id', alertId);
+        await updateAlert(Number(alertId), alertData);
       } else {
-        // INSERT new alert
-        result = await supabase.from('user_alerts' as any).insert(alertData);
+        // CREATE new alert
+        await createAlert(alertData);
       }
 
-      if (result.error) {
-        console.error('Error saving alert:', result.error);
-        toast.error('Nie udało się zapisać alertu. Spróbuj ponownie.');
-        return;
-      }
-
-      // Success
-      toast.success(
-        isEditMode
-          ? 'Alert zaktualizowany pomyślnie! 🎉'
-          : 'Alert utworzony pomyślnie! 🎉',
-        {
-          description: `"${alertName}" został pomyślnie ${
-            isEditMode ? 'zaktualizowany' : 'utworzony'
-          }`,
-        }
-      );
+      // Success - navigate to alerts list
       resetAlert();
       navigate('/alerts');
     } catch (error) {
       console.error('Unexpected error:', error);
-      toast.error('Wystąpił nieoczekiwany błąd');
+      // Error toast already handled in useAlerts hook
     } finally {
       setIsSaving(false);
     }
@@ -227,19 +193,32 @@ const CreateAlert = () => {
       <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-yellow-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
         <FOMOJobsNavbar />
 
-        {/* Hero Section */}
-        <div className="pt-24 pb-8 bg-gradient-to-r from-purple-600 via-purple-500 to-yellow-400">
-          <div className="container mx-auto px-4 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              {isEditMode ? '✏️ Edytuj Alert' : '📬 Utwórz Alert Ofert Pracy'}
-            </h1>
-            <p className="text-xl text-white/90 max-w-2xl mx-auto">
-              {isEditMode
-                ? 'Zaktualizuj swój alert, aby lepiej dopasować powiadomienia'
-                : 'Skonfiguruj spersonalizowany alert i otrzymuj powiadomienia o nowych ofertach dopasowanych do Twoich preferencji'}
-            </p>
+        {/* Hero Section - Only show on step 1 */}
+        {currentStep === 1 && (
+          <div className="pt-24 pb-8 bg-gradient-to-r from-purple-600 via-purple-500 to-yellow-400">
+            <div className="container mx-auto px-4 text-center">
+              <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                {isEditMode ? '✏️ Edytuj Alert' : '📬 Utwórz Alert Ofert Pracy'}
+              </h1>
+              <p className="text-xl text-white/90 max-w-2xl mx-auto">
+                {isEditMode
+                  ? 'Zaktualizuj swój alert, aby lepiej dopasować powiadomienia'
+                  : 'Skonfiguruj spersonalizowany alert i otrzymuj powiadomienia o nowych ofertach dopasowanych do Twoich preferencji'}
+              </p>
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* Compact header for steps 2-4 */}
+        {currentStep > 1 && (
+          <div className="pt-24 pb-4">
+            <div className="container mx-auto px-4 text-center">
+              <h1 className="text-2xl font-bold text-gray-900">
+                {isEditMode ? 'Edytuj Alert' : 'Utwórz Alert Ofert Pracy'}
+              </h1>
+            </div>
+          </div>
+        )}
 
         {/* Progress Bar */}
         <div className="container mx-auto px-4 -mt-4">

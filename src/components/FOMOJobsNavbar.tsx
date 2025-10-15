@@ -149,26 +149,6 @@ const FOMOJobsNavbar = () => {
               Oferty Pracy
             </button>
 
-            <Link
-              to="/alert-wizard"
-              className={cn(
-                "hover:text-secondary transition-colors font-medium",
-                isScrolled ? "text-foreground" : "text-primary-foreground"
-              )}
-            >
-              Ustaw alert
-            </Link>
-
-            <Link
-              to="/profile"
-              className={cn(
-                "hover:text-secondary transition-colors font-medium",
-                isScrolled ? "text-foreground" : "text-primary-foreground"
-              )}
-            >
-              Mój profil
-            </Link>
-
             {/* Tools Dropdown */}
             <div
               className="relative"
@@ -228,13 +208,7 @@ const FOMOJobsNavbar = () => {
             <Link to="/alerts/create">
               <Button
                 size="sm"
-                variant="outline"
-                className={cn(
-                  "font-semibold shadow-md hover:shadow-lg transition-all border-2",
-                  isScrolled
-                    ? "border-purple-500 text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-900/20"
-                    : "border-white text-white hover:bg-white/10"
-                )}
+                className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold px-6 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
               >
                 <Bell className="w-4 h-4 mr-2" />
                 Ustaw alert
@@ -345,8 +319,7 @@ const FOMOJobsNavbar = () => {
             <Link to="/alerts/create" onClick={() => setIsMenuOpen(false)}>
               <Button
                 size="sm"
-                variant="outline"
-                className="w-full border-2 border-purple-500 text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-900/20 mt-4 font-semibold"
+                className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold mt-4"
               >
                 <Bell className="w-4 h-4 mr-2" />
                 Ustaw alert

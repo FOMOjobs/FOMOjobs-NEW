@@ -1,22 +1,23 @@
 // Custom hook for alerts management
-// Handles fetching, toggling, and deleting user alerts
+// Handles fetching, creating, updating, toggling, and deleting user alerts
+// MIGRATED TO LARAVEL API
 
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import api from '@/lib/api';
 import { toast } from 'sonner';
 
 export interface UserAlert {
-  id: string;
-  user_id: string;
+  id: number;
+  user_id: number;
   alert_name: string;
-  notification_time: string;
+  alert_time: string;
+  companies: string[];
+  experience_levels: string[];
+  job_categories: string[];
   is_active: boolean;
-  selected_companies: string[];
-  selected_levels: string[];
-  selected_categories: string[];
+  last_sent_at?: string | null;
   created_at: string;
   updated_at: string;
-  last_sent_at: string | null;
 }
 
 export const useAlerts = () => {
@@ -28,111 +29,126 @@ export const useAlerts = () => {
     fetchAlerts();
   }, []);
 
+  // Fetch all user alerts
   const fetchAlerts = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      const {
-        data: { user },
-        error: userError,
-      } = await supabase.auth.getUser();
-
-      if (userError || !user) {
-        throw new Error('Not authenticated');
-      }
-
-      const { data, error: fetchError } = await supabase
-        .from('user_alerts' as any)
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
-
-      if (fetchError) throw fetchError;
-
-      setAlerts((data as any) || []);
+      const { data } = await api.get('/alerts');
+      setAlerts(data.data || data);
     } catch (err: any) {
       console.error('Error fetching alerts:', err);
-      setError(err.message || 'Failed to fetch alerts');
+      setError(err.response?.data?.message || 'Nie udało się pobrać alertów');
+
+      toast.error('Błąd', {
+        description: 'Nie udało się wczytać alertów',
+      });
     } finally {
       setLoading(false);
     }
   };
 
-  const toggleAlertStatus = async (alertId: string) => {
+  // Create new alert
+  const createAlert = async (alertData: Omit<UserAlert, 'id' | 'user_id' | 'created_at' | 'updated_at'>) => {
     try {
-      const alert = alerts.find((a) => a.id === alertId);
+      const { data } = await api.post('/alerts', alertData);
+      setAlerts([...alerts, data.data]);
+
+      toast.success('Alert utworzony pomyślnie! 🎉', {
+        description: `Alert "${alertData.alert_name}" został zapisany.`,
+      });
+
+      return data.data;
+    } catch (err: any) {
+      console.error('Error creating alert:', err);
+
+      toast.error('Błąd', {
+        description: err.response?.data?.message || 'Nie udało się utworzyć alertu',
+      });
+
+      throw err;
+    }
+  };
+
+  // Update alert
+  const updateAlert = async (id: number, alertData: Partial<UserAlert>) => {
+    try {
+      const { data } = await api.put(`/alerts/${id}`, alertData);
+      setAlerts(alerts.map(a => a.id === id ? data.data : a));
+
+      toast.success('Alert zaktualizowany pomyślnie! 🎉', {
+        description: 'Zmiany zostały zapisane.',
+      });
+
+      return data.data;
+    } catch (err: any) {
+      console.error('Error updating alert:', err);
+
+      toast.error('Błąd', {
+        description: err.response?.data?.message || 'Nie udało się zaktualizować alertu',
+      });
+
+      throw err;
+    }
+  };
+
+  // Toggle alert status
+  const toggleAlertStatus = async (id: number) => {
+    try {
+      const alert = alerts.find(a => a.id === id);
       if (!alert) return;
 
-      const { error: updateError } = await supabase
-        .from('user_alerts' as any)
-        .update({ is_active: !alert.is_active })
-        .eq('id', alertId);
-
-      if (updateError) throw updateError;
-
-      // Update local state
-      setAlerts(
-        alerts.map((a) =>
-          a.id === alertId ? { ...a, is_active: !a.is_active } : a
-        )
-      );
+      const { data } = await api.patch(`/alerts/${id}/toggle`);
+      setAlerts(alerts.map(a => a.id === id ? data.data : a));
 
       toast.success(
-        !alert.is_active ? 'Alert aktywowany' : 'Alert dezaktywowany',
+        data.data.is_active ? '✅ Alert aktywowany' : '⏸️ Alert wstrzymany',
         {
-          description: !alert.is_active
+          description: data.data.is_active
             ? 'Będziesz otrzymywać powiadomienia'
-            : 'Powiadomienia zostały wstrzymane',
+            : 'Powiadomienia zostały wstrzymane'
         }
       );
     } catch (err: any) {
       console.error('Error toggling alert status:', err);
+
       toast.error('Błąd', {
         description: 'Nie udało się zmienić statusu alertu',
       });
     }
   };
 
-  const deleteAlert = async (alertId: string) => {
+  // Delete alert
+  const deleteAlert = async (id: number) => {
     try {
-      const { error: deleteError } = await supabase
-        .from('user_alerts' as any)
-        .delete()
-        .eq('id', alertId);
+      await api.delete(`/alerts/${id}`);
+      setAlerts(alerts.filter(a => a.id !== id));
 
-      if (deleteError) throw deleteError;
-
-      // Update local state
-      setAlerts(alerts.filter((a) => a.id !== alertId));
-
-      toast.success('Alert usunięty', {
-        description: 'Alert został pomyślnie usunięty',
+      toast.success('🗑️ Alert usunięty', {
+        description: 'Alert został pomyślnie usunięty'
       });
     } catch (err: any) {
       console.error('Error deleting alert:', err);
+
       toast.error('Błąd', {
         description: 'Nie udało się usunąć alertu',
       });
     }
   };
 
-  const getAlertById = async (alertId: string): Promise<UserAlert | null> => {
+  // Get alert by ID
+  const getAlertById = async (id: number): Promise<UserAlert | null> => {
     try {
-      const { data, error } = await supabase
-        .from('user_alerts' as any)
-        .select('*')
-        .eq('id', alertId)
-        .single();
-
-      if (error) throw error;
-
-      return (data as any) || null;
+      const { data } = await api.get(`/alerts/${id}`);
+      return data.data || data;
     } catch (err: any) {
       console.error('Error fetching alert:', err);
+
       toast.error('Błąd', {
         description: 'Nie udało się wczytać alertu',
       });
+
       return null;
     }
   };
@@ -142,6 +158,8 @@ export const useAlerts = () => {
     loading,
     error,
     fetchAlerts,
+    createAlert,
+    updateAlert,
     toggleAlertStatus,
     deleteAlert,
     getAlertById,
