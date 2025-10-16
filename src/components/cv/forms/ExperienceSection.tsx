@@ -12,13 +12,15 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog';
-import { Briefcase, Plus, Pencil, Trash2, MapPin, Calendar } from 'lucide-react';
+import { Briefcase, Plus, Pencil, Trash2, MapPin, Calendar, Sparkles, Loader2 } from 'lucide-react';
 import { useCVStore } from '@/stores/cvStore';
 import { ExperienceItem } from '@/types/cv';
 import { toast } from 'sonner';
+import { useAIGeneration } from '@/hooks/useAIGeneration';
 
 const ExperienceSection: React.FC = () => {
   const { cvData, addExperience, updateExperience, deleteExperience } = useCVStore();
+  const { improveDescription, isLoading: isAILoading } = useAIGeneration();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState<Omit<ExperienceItem, 'id'>>({
@@ -83,6 +85,31 @@ const ExperienceSection: React.FC = () => {
     if (!date) return '';
     const [year, month] = date.split('-');
     return `${month}.${year}`;
+  };
+
+  /**
+   * Handle AI description improvement
+   * Converts job description into achievement-focused bullet points
+   */
+  const handleImproveDescription = async () => {
+    if (!formData.position || !formData.description) {
+      toast.error('Najpierw wypełnij stanowisko i opis');
+      return;
+    }
+
+    const achievements = await improveDescription({
+      jobTitle: formData.position,
+      currentDescription: formData.description,
+      language: cvData.customization.language
+    });
+
+    if (achievements) {
+      // Append AI-generated achievements to existing ones
+      setFormData({
+        ...formData,
+        achievements: [...formData.achievements, ...achievements]
+      });
+    }
   };
 
   return (
@@ -236,6 +263,31 @@ const ExperienceSection: React.FC = () => {
                   placeholder="Opisz swoje obowiązki i osiągnięcia..."
                   className="min-h-[100px]"
                 />
+
+                {/* AI Improve Description Button */}
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleImproveDescription}
+                  disabled={isAILoading || !formData.position || !formData.description}
+                  className="w-full border-purple-200 hover:bg-purple-50"
+                >
+                  {isAILoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Ulepszanie...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4 mr-2 text-purple-600" />
+                      Ulepsz opis AI
+                    </>
+                  )}
+                </Button>
+                <p className="text-xs text-gray-500">
+                  AI wygeneruje osiągnięcia na podstawie opisu i doda je do listy poniżej
+                </p>
               </div>
             </div>
             <DialogFooter>

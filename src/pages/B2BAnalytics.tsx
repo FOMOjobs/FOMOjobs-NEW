@@ -481,8 +481,15 @@ export default function B2BAnalytics() {
           description="Inteligentna analiza rynku pracy dla HR i rekruterów. Śledź konkurencję, trendy wynagrodzeń i najpopularniejsze oferty pracy w Polsce."
         />
         <FOMOJobsNavbar />
-        <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 pt-16 px-4 flex items-center justify-center">
-          <div className="text-center">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative overflow-hidden pt-16 px-4 flex items-center justify-center">
+          {/* Animated gradient orbs */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-300 dark:bg-blue-600/30 rounded-full mix-blend-multiply dark:mix-blend-normal filter blur-xl opacity-30 dark:opacity-20 animate-blob" />
+            <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-teal-300 dark:bg-teal-600/30 rounded-full mix-blend-multiply dark:mix-blend-normal filter blur-xl opacity-30 dark:opacity-20 animate-blob animation-delay-4000" />
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-cyan-300 dark:bg-cyan-600/30 rounded-full mix-blend-multiply dark:mix-blend-normal filter blur-xl opacity-20 dark:opacity-10 animate-blob animation-delay-2000" />
+          </div>
+
+          <div className="relative z-10 text-center">
             <RefreshCcw className="w-12 h-12 animate-spin text-purple-600 mx-auto mb-4" />
             <p className="text-lg text-gray-600 dark:text-gray-400">
               Ładowanie danych...
@@ -500,8 +507,16 @@ export default function B2BAnalytics() {
         description="Inteligentna analiza rynku pracy dla HR i rekruterów. Śledź konkurencję, trendy wynagrodzeń i najpopularniejsze oferty pracy w Polsce."
       />
       <FOMOJobsNavbar />
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 pt-16 px-4 pb-8">
-        <div className="max-w-7xl mx-auto">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative overflow-hidden pt-16 px-4 pb-8">
+        {/* Animated gradient orbs - Analytics colors (Blue + Teal) */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-300 dark:bg-blue-600/30 rounded-full mix-blend-multiply dark:mix-blend-normal filter blur-xl opacity-30 dark:opacity-20 animate-blob" />
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-teal-300 dark:bg-teal-600/30 rounded-full mix-blend-multiply dark:mix-blend-normal filter blur-xl opacity-30 dark:opacity-20 animate-blob animation-delay-4000" />
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-cyan-300 dark:bg-cyan-600/30 rounded-full mix-blend-multiply dark:mix-blend-normal filter blur-xl opacity-20 dark:opacity-10 animate-blob animation-delay-2000" />
+        </div>
+
+        {/* Content - positioned above animated background */}
+        <div className="relative z-10 max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-yellow-500 bg-clip-text text-transparent">
@@ -1068,6 +1083,7 @@ export default function B2BAnalytics() {
               </BarChart>
             </ResponsiveContainer>
           </Card>
+        </div>
         </div>
       </div>
     </div>

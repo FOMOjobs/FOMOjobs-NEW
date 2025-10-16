@@ -474,7 +474,7 @@ const JobTracker = () => {
         <div className="relative z-10">
           {/* Header */}
           <div className="bg-gradient-to-br from-primary via-accent to-primary dark:from-primary/80 dark:via-accent/80 dark:to-primary/70 text-primary-foreground">
-          <div className="container mx-auto px-4 py-20">
+            <div className="container mx-auto px-4 py-20">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -697,6 +697,7 @@ const JobTracker = () => {
                 </Dialog>
               </div>
             </motion.div>
+            </div>
           </div>
         </div>
 

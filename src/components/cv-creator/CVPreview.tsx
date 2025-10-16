@@ -23,6 +23,10 @@ import ExecutiveTemplate from './templates/ExecutiveTemplate';
 import ModernTemplate from './templates/ModernTemplate';
 import ProfessionalTemplate from './templates/ProfessionalTemplate';
 import MinimalistTemplate from './templates/MinimalistTemplate';
+import ClassicTemplate from './templates/ClassicTemplate';
+import TechTemplate from './templates/TechTemplate';
+import CreativeTemplate from './templates/CreativeTemplate';
+import AcademicTemplate from './templates/AcademicTemplate';
 import { toast } from 'sonner';
 
 const CVPreview: React.FC = memo(() => {
@@ -82,20 +86,16 @@ const CVPreview: React.FC = memo(() => {
       case 'minimal':
         return <MinimalistTemplate data={cvData} primaryColor={primaryColor} secondaryColor={secondaryColor} />;
       case 'classic':
-      case 'creative':
+        return <ClassicTemplate data={cvData} primaryColor={primaryColor} secondaryColor={secondaryColor} />;
       case 'tech':
+        return <TechTemplate data={cvData} primaryColor={primaryColor} secondaryColor={secondaryColor} />;
+      case 'creative':
+        return <CreativeTemplate data={cvData} primaryColor={primaryColor} secondaryColor={secondaryColor} />;
       case 'academic':
+        return <AcademicTemplate data={cvData} primaryColor={primaryColor} secondaryColor={secondaryColor} />;
       default:
-        // Placeholder for other templates
-        return (
-          <div className="bg-white p-12 max-w-[21cm] mx-auto">
-            <div className="text-center text-gray-400 py-20">
-              <FileText className="h-16 w-16 mx-auto mb-4 opacity-50" />
-              <p className="text-lg font-medium">Szablon "{getTemplateName(template)}" będzie dostępny wkrótce!</p>
-              <p className="text-sm mt-2">Wypróbuj dostępne szablony z menu</p>
-            </div>
-          </div>
-        );
+        // Fallback to modern template
+        return <ModernTemplate data={cvData} primaryColor={primaryColor} secondaryColor={secondaryColor} />;
     }
   };
 
@@ -135,7 +135,16 @@ const CVPreview: React.FC = memo(() => {
                 ✨ Nowoczesny - Świeży i dynamiczny z gradientami
               </SelectItem>
               <SelectItem value="classic">
-                📋 Klasyczny - Tradycyjny i sprawdzony (wkrótce)
+                📋 Klasyczny - Tradycyjny serif, ideał dla finansów i prawa
+              </SelectItem>
+              <SelectItem value="tech">
+                💻 Tech - Motyw terminalowy dla programistów
+              </SelectItem>
+              <SelectItem value="creative">
+                🎨 Kreatywny - Asymetryczny, dla designerów i artystów
+              </SelectItem>
+              <SelectItem value="academic">
+                🎓 Akademicki - Dla naukowców i badaczy
               </SelectItem>
               <SelectItem value="minimal">
                 ⚪ Minimalistyczny - Skandynawski, maksimum białej przestrzeni

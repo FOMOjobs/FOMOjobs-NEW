@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { CVData, ExperienceItem, EducationItem, SkillItem, LanguageItem, PersonalInfo, CVTemplate, CVCustomization } from '@/types/cv';
 import { createEmptyCVData } from '@/lib/cvStorage';
+import { cvCloudService, SavedCV } from '@/services/cvCloudService';
 
 interface CVStore {
   // State
@@ -8,6 +9,11 @@ interface CVStore {
   activeSection: string;
   isDirty: boolean;
   isLoading: boolean;
+
+  // Cloud Sync State
+  savedCVs: SavedCV[];
+  currentCVId: string | null;
+  isCloudLoading: boolean;
 
   // Personal Info Actions
   updatePersonalInfo: (info: Partial<PersonalInfo>) => void;
@@ -45,6 +51,15 @@ interface CVStore {
   resetCV: () => void;
   setDirty: (dirty: boolean) => void;
   setLoading: (loading: boolean) => void;
+
+  // Cloud Sync Actions
+  fetchSavedCVs: () => Promise<void>;
+  saveCurrentCV: (name: string) => Promise<SavedCV>;
+  loadSavedCV: (id: string) => Promise<void>;
+  renameSavedCV: (id: string, newName: string) => Promise<void>;
+  duplicateSavedCV: (id: string) => Promise<void>;
+  deleteSavedCV: (id: string) => Promise<void>;
+  updateCurrentCV: () => Promise<void>;
 }
 
 export const useCVStore = create<CVStore>((set, get) => ({
@@ -53,6 +68,11 @@ export const useCVStore = create<CVStore>((set, get) => ({
   activeSection: 'personal',
   isDirty: false,
   isLoading: false,
+
+  // Cloud Sync State
+  savedCVs: [],
+  currentCVId: null,
+  isCloudLoading: false,
 
   // Personal Info Actions
   updatePersonalInfo: (info) => {
@@ -325,5 +345,131 @@ export const useCVStore = create<CVStore>((set, get) => ({
 
   setLoading: (loading) => {
     set({ isLoading: loading });
+  },
+
+  // Cloud Sync Actions
+  fetchSavedCVs: async () => {
+    set({ isCloudLoading: true });
+    try {
+      const cvs = await cvCloudService.listCVs();
+      set({ savedCVs: cvs, isCloudLoading: false });
+    } catch (error) {
+      console.error('Failed to fetch CVs:', error);
+      set({ isCloudLoading: false });
+      throw error;
+    }
+  },
+
+  saveCurrentCV: async (name: string) => {
+    set({ isCloudLoading: true });
+    try {
+      const state = get();
+      const savedCV = await cvCloudService.createCV(name, state.cvData);
+
+      set({
+        currentCVId: savedCV.id,
+        isCloudLoading: false,
+        isDirty: false
+      });
+
+      // Refresh list
+      await get().fetchSavedCVs();
+
+      return savedCV;
+    } catch (error) {
+      console.error('Failed to save CV:', error);
+      set({ isCloudLoading: false });
+      throw error;
+    }
+  },
+
+  updateCurrentCV: async () => {
+    const state = get();
+    if (!state.currentCVId) {
+      throw new Error('No CV is currently loaded');
+    }
+
+    set({ isCloudLoading: true });
+    try {
+      await cvCloudService.updateCV(state.currentCVId, {
+        cvData: state.cvData
+      });
+
+      set({
+        isCloudLoading: false,
+        isDirty: false
+      });
+
+      // Refresh list
+      await get().fetchSavedCVs();
+    } catch (error) {
+      console.error('Failed to update CV:', error);
+      set({ isCloudLoading: false });
+      throw error;
+    }
+  },
+
+  loadSavedCV: async (id: string) => {
+    set({ isCloudLoading: true });
+    try {
+      const cv = await cvCloudService.getCV(id);
+      if (cv) {
+        set({
+          cvData: cv.cvData,
+          currentCVId: cv.id,
+          isCloudLoading: false,
+          isDirty: false
+        });
+      }
+    } catch (error) {
+      console.error('Failed to load CV:', error);
+      set({ isCloudLoading: false });
+      throw error;
+    }
+  },
+
+  renameSavedCV: async (id: string, newName: string) => {
+    set({ isCloudLoading: true });
+    try {
+      await cvCloudService.updateCV(id, { name: newName });
+      await get().fetchSavedCVs();
+      set({ isCloudLoading: false });
+    } catch (error) {
+      console.error('Failed to rename CV:', error);
+      set({ isCloudLoading: false });
+      throw error;
+    }
+  },
+
+  duplicateSavedCV: async (id: string) => {
+    set({ isCloudLoading: true });
+    try {
+      await cvCloudService.duplicateCV(id);
+      await get().fetchSavedCVs();
+      set({ isCloudLoading: false });
+    } catch (error) {
+      console.error('Failed to duplicate CV:', error);
+      set({ isCloudLoading: false });
+      throw error;
+    }
+  },
+
+  deleteSavedCV: async (id: string) => {
+    set({ isCloudLoading: true });
+    try {
+      await cvCloudService.deleteCV(id);
+
+      const state = get();
+      if (state.currentCVId === id) {
+        set({ currentCVId: null });
+      }
+
+      await get().fetchSavedCVs();
+      set({ isCloudLoading: false });
+    } catch (error) {
+      console.error('Failed to delete CV:', error);
+      set({ isCloudLoading: false });
+      throw error;
+    }
   }
 }));

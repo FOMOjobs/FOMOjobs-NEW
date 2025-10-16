@@ -14,6 +14,7 @@ import Auth from "./pages/Auth";
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const JobTracker = lazy(() => import("./pages/JobTracker"));
 const CVCreator = lazy(() => import("./pages/CVCreator"));
+const CVList = lazy(() => import("./pages/CVList"));
 const InterviewCoach = lazy(() => import("./pages/InterviewCoach"));
 const JobPrompts = lazy(() => import("./pages/JobPrompts"));
 const Recruiter = lazy(() => import("./pages/Recruiter"));
@@ -23,6 +24,7 @@ const About = lazy(() => import("./pages/About"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Profile = lazy(() => import("./pages/Profile"));
+const FeedbackPage = lazy(() => import("./pages/FeedbackPage"));
 // const CalendarPage = lazy(() => import("./pages/Calendar")); // TODO: Migrate from volunteer to job events
 const Chat = lazy(() => import("./pages/Chat"));
 const Admin = lazy(() => import("./pages/Admin"));
@@ -62,6 +64,7 @@ const App = () => (
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/job-tracker" element={<JobTracker />} />
                   <Route path="/cv-creator" element={<CVCreator />} />
+                  <Route path="/cvs" element={<CVList />} />
                   <Route path="/interview-coach" element={<InterviewCoach />} />
                   <Route path="/job-prompts" element={<JobPrompts />} />
                   <Route path="/recruiter" element={<Recruiter />} />
@@ -69,6 +72,7 @@ const App = () => (
                   <Route path="/alerts" element={<Alerts />} />
                   <Route path="/alerts/create" element={<CreateAlert />} />
                   <Route path="/alerts/edit/:alertId" element={<CreateAlert />} />
+                  <Route path="/feedback" element={<FeedbackPage />} />
 
                   {/* User pages - keep protected */}
                   <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />

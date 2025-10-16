@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
-import { Plus, Download, Eye, Save, RotateCcw, FileText, FileDown } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Plus, Download, Eye, Save, RotateCcw, FileText, FileDown, Cloud } from "lucide-react";
 import { useCVStore } from '@/stores/cvStore';
 import { autoSaveCVData, loadAutoSavedCVData } from '@/lib/cvStorage';
 import CVSectionNavigation from '@/components/cv/CVSectionNavigation';
@@ -25,10 +27,26 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const CVCreator = () => {
-  const { activeSection, cvData, isDirty, setDirty, loadCVData, resetCV } = useCVStore();
+  const { activeSection, cvData, isDirty, setDirty, loadCVData, resetCV, saveCurrentCV, currentCVId } = useCVStore();
   const [isExporting, setIsExporting] = useState(false);
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+  const [cvName, setCVName] = useState('');
 
   // Auto-load from localStorage on mount
   useEffect(() => {
@@ -49,6 +67,30 @@ const CVCreator = () => {
       return () => clearTimeout(timer);
     }
   }, [cvData, isDirty, setDirty]);
+
+  // Keyboard shortcut (Ctrl+S / Cmd+S)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+
+        // Auto-suggest name if not set
+        const fullName = cvData.personal?.firstName && cvData.personal?.lastName
+          ? `${cvData.personal.firstName} ${cvData.personal.lastName}`
+          : '';
+        const suggestedName = fullName ? `CV - ${fullName}` : 'Nowe CV';
+
+        if (!cvName) {
+          setCVName(suggestedName);
+        }
+
+        setSaveDialogOpen(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [cvData.personal, cvName]);
 
   const renderActiveSection = () => {
     switch (activeSection) {
@@ -80,6 +122,38 @@ const CVCreator = () => {
     autoSaveCVData(cvData);
     setDirty(false);
     toast.success('CV zapisane!');
+  };
+
+  const handleOpenSaveDialog = () => {
+    const fullName = cvData.personal?.firstName && cvData.personal?.lastName
+      ? `${cvData.personal.firstName} ${cvData.personal.lastName}`
+      : '';
+    const suggestedName = fullName ? `CV - ${fullName}` : 'Nowe CV';
+
+    if (!cvName) {
+      setCVName(suggestedName);
+    }
+
+    setSaveDialogOpen(true);
+  };
+
+  const handleCloudSave = async () => {
+    if (!cvName.trim()) {
+      toast.error('Podaj nazwę CV');
+      return;
+    }
+
+    try {
+      await saveCurrentCV(cvName.trim());
+      toast.success('✅ Zapisano w chmurze!', {
+        description: `CV "${cvName}" jest teraz dostępne na wszystkich urządzeniach.`
+      });
+      setSaveDialogOpen(false);
+    } catch (error) {
+      toast.error('Błąd zapisu', {
+        description: 'Nie udało się zapisać CV. Spróbuj ponownie.'
+      });
+    }
   };
 
   const handleExportPDF = async () => {
@@ -121,9 +195,18 @@ const CVCreator = () => {
 
       <FOMOJobsNavbar />
 
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 pt-16">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-primary via-secondary to-primary bg-[length:200%_100%] animate-gradient-x text-primary-foreground">
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative overflow-hidden pt-16">
+        {/* Animated gradient orbs */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-300 dark:bg-purple-600/30 rounded-full mix-blend-multiply dark:mix-blend-normal filter blur-xl opacity-30 dark:opacity-20 animate-blob" />
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-yellow-300 dark:bg-yellow-600/30 rounded-full mix-blend-multiply dark:mix-blend-normal filter blur-xl opacity-30 dark:opacity-20 animate-blob animation-delay-2000" />
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-pink-300 dark:bg-pink-600/30 rounded-full mix-blend-multiply dark:mix-blend-normal filter blur-xl opacity-20 dark:opacity-10 animate-blob animation-delay-4000" />
+        </div>
+
+        {/* Content - positioned above animated background */}
+        <div className="relative z-10">
+          {/* Header */}
+          <div className="bg-gradient-to-r from-primary via-secondary to-primary bg-[length:200%_100%] animate-gradient-x text-primary-foreground">
           <div className="container mx-auto px-4 py-20">
             <motion.div
               className="text-center"
@@ -137,7 +220,26 @@ const CVCreator = () => {
               <p className="text-lg md:text-xl lg:text-2xl mb-6 md:mb-8 opacity-90 max-w-3xl mx-auto">
                 Profesjonalne narzędzie do tworzenia CV dopasowane do polskiego rynku pracy.
               </p>
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center max-w-2xl mx-auto">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center max-w-3xl mx-auto">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        size="lg"
+                        onClick={handleOpenSaveDialog}
+                        className="text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 text-white w-full sm:w-auto"
+                      >
+                        <Cloud className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+                        {currentCVId ? 'Zaktualizuj' : 'Zapisz w chmurze'}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Zapisz CV i uzyskaj dostęp z każdego urządzenia</p>
+                      <p className="text-xs text-gray-400 mt-1">Skrót: Ctrl+S</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button
@@ -170,6 +272,13 @@ const CVCreator = () => {
                   <RotateCcw className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                   Nowe CV
                 </Button>
+
+                {currentCVId && (
+                  <div className="flex items-center gap-2 text-sm text-gray-100 px-4 py-2 bg-green-500/20 backdrop-blur-sm rounded-full border border-green-400/30">
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                    Zapisane
+                  </div>
+                )}
               </div>
             </motion.div>
           </div>
@@ -238,9 +347,65 @@ const CVCreator = () => {
             </motion.aside>
           </div>
         </div>
+        </div>
       </div>
 
       <FOMOJobsFooter />
+
+      {/* Save to Cloud Dialog */}
+      <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {currentCVId ? 'Zaktualizuj CV w chmurze' : 'Zapisz CV w chmurze'}
+            </DialogTitle>
+            <DialogDescription>
+              {currentCVId
+                ? 'Wszystkie zmiany zostaną zapisane w istniejącym CV.'
+                : 'Twoje CV będzie dostępne z każdego urządzenia i przeglądarki.'
+              }
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-4">
+            <div>
+              <Label htmlFor="cvName">Nazwa CV</Label>
+              <Input
+                id="cvName"
+                value={cvName}
+                onChange={(e) => setCVName(e.target.value)}
+                placeholder="np. 'CV - Software Engineer'"
+                className="mt-2"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && cvName.trim()) {
+                    handleCloudSave();
+                  }
+                }}
+              />
+              <p className="text-xs text-gray-500 mt-2">
+                Wybierz nazwę, która pomoże Ci rozróżnić wersje CV
+              </p>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setSaveDialogOpen(false)}
+            >
+              Anuluj
+            </Button>
+            <Button
+              onClick={handleCloudSave}
+              disabled={!cvName.trim()}
+              className="bg-gradient-to-r from-purple-600 to-yellow-500 hover:from-purple-700 hover:to-yellow-600"
+            >
+              <Save className="w-4 h-4 mr-2" />
+              {currentCVId ? 'Zaktualizuj' : 'Zapisz'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
