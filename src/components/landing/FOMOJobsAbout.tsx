@@ -12,7 +12,7 @@ const FOMOJobsAbout = () => {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-gradient mb-6">
+          <h2 className="text-4xl md:text-5xl font-bold text-gradient mb-6 pb-2 overflow-visible">
             Poznaj FOMOjobs
           </h2>
           <p className="text-muted-foreground text-lg max-w-3xl mx-auto">

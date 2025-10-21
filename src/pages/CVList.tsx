@@ -76,6 +76,7 @@ const CVList = () => {
     renameSavedCV,
     duplicateSavedCV,
     deleteSavedCV,
+    resetCV,
     cvData
   } = useCVStore();
 
@@ -243,7 +244,10 @@ const CVList = () => {
 
             <Button
               size="lg"
-              onClick={() => setCreateDialogOpen(true)}
+              onClick={() => {
+                resetCV();
+                navigate('/cv-creator');
+              }}
               className="mt-4 md:mt-0 bg-gradient-to-r from-purple-600 to-yellow-500 hover:from-purple-700 hover:to-yellow-600"
             >
               <Plus className="w-5 h-5 mr-2" />
@@ -272,7 +276,10 @@ const CVList = () => {
               </p>
               <Button
                 size="lg"
-                onClick={() => setCreateDialogOpen(true)}
+                onClick={() => {
+                  resetCV();
+                  navigate('/cv-creator');
+                }}
                 className="bg-gradient-to-r from-purple-600 to-yellow-500 hover:from-purple-700 hover:to-yellow-600"
               >
                 <Plus className="w-5 h-5 mr-2" />
@@ -358,6 +365,11 @@ const CVList = () => {
                             {cv.cvData.personal?.fullName || ''}
                           </span>
                         </div>
+                        {cv.cvData.personal?.email && (
+                          <div className="text-xs text-gray-500">
+                            {cv.cvData.personal.email}
+                          </div>
+                        )}
                       </div>
                     </CardContent>
 

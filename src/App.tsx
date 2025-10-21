@@ -29,7 +29,7 @@ const FeedbackPage = lazy(() => import("./pages/FeedbackPage"));
 const Chat = lazy(() => import("./pages/Chat"));
 const Admin = lazy(() => import("./pages/Admin"));
 const Achievements = lazy(() => import("./pages/Achievements"));
-const B2BAnalytics = lazy(() => import("./pages/B2B/Analytics"));
+const B2BAnalytics = lazy(() => import("./pages/B2BAnalytics"));
 const CreateAlert = lazy(() => import("./pages/CreateAlert"));
 const Alerts = lazy(() => import("./pages/Alerts"));
 

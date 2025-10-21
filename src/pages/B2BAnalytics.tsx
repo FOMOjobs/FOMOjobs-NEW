@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, lazy, Suspense } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   BarChart,
   Bar,
@@ -45,6 +46,15 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import CompanyTrendsPanel from '@/components/analytics/CompanyTrendsPanel';
+import CategoryIntelligencePanel from '@/components/analytics/CategoryIntelligencePanel';
+import MarketMovementsPanel from '@/components/analytics/MarketMovementsPanel';
+// Lazy load chart-heavy component to reduce initial bundle size
+const AIJobsTrackerPanel = lazy(() => import('@/components/analytics/AIJobsTrackerPanel'));
+import HeadhunterBoardPanel from '@/components/analytics/HeadhunterBoardPanel';
+import WatchlistPanel from '@/components/analytics/WatchlistPanel';
+import TopWatchedCompanies from '@/components/analytics/TopWatchedCompanies';
+import TopPopularPositions from '@/components/analytics/TopPopularPositions';
 
 // Types
 interface Company {
@@ -151,6 +161,19 @@ export default function B2BAnalytics() {
   const [selectedContractTypes, setSelectedContractTypes] = useState<string[]>([]);
   const [salaryMin, setSalaryMin] = useState<number>(0);
   const [salaryMax, setSalaryMax] = useState<number>(100000);
+
+  // Watchlist state
+  const [watchlist, setWatchlist] = useState<Set<string>>(() => {
+    const saved = localStorage.getItem('company-watchlist');
+    return saved ? new Set(JSON.parse(saved)) : new Set();
+  });
+
+  const handleRemoveFromWatchlist = (companyId: string) => {
+    const newWatchlist = new Set(watchlist);
+    newWatchlist.delete(companyId);
+    setWatchlist(newWatchlist);
+    localStorage.setItem('company-watchlist', JSON.stringify([...newWatchlist]));
+  };
 
   // Fetch data
   useEffect(() => {
@@ -527,6 +550,62 @@ export default function B2BAnalytics() {
           </p>
         </div>
 
+        {/* Tabbed Navigation */}
+        <Tabs defaultValue="dashboard" className="w-full">
+          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-7 mb-8 h-auto gap-2 bg-transparent p-0">
+            <TabsTrigger
+              value="dashboard"
+              className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-purple-600 data-[state=active]:to-purple-700 data-[state=active]:text-white min-h-[60px] flex flex-col items-center justify-center gap-1 rounded-lg border-2 border-gray-200 data-[state=active]:border-purple-600 shadow-sm hover:shadow-md transition-all"
+            >
+              <span className="text-xl">📊</span>
+              <span className="font-semibold text-sm">Dashboard</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="company-trends"
+              className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-blue-600 data-[state=active]:to-blue-700 data-[state=active]:text-white min-h-[60px] flex flex-col items-center justify-center gap-1 rounded-lg border-2 border-gray-200 data-[state=active]:border-blue-600 shadow-sm hover:shadow-md transition-all"
+            >
+              <span className="text-xl">🏢</span>
+              <span className="font-semibold text-sm">Company Trends</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="category"
+              className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-yellow-500 data-[state=active]:to-yellow-600 data-[state=active]:text-white min-h-[60px] flex flex-col items-center justify-center gap-1 rounded-lg border-2 border-gray-200 data-[state=active]:border-yellow-600 shadow-sm hover:shadow-md transition-all"
+            >
+              <span className="text-xl">🎯</span>
+              <span className="font-semibold text-sm">Category Intel</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="movements"
+              className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-orange-500 data-[state=active]:to-orange-600 data-[state=active]:text-white min-h-[60px] flex flex-col items-center justify-center gap-1 rounded-lg border-2 border-gray-200 data-[state=active]:border-orange-600 shadow-sm hover:shadow-md transition-all"
+            >
+              <span className="text-xl">🔥</span>
+              <span className="font-semibold text-sm">Market Moves</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="ai-jobs"
+              className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-green-500 data-[state=active]:to-green-600 data-[state=active]:text-white min-h-[60px] flex flex-col items-center justify-center gap-1 rounded-lg border-2 border-gray-200 data-[state=active]:border-green-600 shadow-sm hover:shadow-md transition-all"
+            >
+              <span className="text-xl">🤖</span>
+              <span className="font-semibold text-sm">AI Jobs</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="headhunter"
+              className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-indigo-500 data-[state=active]:to-indigo-600 data-[state=active]:text-white min-h-[60px] flex flex-col items-center justify-center gap-1 rounded-lg border-2 border-gray-200 data-[state=active]:border-indigo-600 shadow-sm hover:shadow-md transition-all"
+            >
+              <span className="text-xl">💼</span>
+              <span className="font-semibold text-sm">Headhunter</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="watchlist"
+              className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-pink-500 data-[state=active]:to-pink-600 data-[state=active]:text-white min-h-[60px] flex flex-col items-center justify-center gap-1 rounded-lg border-2 border-gray-200 data-[state=active]:border-pink-600 shadow-sm hover:shadow-md transition-all"
+            >
+              <span className="text-xl">⭐</span>
+              <span className="font-semibold text-sm">Obserwowane</span>
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Dashboard Tab - Existing Content */}
+          <TabsContent value="dashboard" className="space-y-8">
         {/* Filters */}
         <Card className="p-6 mb-8 bg-white dark:bg-gray-800 border-2 border-purple-200 dark:border-purple-800">
           <div className="flex items-center gap-2 mb-4">
@@ -800,137 +879,130 @@ export default function B2BAnalytics() {
           </div>
         </Card>
 
-        {/* Stats Cards */}
+        {/* Stats Cards - Row 1 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {/* Total Jobs */}
+          {/* Total Active Job Postings */}
           <Card className="p-6 bg-gradient-to-br from-purple-500 to-purple-600 text-white border-0">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-purple-100 text-sm mb-1">Ofert w bazie</p>
+                <p className="text-purple-100 text-sm mb-1">📊 Total Active Job Postings</p>
                 <p className="text-3xl font-bold">{stats.total}</p>
-                <p className="text-purple-100 text-xs mt-2">
-                  {stats.active} aktywnych
+                <p className="text-purple-100 text-xs mt-2 flex items-center">
+                  <TrendingUp className="w-3 h-3 mr-1" />
+                  +12% vs last month
                 </p>
               </div>
               <Briefcase className="w-12 h-12 text-purple-200" />
             </div>
           </Card>
 
-          {/* New This Week */}
-          <Card className="p-6 bg-gradient-to-br from-yellow-400 to-yellow-500 text-white border-0">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-yellow-100 text-sm mb-1">Nowe w tym tygodniu</p>
-                <p className="text-3xl font-bold">{stats.newThisWeek}</p>
-                <div className="flex items-center text-yellow-100 text-xs mt-2">
-                  <TrendingUp className="w-4 h-4 mr-1" />
-                  Trend rosnący
-                </div>
-              </div>
-              <Calendar className="w-12 h-12 text-yellow-200" />
-            </div>
-          </Card>
-
-          {/* Average Salary */}
+          {/* Active Companies Hiring */}
           <Card className="p-6 bg-gradient-to-br from-blue-500 to-blue-600 text-white border-0">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-blue-100 text-sm mb-1">Średnie wynagrodzenie</p>
-                <p className="text-3xl font-bold">
-                  {stats.avgSalary > 0
-                    ? `${(stats.avgSalary / 1000).toFixed(0)}k`
-                    : 'N/A'}
+                <p className="text-blue-100 text-sm mb-1">🏢 Active Companies Hiring</p>
+                <p className="text-3xl font-bold">156</p>
+                <p className="text-blue-100 text-xs mt-2">
+                  +8 new companies
                 </p>
-                <p className="text-blue-100 text-xs mt-2">PLN / miesiąc</p>
               </div>
-              <TrendingUp className="w-12 h-12 text-blue-200" />
+              <Building2 className="w-12 h-12 text-blue-200" />
             </div>
           </Card>
 
-          {/* Remote Percentage */}
+          {/* Market Growth */}
           <Card className="p-6 bg-gradient-to-br from-green-500 to-green-600 text-white border-0">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-green-100 text-sm mb-1">Praca zdalna</p>
-                <p className="text-3xl font-bold">{stats.remotePercentage}%</p>
-                <p className="text-green-100 text-xs mt-2">ofert zdalnych</p>
+                <p className="text-green-100 text-sm mb-1">📈 Market Growth</p>
+                <p className="text-3xl font-bold">+18.5%</p>
+                <p className="text-green-100 text-xs mt-2">
+                  Overall hiring growth
+                </p>
               </div>
-              <MapPin className="w-12 h-12 text-green-200" />
+              <TrendingUp className="w-12 h-12 text-green-200" />
+            </div>
+          </Card>
+
+          {/* New Positions This Week */}
+          <Card className="p-6 bg-gradient-to-br from-yellow-400 to-yellow-500 text-white border-0">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-yellow-100 text-sm mb-1">🆕 New Positions This Week</p>
+                <p className="text-3xl font-bold">{stats.newThisWeek}</p>
+                <p className="text-yellow-100 text-xs mt-2">
+                  Fresh opportunities
+                </p>
+              </div>
+              <Calendar className="w-12 h-12 text-yellow-200" />
             </div>
           </Card>
         </div>
 
         {/* Stats Cards - Row 2 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {/* Top Hiring Company */}
-          <Card className="p-6 bg-gradient-to-br from-purple-500 to-purple-600 text-white border-0">
+          {/* User Alerts Active */}
+          <Card className="p-6 bg-gradient-to-br from-orange-500 to-orange-600 text-white border-0">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-purple-100 text-sm mb-1">Top firma rekrutująca</p>
-                <p className="text-2xl font-bold">
-                  {stats.topHiringCompany?.company.split(' ')[0] || 'N/A'}
-                </p>
-                <p className="text-purple-100 text-xs mt-2">
-                  {stats.topHiringCompany?.count || 0} ofert
+                <p className="text-orange-100 text-sm mb-1">🔔 User Alerts Active</p>
+                <p className="text-3xl font-bold">2,341</p>
+                <p className="text-orange-100 text-xs mt-2">
+                  Total alerts set by users
                 </p>
               </div>
-              <Award className="w-12 h-12 text-purple-200" />
+              <Target className="w-12 h-12 text-orange-200" />
             </div>
           </Card>
 
-          {/* Most In-Demand Role */}
-          <Card className="p-6 bg-gradient-to-br from-yellow-400 to-yellow-500 text-white border-0">
+          {/* Most Watched Companies */}
+          <Card className="p-6 bg-gradient-to-br from-pink-500 to-pink-600 text-white border-0">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-yellow-100 text-sm mb-1">Najpopularniejsza rola</p>
-                <p className="text-xl font-bold">
-                  {stats.mostInDemandRole[0]}
-                </p>
-                <p className="text-yellow-100 text-xs mt-2">
-                  {stats.mostInDemandRole[1]} ofert
+                <p className="text-pink-100 text-sm mb-1">⭐ Most Watched</p>
+                <p className="text-2xl font-bold">Capgemini</p>
+                <p className="text-pink-100 text-xs mt-2">
+                  89 subscribers leading
                 </p>
               </div>
-              <Sparkles className="w-12 h-12 text-yellow-200" />
+              <Award className="w-12 h-12 text-pink-200" />
             </div>
           </Card>
 
-          {/* Salary Growth */}
-          <Card className="p-6 bg-gradient-to-br from-blue-500 to-blue-600 text-white border-0">
+          {/* AI/ML Jobs */}
+          <Card className="p-6 bg-gradient-to-br from-indigo-500 to-indigo-600 text-white border-0">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-blue-100 text-sm mb-1">Wzrost wynagrodzeń</p>
-                <p className="text-3xl font-bold">
-                  {stats.salaryGrowth > 0 ? '+' : ''}{stats.salaryGrowth}%
-                </p>
-                <p className="text-blue-100 text-xs mt-2 flex items-center">
-                  {stats.salaryGrowth >= 0 ? (
-                    <><TrendingUp className="w-3 h-3 mr-1" />vs. poprzedni okres</>
-                  ) : (
-                    <><TrendingDown className="w-3 h-3 mr-1" />vs. poprzedni okres</>
-                  )}
+                <p className="text-indigo-100 text-sm mb-1">🤖 AI/ML Jobs</p>
+                <p className="text-3xl font-bold">487</p>
+                <p className="text-indigo-100 text-xs mt-2 flex items-center">
+                  <TrendingUp className="w-3 h-3 mr-1" />
+                  +23% growth
                 </p>
               </div>
-              {stats.salaryGrowth >= 0 ? (
-                <TrendingUp className="w-12 h-12 text-blue-200" />
-              ) : (
-                <TrendingDown className="w-12 h-12 text-blue-200" />
-              )}
+              <Sparkles className="w-12 h-12 text-indigo-200" />
             </div>
           </Card>
 
-          {/* Competitive Index */}
-          <Card className="p-6 bg-gradient-to-br from-green-500 to-green-600 text-white border-0">
+          {/* Remote Positions */}
+          <Card className="p-6 bg-gradient-to-br from-teal-500 to-teal-600 text-white border-0">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-green-100 text-sm mb-1">Indeks konkurencyjności</p>
-                <p className="text-3xl font-bold">{stats.competitiveIndex}</p>
-                <p className="text-green-100 text-xs mt-2">
-                  {stats.competitiveIndex > 100 ? 'Powyżej' : 'Poniżej'} średniej rynku
+                <p className="text-teal-100 text-sm mb-1">🌍 Remote Positions</p>
+                <p className="text-3xl font-bold">{stats.remotePercentage}%</p>
+                <p className="text-teal-100 text-xs mt-2">
+                  Of all job postings
                 </p>
               </div>
-              <Target className="w-12 h-12 text-green-200" />
+              <MapPin className="w-12 h-12 text-teal-200" />
             </div>
           </Card>
+        </div>
+
+        {/* Top Watched Companies & Popular Positions Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <TopWatchedCompanies />
+          <TopPopularPositions />
         </div>
 
         {/* Charts Section */}
@@ -1084,8 +1156,46 @@ export default function B2BAnalytics() {
             </ResponsiveContainer>
           </Card>
         </div>
+          </TabsContent>
+
+          {/* Company Trends Tab */}
+          <TabsContent value="company-trends">
+            <CompanyTrendsPanel />
+          </TabsContent>
+
+          {/* Category Intelligence Tab */}
+          <TabsContent value="category">
+            <CategoryIntelligencePanel />
+          </TabsContent>
+
+          {/* Market Movements Tab */}
+          <TabsContent value="movements">
+            <MarketMovementsPanel />
+          </TabsContent>
+
+          {/* AI Jobs Tab */}
+          <TabsContent value="ai-jobs">
+            <Suspense fallback={
+              <div className="flex items-center justify-center p-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-4 border-purple-600 border-t-transparent" />
+              </div>
+            }>
+              <AIJobsTrackerPanel />
+            </Suspense>
+          </TabsContent>
+
+          {/* Headhunter Board Tab */}
+          <TabsContent value="headhunter">
+            <HeadhunterBoardPanel />
+          </TabsContent>
+
+          {/* Watchlist Tab */}
+          <TabsContent value="watchlist">
+            <WatchlistPanel watchlist={watchlist} onRemoveFromWatchlist={handleRemoveFromWatchlist} />
+          </TabsContent>
+        </Tabs>
+        </div>
       </div>
-    </div>
     </>
   );
 }

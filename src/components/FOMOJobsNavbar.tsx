@@ -56,7 +56,7 @@ const FOMOJobsNavbar = () => {
 
   const toolsMenuItems = [
     {
-      to: '/cv-creator',
+      to: '/cvs',
       icon: FileText,
       label: 'FOMO.cvcreator',
       description: 'Kreator CV z AI'
@@ -204,17 +204,6 @@ const FOMOJobsNavbar = () => {
             >
               FAQ
             </button>
-
-            <Link
-              to="/cvs"
-              className={cn(
-                "flex items-center gap-2 hover:text-secondary transition-colors font-medium",
-                isScrolled ? "text-foreground" : "text-primary-foreground"
-              )}
-            >
-              <FileText className="w-4 h-4" />
-              Moje CV
-            </Link>
 
             <Link to="/alerts/create">
               <Button

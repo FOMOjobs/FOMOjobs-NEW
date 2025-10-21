@@ -19,8 +19,7 @@ import FOMOJobsNavbar from '@/components/FOMOJobsNavbar';
 import FOMOJobsFooter from '@/components/landing/FOMOJobsFooter';
 import { Helmet } from 'react-helmet-async';
 import { toast } from 'sonner';
-import { exportToPDF } from '@/utils/cvExport/pdfExport';
-import { exportToDOCX } from '@/utils/cvExport/docxExport';
+// Removed static imports - now using dynamic imports for PDF/DOCX export to reduce bundle size
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -155,6 +154,8 @@ const CVCreator = () => {
   const handleExportPDF = async () => {
     try {
       setIsExporting(true);
+      // Dynamic import - only load PDF library when user actually exports
+      const { exportToPDF } = await import('@/utils/cvExport/pdfExport');
       await exportToPDF(cvData);
       toast.success('CV wyeksportowane jako PDF!');
     } catch (error) {
@@ -168,6 +169,8 @@ const CVCreator = () => {
   const handleExportDOCX = async () => {
     try {
       setIsExporting(true);
+      // Dynamic import - only load DOCX library when user actually exports
+      const { exportToDOCX } = await import('@/utils/cvExport/docxExport');
       await exportToDOCX(cvData);
       toast.success('CV wyeksportowane jako DOCX!');
     } catch (error) {
