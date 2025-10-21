@@ -12,10 +12,10 @@ import { UserAlert } from '@/hooks/useAlerts';
 
 interface AlertCardProps {
   alert: UserAlert;
-  onToggleStatus: (alertId: string) => void;
+  onToggleStatus: (alertId: number) => void;
   onViewDetails: (alert: UserAlert) => void;
-  onEdit: (alertId: string) => void;
-  onDelete: (alertId: string, alertName: string, lastSent: string | null) => void;
+  onEdit: (alertId: number) => void;
+  onDelete: (alertId: number, alertName: string, lastSent: string | null) => void;
 }
 
 const AlertCard = ({
@@ -45,7 +45,7 @@ const AlertCard = ({
             <CardTitle className="text-lg font-bold">{alert.alert_name}</CardTitle>
             <p className="text-sm text-muted-foreground mt-1 flex items-center">
               <Clock className="w-3 h-3 inline mr-1" />
-              Powiadomienia o {formatTime(alert.notification_time)}
+              Powiadomienia o {formatTime(alert.alert_time)}
             </p>
           </div>
           <Switch
@@ -61,17 +61,17 @@ const AlertCard = ({
         <div className="grid grid-cols-3 gap-2 text-center text-sm">
           <div className="bg-purple-50 dark:bg-purple-900/20 rounded p-2">
             <Building2 className="w-4 h-4 mx-auto mb-1 text-purple-600 dark:text-purple-400" />
-            <p className="font-semibold text-foreground">{alert.selected_companies.length}</p>
+            <p className="font-semibold text-foreground">{alert.companies.length}</p>
             <p className="text-xs text-muted-foreground">firm</p>
           </div>
           <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded p-2">
             <GraduationCap className="w-4 h-4 mx-auto mb-1 text-yellow-600 dark:text-yellow-400" />
-            <p className="font-semibold text-foreground">{alert.selected_levels.length}</p>
+            <p className="font-semibold text-foreground">{alert.experience_levels.length}</p>
             <p className="text-xs text-muted-foreground">poziomów</p>
           </div>
           <div className="bg-green-50 dark:bg-green-900/20 rounded p-2">
             <Briefcase className="w-4 h-4 mx-auto mb-1 text-green-600 dark:text-green-400" />
-            <p className="font-semibold text-foreground">{alert.selected_categories.length}</p>
+            <p className="font-semibold text-foreground">{alert.job_categories.length}</p>
             <p className="text-xs text-muted-foreground">kategorii</p>
           </div>
         </div>
@@ -80,14 +80,14 @@ const AlertCard = ({
         <div className="text-xs text-muted-foreground space-y-1">
           <p className="truncate">
             <strong className="text-foreground">Firmy:</strong>{' '}
-            {alert.selected_companies.slice(0, 3).join(', ')}
-            {alert.selected_companies.length > 3 &&
-              ` +${alert.selected_companies.length - 3} więcej`}
+            {alert.companies.slice(0, 3).join(', ')}
+            {alert.companies.length > 3 &&
+              ` +${alert.companies.length - 3} więcej`}
           </p>
           <p className="truncate">
             <strong className="text-foreground">Poziomy:</strong>{' '}
-            {alert.selected_levels.slice(0, 2).join(', ')}
-            {alert.selected_levels.length > 2 && ` +${alert.selected_levels.length - 2}`}
+            {alert.experience_levels.slice(0, 2).join(', ')}
+            {alert.experience_levels.length > 2 && ` +${alert.experience_levels.length - 2}`}
           </p>
         </div>
 

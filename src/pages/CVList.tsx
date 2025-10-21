@@ -355,14 +355,9 @@ const CVList = () => {
                         <div className="flex items-center gap-2">
                           <FileText className="w-4 h-4" />
                           <span>
-                            {cv.cvData.personal?.firstName || ''} {cv.cvData.personal?.lastName || ''}
+                            {cv.cvData.personal?.fullName || ''}
                           </span>
                         </div>
-                        {cv.cvData.personal?.jobTitle && (
-                          <div className="text-xs text-gray-500">
-                            {cv.cvData.personal.jobTitle}
-                          </div>
-                        )}
                       </div>
                     </CardContent>
 

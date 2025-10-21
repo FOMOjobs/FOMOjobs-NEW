@@ -20,7 +20,7 @@ interface AlertDetailsDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   alert: UserAlert | null;
-  onEdit: (alertId: string) => void;
+  onEdit: (alertId: number) => void;
 }
 
 const AlertDetailsDialog = ({
@@ -61,7 +61,7 @@ const AlertDetailsDialog = ({
             </Badge>
           </DialogTitle>
           <DialogDescription>
-            Powiadomienia codziennie o {formatTime(alert.notification_time)}
+            Powiadomienia codziennie o {formatTime(alert.alert_time)}
           </DialogDescription>
         </DialogHeader>
 
@@ -70,10 +70,10 @@ const AlertDetailsDialog = ({
           <div>
             <h3 className="font-semibold text-lg mb-3 flex items-center text-foreground">
               <Building2 className="w-5 h-5 mr-2 text-purple-600" />
-              Firmy ({alert.selected_companies.length})
+              Firmy ({alert.companies.length})
             </h3>
             <div className="flex flex-wrap gap-2">
-              {alert.selected_companies.map((company) => (
+              {alert.companies.map((company) => (
                 <Badge key={company} variant="outline" className="text-sm">
                   {company}
                 </Badge>
@@ -85,10 +85,10 @@ const AlertDetailsDialog = ({
           <div>
             <h3 className="font-semibold text-lg mb-3 flex items-center text-foreground">
               <GraduationCap className="w-5 h-5 mr-2 text-yellow-600" />
-              Poziomy doświadczenia ({alert.selected_levels.length})
+              Poziomy doświadczenia ({alert.experience_levels.length})
             </h3>
             <div className="flex flex-wrap gap-2">
-              {alert.selected_levels.map((level) => (
+              {alert.experience_levels.map((level) => (
                 <Badge key={level} variant="outline" className="text-sm">
                   {level}
                 </Badge>
@@ -100,10 +100,10 @@ const AlertDetailsDialog = ({
           <div>
             <h3 className="font-semibold text-lg mb-3 flex items-center text-foreground">
               <Briefcase className="w-5 h-5 mr-2 text-green-600" />
-              Kategorie stanowisk ({alert.selected_categories.length})
+              Kategorie stanowisk ({alert.job_categories.length})
             </h3>
             <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto">
-              {alert.selected_categories.map((category) => (
+              {alert.job_categories.map((category) => (
                 <Badge key={category} variant="outline" className="text-sm">
                   {category}
                 </Badge>

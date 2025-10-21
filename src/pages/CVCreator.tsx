@@ -75,9 +75,7 @@ const CVCreator = () => {
         e.preventDefault();
 
         // Auto-suggest name if not set
-        const fullName = cvData.personal?.firstName && cvData.personal?.lastName
-          ? `${cvData.personal.firstName} ${cvData.personal.lastName}`
-          : '';
+        const fullName = cvData.personal?.fullName || '';
         const suggestedName = fullName ? `CV - ${fullName}` : 'Nowe CV';
 
         if (!cvName) {
@@ -125,9 +123,7 @@ const CVCreator = () => {
   };
 
   const handleOpenSaveDialog = () => {
-    const fullName = cvData.personal?.firstName && cvData.personal?.lastName
-      ? `${cvData.personal.firstName} ${cvData.personal.lastName}`
-      : '';
+    const fullName = cvData.personal?.fullName || '';
     const suggestedName = fullName ? `CV - ${fullName}` : 'Nowe CV';
 
     if (!cvName) {

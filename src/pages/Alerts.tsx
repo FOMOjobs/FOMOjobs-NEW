@@ -26,7 +26,7 @@ const Alerts = () => {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<{
-    id: string;
+    id: number;
     name: string;
     lastSent: string | null;
   } | null>(null);
@@ -49,11 +49,11 @@ const Alerts = () => {
     setIsDetailsOpen(true);
   };
 
-  const handleEdit = (alertId: string) => {
+  const handleEdit = (alertId: number) => {
     navigate(`/alerts/edit/${alertId}`);
   };
 
-  const handleDeleteClick = (alertId: string, alertName: string, lastSent: string | null) => {
+  const handleDeleteClick = (alertId: number, alertName: string, lastSent: string | null) => {
     setDeleteTarget({ id: alertId, name: alertName, lastSent });
     setIsDeleteOpen(true);
   };

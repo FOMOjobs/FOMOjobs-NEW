@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import FOMOJobsNavbar from '@/components/FOMOJobsNavbar';
 import FOMOJobsFooter from '@/components/landing/FOMOJobsFooter';
 import { Helmet } from 'react-helmet-async';
