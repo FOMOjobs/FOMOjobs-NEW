@@ -1084,7 +1084,6 @@ export default function B2BAnalytics() {
             </ResponsiveContainer>
           </Card>
         </div>
-        </div>
       </div>
     </div>
     </>
