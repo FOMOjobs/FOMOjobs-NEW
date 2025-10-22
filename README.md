@@ -1,53 +1,34 @@
-# Planty Możliwości
+📊 FOMOjobs – Podsumowanie Strategiczne
+🎯 Czym Jest FOMOjobs
+Osobisty asystent dla kandydatów, nie kolejny job board. Platforma agregująca oferty pracy ze stron karier firm, wysyłająca spersonalizowane alerty emailowe — oszczędzająca czas, eliminująca FOMO, automatyczna.
 
-**Krakowskie Cyfrowe Centrum Wolontariatu**
+🚀 Tech Stack (Wnioskowanie Techniczne)
+Na podstawie opisu funkcjonalności zakładam:
 
-Platforma łącząca młodych wolontariuszy z organizacjami społecznymi w Krakowie. Znajdź inicjatywy edukacyjne, ekologiczne, sportowe i kulturalne.
+Frontend: React/Vue + Tailwind CSS (proste, responsywne alerty emailowe)
+Backend: Node.js/Python (agregacja danych, scraping, scheduling alertów)
+Baza danych: PostgreSQL lub MongoDB (profile użytkowników, alerty, history ofert)
+Email infrastructure: SendGrid/Brevo (masowe wysyłki, deliverability)
+(USUNIĘTE) Highly confidential magic technology
+State Management: Redux/Zustand (tracking alertów, preferencji, dopasowań)
+Hosting: AWS/Google Cloud (skalowanie dla wzrostu użytkowników)
 
-## 🚀 Tech Stack
+Kluczowe wyzwanie techniczne: Scraping musi być niezawodny, bo nawet 5% opuszczonych ofert = user churn.
 
-- **Frontend**: React 18 + TypeScript + Vite
-- **UI**: Tailwind CSS + shadcn/ui (Radix UI)
-- **Backend**: Supabase (PostgreSQL + Auth + Storage)
-- **State Management**: Zustand + React Query
-- **Maps**: Leaflet + React Leaflet
-- **Routing**: React Router v6
-
-## 🏗️ Project Structure
-
-```
+🏗️ Struktura Projektu
 src/
-├── components/       # UI components
-├── pages/           # Page components
-├── contexts/        # React contexts
-├── stores/          # Zustand stores
-├── hooks/           # Custom hooks
-├── lib/             # Utilities
-└── assets/          # Static assets
-```
+├── components/           # UI alertów, dashboard alertów, settings
+├── pages/               # Landing, Dashboard, Settings, Pricing
+├── services/            # Job scraping, email dispatch, algorithm matching
+├── stores/              # User preferences, alert states, billing
+├── hooks/               # Custom hooks dla alert management
+├── lib/                 # Semantic matching algorithm, filtering logic
+└── assets/              # Brand assets (casual, young tone)
 
-## 🛠️ Development
+💼 Brand Identity
 
-```bash
-# Install dependencies
-npm install
-
-# Run development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
-```
-
-## 🎨 Brand Identity
-
-- **Młody Kraków**: Brand heritage (Magenta #E91E8C, Green #8BC53F, Purple #5B4B9C)
-- **Planty Możliwości**: Platform name
-- **Krakowskie Cyfrowe Centrum Wolontariatu**: Official organization name
-
-## 📝 License
-
-This project was created for Hack Yeah 2025.
+Nazwa: FOMOjobs (Fear Of Missing Out + Jobs)
+Ton: Młody, lekko żartobliwy, przyjazny, anty-korpo
+Positioning: "Twój osobisty asystent w job search" — nie portal
+Przewaga: Scraping bezpośrednio ze stron firm (prawdziwe oferty) vs. płatne wrzutki konkurencji
+Model: Zarabiamy na kandydatach (freemium subskrypcja), nie pracodawcach
