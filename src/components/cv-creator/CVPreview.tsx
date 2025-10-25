@@ -65,9 +65,9 @@ const CVPreview: React.FC = memo(() => {
       creative: 'Kreatywny',
       tech: 'Tech',
       academic: 'Akademicki',
-      executive: 'Executive',
-      ats: 'ATS-Friendly',
-      professional: 'Professional'
+      executive: 'Dla kadry zarządzającej',
+      ats: 'Przyjazny dla ATS',
+      professional: 'Profesjonalny'
     };
     return names[template] || template;
   };
