@@ -40,12 +40,21 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 const CVCreator = () => {
   const { activeSection, cvData, isDirty, setDirty, loadCVData, resetCV, saveCurrentCV, currentCVId } = useCVStore();
   const [isExporting, setIsExporting] = useState(false);
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [cvName, setCVName] = useState('');
+  const [mobilePreviewOpen, setMobilePreviewOpen] = useState(false);
 
   // Auto-load from localStorage on mount
   useEffect(() => {
@@ -297,7 +306,7 @@ const CVCreator = () => {
 
             {/* Main Content - CV Editor */}
             <motion.main
-              className="flex-1 min-w-0"
+              className="flex-1 min-w-0 max-w-4xl mx-auto lg:mx-0"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
@@ -344,6 +353,33 @@ const CVCreator = () => {
               <CustomizationPanel />
               <CVPreview />
             </motion.aside>
+          </div>
+
+          {/* Mobile Preview Button - Fixed floating button */}
+          <div className="lg:hidden fixed bottom-6 right-6 z-40">
+            <Sheet open={mobilePreviewOpen} onOpenChange={setMobilePreviewOpen}>
+              <SheetTrigger asChild>
+                <Button
+                  size="lg"
+                  className="rounded-full shadow-2xl h-14 w-14 bg-gradient-to-r from-primary to-secondary hover:opacity-90"
+                >
+                  <Eye className="h-6 w-6" />
+                  <span className="sr-only">Podgląd CV</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="bottom" className="h-[90vh] overflow-y-auto">
+                <SheetHeader>
+                  <SheetTitle>Podgląd CV</SheetTitle>
+                  <SheetDescription>
+                    Zobacz jak wygląda Twoje CV
+                  </SheetDescription>
+                </SheetHeader>
+                <div className="mt-6 space-y-6">
+                  <CustomizationPanel />
+                  <CVPreview />
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
         </div>
