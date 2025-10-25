@@ -6,6 +6,7 @@
  */
 
 import { CVData } from '@/types/cv';
+import { generatePrefixedId } from '@/utils/secureId';
 
 // Toggle this when backend is ready
 const USE_MOCK_API = true;
@@ -52,7 +53,7 @@ class MockCVAPI {
     await new Promise(resolve => setTimeout(resolve, 300));
 
     const newCV: SavedCV = {
-      id: `cv_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      id: generatePrefixedId('cv'), // Use cryptographically secure ID
       name,
       cvData,
       createdAt: new Date().toISOString(),
@@ -105,7 +106,7 @@ class MockCVAPI {
     }
 
     const duplicate: SavedCV = {
-      id: `cv_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      id: generatePrefixedId('cv'), // Use cryptographically secure ID
       name: `${original.name} (kopia)`,
       cvData: { ...original.cvData },
       createdAt: new Date().toISOString(),

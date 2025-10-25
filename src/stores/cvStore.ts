@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { CVData, ExperienceItem, EducationItem, SkillItem, LanguageItem, PersonalInfo, CVTemplate, CVCustomization } from '@/types/cv';
 import { createEmptyCVData } from '@/lib/cvStorage';
 import { cvCloudService, SavedCV } from '@/services/cvCloudService';
+import { generateSecureId } from '@/utils/secureId';
 
 interface CVStore {
   // State
@@ -128,7 +129,7 @@ export const useCVStore = create<CVStore>((set, get) => ({
   addExperience: (experience) => {
     const newExperience: ExperienceItem = {
       ...experience,
-      id: crypto.randomUUID()
+      id: generateSecureId() // Use cryptographically secure ID
     };
     set((state) => ({
       cvData: {
@@ -185,7 +186,7 @@ export const useCVStore = create<CVStore>((set, get) => ({
   addEducation: (education) => {
     const newEducation: EducationItem = {
       ...education,
-      id: crypto.randomUUID()
+      id: generateSecureId() // Use cryptographically secure ID
     };
     set((state) => ({
       cvData: {
@@ -242,7 +243,7 @@ export const useCVStore = create<CVStore>((set, get) => ({
   addSkill: (skill) => {
     const newSkill: SkillItem = {
       ...skill,
-      id: crypto.randomUUID()
+      id: generateSecureId() // Use cryptographically secure ID
     };
     set((state) => ({
       cvData: {
@@ -282,7 +283,7 @@ export const useCVStore = create<CVStore>((set, get) => ({
   addLanguage: (language) => {
     const newLanguage: LanguageItem = {
       ...language,
-      id: crypto.randomUUID()
+      id: generateSecureId() // Use cryptographically secure ID
     };
     set((state) => ({
       cvData: {

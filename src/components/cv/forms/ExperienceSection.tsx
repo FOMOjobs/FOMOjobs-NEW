@@ -17,6 +17,12 @@ import { useCVStore } from '@/stores/cvStore';
 import { ExperienceItem } from '@/types/cv';
 import { toast } from 'sonner';
 import { useAIGeneration } from '@/hooks/useAIGeneration';
+import {
+  sanitizeInput,
+  validateDateFormat,
+  validateDateNotFuture,
+  validateDateRange
+} from '@/utils/validation';
 
 const ExperienceSection: React.FC = () => {
   const { cvData, addExperience, updateExperience, deleteExperience } = useCVStore();
@@ -59,16 +65,59 @@ const ExperienceSection: React.FC = () => {
   };
 
   const handleSave = () => {
+    // Basic field validation
     if (!formData.position || !formData.company) {
       toast.error('Wypełnij wymagane pola (stanowisko i firma)');
       return;
     }
 
+    // Validate start date
+    if (formData.startDate) {
+      if (!validateDateFormat(formData.startDate)) {
+        toast.error('Nieprawidłowy format daty rozpoczęcia (YYYY-MM)');
+        return;
+      }
+
+      if (!validateDateNotFuture(formData.startDate)) {
+        toast.error('Data rozpoczęcia nie może być w przyszłości');
+        return;
+      }
+    }
+
+    // Validate end date (if not current job)
+    if (!formData.current && formData.endDate) {
+      if (!validateDateFormat(formData.endDate)) {
+        toast.error('Nieprawidłowy format daty zakończenia (YYYY-MM)');
+        return;
+      }
+
+      if (!validateDateNotFuture(formData.endDate)) {
+        toast.error('Data zakończenia nie może być w przyszłości');
+        return;
+      }
+
+      // Check date range
+      if (formData.startDate && !validateDateRange(formData.startDate, formData.endDate)) {
+        toast.error('Data zakończenia nie może być przed datą rozpoczęcia');
+        return;
+      }
+    }
+
+    // Sanitize text inputs
+    const sanitizedData = {
+      ...formData,
+      position: sanitizeInput(formData.position, 100),
+      company: sanitizeInput(formData.company, 100),
+      location: sanitizeInput(formData.location || '', 100),
+      description: sanitizeInput(formData.description, 2000),
+      achievements: formData.achievements.map(a => sanitizeInput(a, 500))
+    };
+
     if (editingId) {
-      updateExperience(editingId, formData);
+      updateExperience(editingId, sanitizedData);
       toast.success('Doświadczenie zaktualizowane!');
     } else {
-      addExperience(formData);
+      addExperience(sanitizedData);
       toast.success('Doświadczenie dodane!');
     }
 

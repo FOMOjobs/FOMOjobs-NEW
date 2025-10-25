@@ -16,6 +16,12 @@ import { GraduationCap, Plus, Pencil, Trash2, MapPin, Calendar } from 'lucide-re
 import { useCVStore } from '@/stores/cvStore';
 import { EducationItem } from '@/types/cv';
 import { toast } from 'sonner';
+import {
+  sanitizeInput,
+  validateDateFormat,
+  validateDateNotFuture,
+  validateDateRange
+} from '@/utils/validation';
 
 const EducationSection: React.FC = () => {
   const { cvData, addEducation, updateEducation, deleteEducation } = useCVStore();
@@ -61,16 +67,57 @@ const EducationSection: React.FC = () => {
   };
 
   const handleSave = () => {
+    // Basic field validation
     if (!formData.degree || !formData.school) {
       toast.error('Wypełnij wymagane pola (stopień i uczelnia)');
       return;
     }
 
+    // Validate start date
+    if (formData.startDate) {
+      if (!validateDateFormat(formData.startDate)) {
+        toast.error('Nieprawidłowy format daty rozpoczęcia (YYYY-MM)');
+        return;
+      }
+
+      if (!validateDateNotFuture(formData.startDate)) {
+        toast.error('Data rozpoczęcia nie może być w przyszłości');
+        return;
+      }
+    }
+
+    // Validate end date (if not current)
+    if (!formData.current && formData.endDate) {
+      if (!validateDateFormat(formData.endDate)) {
+        toast.error('Nieprawidłowy format daty zakończenia (YYYY-MM)');
+        return;
+      }
+
+      // Allow future dates for education (ongoing programs)
+      // But check date range
+      if (formData.startDate && !validateDateRange(formData.startDate, formData.endDate)) {
+        toast.error('Data zakończenia nie może być przed datą rozpoczęcia');
+        return;
+      }
+    }
+
+    // Sanitize text inputs
+    const sanitizedData = {
+      ...formData,
+      degree: sanitizeInput(formData.degree, 100),
+      fieldOfStudy: sanitizeInput(formData.fieldOfStudy, 100),
+      school: sanitizeInput(formData.school, 100),
+      location: sanitizeInput(formData.location || '', 100),
+      gpa: sanitizeInput(formData.gpa || '', 20),
+      description: sanitizeInput(formData.description || '', 2000),
+      achievements: formData.achievements.map(a => sanitizeInput(a, 500))
+    };
+
     if (editingId) {
-      updateEducation(editingId, formData);
+      updateEducation(editingId, sanitizedData);
       toast.success('Wykształcenie zaktualizowane!');
     } else {
-      addEducation(formData);
+      addEducation(sanitizedData);
       toast.success('Wykształcenie dodane!');
     }
 

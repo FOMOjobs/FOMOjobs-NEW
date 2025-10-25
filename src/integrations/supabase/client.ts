@@ -8,10 +8,34 @@ const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
+/**
+ * SECURITY: Memory-only storage for auth tokens
+ *
+ * This prevents XSS attacks from stealing JWT tokens via localStorage.
+ * Tokens are stored in memory only and cleared on page refresh.
+ *
+ * Trade-off: Users must re-login on page refresh.
+ * For production: implement httpOnly cookies on backend for persistent sessions.
+ */
+const memoryStorage = new Map<string, string>();
+
+const memoryStorageAdapter = {
+  getItem: (key: string) => {
+    return memoryStorage.get(key) ?? null;
+  },
+  setItem: (key: string, value: string) => {
+    memoryStorage.set(key, value);
+  },
+  removeItem: (key: string) => {
+    memoryStorage.delete(key);
+  },
+};
+
 export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
   auth: {
-    storage: localStorage,
-    persistSession: true,
-    autoRefreshToken: true,
+    storage: memoryStorageAdapter, // ✅ Memory-only storage (XSS protection)
+    persistSession: false, // ✅ Don't persist to localStorage
+    autoRefreshToken: true, // Keep session alive during browsing
+    detectSessionInUrl: true, // Handle OAuth redirects
   }
 });

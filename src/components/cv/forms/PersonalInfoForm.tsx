@@ -11,6 +11,14 @@ import { PhotoUpload } from '@/components/cv/PhotoUpload';
 import { useAIGeneration } from '@/hooks/useAIGeneration';
 import AIUsageIndicator from '@/components/cv-creator/AIUsageIndicator';
 import type { AITone } from '@/lib/mockAI';
+import {
+  sanitizeInput,
+  validateAndSanitizeEmail,
+  validateAndSanitizePhone,
+  validateAndSanitizeName,
+  validateAndSanitizeURL
+} from '@/utils/validation';
+import { toast } from 'sonner';
 
 const PersonalInfoForm: React.FC = memo(() => {
   const { cvData, updatePersonalInfo } = useCVStore();
@@ -48,6 +56,85 @@ const PersonalInfoForm: React.FC = memo(() => {
     }
   };
 
+  // Validated input handlers
+  const handleNameChange = (value: string) => {
+    const result = validateAndSanitizeName(value);
+    if (result.isValid || value.length === 0) {
+      updatePersonalInfo({ fullName: result.value });
+    } else if (value.length > 0) {
+      toast.error(result.error);
+    }
+  };
+
+  const handleEmailChange = (value: string) => {
+    // Allow typing, but show error on blur if invalid
+    const sanitized = sanitizeInput(value, 254);
+    updatePersonalInfo({ email: sanitized });
+  };
+
+  const handleEmailBlur = () => {
+    if (!personal.email) return; // Empty is OK (will be caught by required check)
+
+    const result = validateAndSanitizeEmail(personal.email);
+    if (!result.isValid) {
+      toast.error(result.error);
+    }
+  };
+
+  const handlePhoneChange = (value: string) => {
+    const sanitized = sanitizeInput(value, 20);
+    updatePersonalInfo({ phone: sanitized });
+  };
+
+  const handlePhoneBlur = () => {
+    if (!personal.phone) return;
+
+    const result = validateAndSanitizePhone(personal.phone);
+    if (!result.isValid) {
+      toast.error(result.error);
+    }
+  };
+
+  const handleAddressChange = (value: string) => {
+    const sanitized = sanitizeInput(value, 200);
+    updatePersonalInfo({ address: sanitized });
+  };
+
+  const handleLinkedInChange = (value: string) => {
+    const sanitized = sanitizeInput(value, 2048);
+    updatePersonalInfo({ linkedIn: sanitized });
+  };
+
+  const handleLinkedInBlur = () => {
+    if (!personal.linkedIn) return; // Empty is OK (optional field)
+
+    const result = validateAndSanitizeURL(personal.linkedIn);
+    if (!result.isValid) {
+      toast.error(result.error);
+      updatePersonalInfo({ linkedIn: '' }); // Clear invalid URL
+    }
+  };
+
+  const handlePortfolioChange = (value: string) => {
+    const sanitized = sanitizeInput(value, 2048);
+    updatePersonalInfo({ portfolio: sanitized });
+  };
+
+  const handlePortfolioBlur = () => {
+    if (!personal.portfolio) return;
+
+    const result = validateAndSanitizeURL(personal.portfolio);
+    if (!result.isValid) {
+      toast.error(result.error);
+      updatePersonalInfo({ portfolio: '' });
+    }
+  };
+
+  const handleSummaryChange = (value: string) => {
+    const sanitized = sanitizeInput(value, 500);
+    updatePersonalInfo({ summary: sanitized });
+  };
+
   return (
     <Card className="shadow-card border-0 bg-gradient-card">
       <CardHeader>
@@ -66,7 +153,8 @@ const PersonalInfoForm: React.FC = memo(() => {
             id="fullName"
             placeholder="Jan Kowalski"
             value={personal.fullName}
-            onChange={(e) => updatePersonalInfo({ fullName: e.target.value })}
+            onChange={(e) => handleNameChange(e.target.value)}
+            maxLength={100}
           />
         </div>
 
@@ -90,7 +178,9 @@ const PersonalInfoForm: React.FC = memo(() => {
               type="email"
               placeholder="jan.kowalski@email.com"
               value={personal.email}
-              onChange={(e) => updatePersonalInfo({ email: e.target.value })}
+              onChange={(e) => handleEmailChange(e.target.value)}
+              onBlur={handleEmailBlur}
+              maxLength={254}
             />
           </div>
 
@@ -103,7 +193,9 @@ const PersonalInfoForm: React.FC = memo(() => {
               id="phone"
               placeholder="+48 123 456 789"
               value={personal.phone}
-              onChange={(e) => updatePersonalInfo({ phone: e.target.value })}
+              onChange={(e) => handlePhoneChange(e.target.value)}
+              onBlur={handlePhoneBlur}
+              maxLength={20}
             />
           </div>
 
@@ -116,7 +208,8 @@ const PersonalInfoForm: React.FC = memo(() => {
               id="address"
               placeholder="Warszawa, Polska"
               value={personal.address}
-              onChange={(e) => updatePersonalInfo({ address: e.target.value })}
+              onChange={(e) => handleAddressChange(e.target.value)}
+              maxLength={200}
             />
           </div>
 
@@ -130,7 +223,9 @@ const PersonalInfoForm: React.FC = memo(() => {
               type="url"
               placeholder="https://linkedin.com/in/jan-kowalski"
               value={personal.linkedIn || ''}
-              onChange={(e) => updatePersonalInfo({ linkedIn: e.target.value })}
+              onChange={(e) => handleLinkedInChange(e.target.value)}
+              onBlur={handleLinkedInBlur}
+              maxLength={2048}
             />
           </div>
 
@@ -144,7 +239,9 @@ const PersonalInfoForm: React.FC = memo(() => {
               type="url"
               placeholder="https://jankowalski.dev"
               value={personal.portfolio || ''}
-              onChange={(e) => updatePersonalInfo({ portfolio: e.target.value })}
+              onChange={(e) => handlePortfolioChange(e.target.value)}
+              onBlur={handlePortfolioBlur}
+              maxLength={2048}
             />
           </div>
         </div>
@@ -156,7 +253,8 @@ const PersonalInfoForm: React.FC = memo(() => {
             placeholder="Krótkie podsumowanie Twoich kwalifikacji i celów zawodowych..."
             className="min-h-[120px]"
             value={personal.summary}
-            onChange={(e) => updatePersonalInfo({ summary: e.target.value })}
+            onChange={(e) => handleSummaryChange(e.target.value)}
+            maxLength={500}
           />
           <div className="flex justify-end">
             <span className="text-xs text-muted-foreground">

@@ -89,12 +89,14 @@ const FOMOJobsFooter = () => {
                 </button>
               </li>
               <li>
-                <button
-                  onClick={() => scrollToSection('wolontariaty')}
-                  className="text-primary-foreground/80 hover:text-secondary transition-colors"
-                >
-                  Wolontariaty
-                </button>
+                <Link to="/help" className="text-primary-foreground/80 hover:text-secondary transition-colors">
+                  Centrum Pomocy
+                </Link>
+              </li>
+              <li>
+                <Link to="/report-issue" className="text-primary-foreground/80 hover:text-secondary transition-colors">
+                  Zgłoś problem
+                </Link>
               </li>
               <li>
                 <Link to="/auth" className="text-primary-foreground/80 hover:text-secondary transition-colors">
@@ -117,23 +119,43 @@ const FOMOJobsFooter = () => {
             </ul>
           </div>
 
-          {/* Features */}
+          {/* Tools */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-secondary">Funkcje</h3>
+            <h3 className="text-lg font-semibold text-secondary">Narzędzia</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/job-tracker" className="text-primary-foreground/80 hover:text-secondary transition-colors">
-                  Job Tracker
+                <Link to="#" className="text-primary-foreground/80 hover:text-secondary transition-colors">
+                  FOMO.cvcreator
                 </Link>
               </li>
               <li>
-                <Link to="/cv-creator" className="text-primary-foreground/80 hover:text-secondary transition-colors">
-                  CV Creator
+                <Link to="#" className="text-primary-foreground/80 hover:text-secondary transition-colors">
+                  FOMO.jobstracker
                 </Link>
               </li>
               <li>
-                <Link to="/dashboard" className="text-primary-foreground/80 hover:text-secondary transition-colors">
-                  Dashboard
+                <Link to="#" className="text-primary-foreground/80 hover:text-secondary transition-colors">
+                  FOMO.alerts
+                </Link>
+              </li>
+              <li>
+                <Link to="#" className="text-primary-foreground/80 hover:text-secondary transition-colors">
+                  FOMO.analytics
+                </Link>
+              </li>
+              <li>
+                <Link to="#" className="text-primary-foreground/80 hover:text-secondary transition-colors">
+                  FOMO.recruiter
+                </Link>
+              </li>
+              <li>
+                <Link to="#" className="text-primary-foreground/80 hover:text-secondary transition-colors">
+                  FOMO.coach
+                </Link>
+              </li>
+              <li>
+                <Link to="#" className="text-primary-foreground/80 hover:text-secondary transition-colors">
+                  FOMO.jobprompts
                 </Link>
               </li>
             </ul>
@@ -143,7 +165,7 @@ const FOMOJobsFooter = () => {
           <div className="space-y-4" id="contact">
             <h3 className="text-lg font-semibold text-secondary">Bądź na bieżąco</h3>
             <p className="text-primary-foreground/90 text-sm">
-              Zapisz się do newslettera, aby otrzymywać alerty o najlepszych ofertach pracy.
+              Zapisz się do newslettera
             </p>
             <form onSubmit={handleNewsletterSubmit} className="flex flex-col space-y-2">
               <Input
@@ -151,7 +173,7 @@ const FOMOJobsFooter = () => {
                 placeholder="Twój adres email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder-primary-foreground/60 focus:border-secondary"
+                className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-white focus:border-secondary"
                 required
               />
               <Button
@@ -165,7 +187,7 @@ const FOMOJobsFooter = () => {
             <div className="space-y-2 text-sm text-primary-foreground/90">
               <div className="flex items-center">
                 <Mail className="h-4 w-4 mr-2 text-secondary" />
-                <span>kontakt@mlodykrakow.pl</span>
+                <span>kontakt@fomojobs.pl</span>
               </div>
               <div className="flex items-center">
                 <Phone className="h-4 w-4 mr-2 text-secondary" />
@@ -183,7 +205,7 @@ const FOMOJobsFooter = () => {
         <div className="border-t border-primary-foreground/20 pt-8 mt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="text-primary-foreground/70 text-sm">
-              © 2024 FOMOjobs - Portal pracy nowej generacji. Wszelkie prawa zastrzeżone.
+              © 2025 FOMOjobs - Portal pracy nowej generacji. Wszelkie prawa zastrzeżone.
             </div>
             <div className="flex space-x-6 text-sm">
               <Link to="/privacy-policy" className="text-primary-foreground/70 hover:text-secondary transition-colors">

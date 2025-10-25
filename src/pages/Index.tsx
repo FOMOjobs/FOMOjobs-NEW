@@ -611,7 +611,7 @@ const Index = () => {
                 Gotowy, by złapać najlepsze oferty?
               </h2>
               <p className="text-xl mb-8 opacity-95 drop-shadow">
-                Dołącz do tysięcy zadowolonych użytkowników, którzy znaleźli pracę dzięki FOMOjobs. To proste, szybkie i skuteczne!
+                Dołącz do wielu zadowolonych użytkowników, którzy znaleźli pracę dzięki FOMOjobs. To proste, szybkie i skuteczne!
               </p>
               <Button
                 size="lg"
