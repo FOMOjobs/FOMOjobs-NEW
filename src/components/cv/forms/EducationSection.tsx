@@ -12,7 +12,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog';
-import { GraduationCap, Plus, Pencil, Trash2, MapPin, Calendar } from 'lucide-react';
+import { GraduationCap, Plus, Pencil, Trash2, MapPin, Calendar, X } from 'lucide-react';
 import { useCVStore } from '@/stores/cvStore';
 import { EducationItem } from '@/types/cv';
 import { toast } from 'sonner';
@@ -27,6 +27,7 @@ const EducationSection: React.FC = () => {
   const { cvData, addEducation, updateEducation, deleteEducation } = useCVStore();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [newAchievement, setNewAchievement] = useState('');
   const [formData, setFormData] = useState<Omit<EducationItem, 'id'>>({
     degree: '',
     fieldOfStudy: '',
@@ -54,6 +55,7 @@ const EducationSection: React.FC = () => {
       achievements: []
     });
     setEditingId(null);
+    setNewAchievement('');
   };
 
   const handleOpenDialog = (education?: EducationItem) => {
@@ -134,6 +136,35 @@ const EducationSection: React.FC = () => {
     if (!date) return '';
     const [year, month] = date.split('-');
     return `${month}.${year}`;
+  };
+
+  /**
+   * Add new achievement to the list
+   */
+  const handleAddAchievement = () => {
+    if (!newAchievement.trim()) {
+      toast.error('Wpisz osiągnięcie');
+      return;
+    }
+
+    const sanitized = sanitizeInput(newAchievement, 500);
+    setFormData({
+      ...formData,
+      achievements: [...formData.achievements, sanitized]
+    });
+    setNewAchievement('');
+    toast.success('Osiągnięcie dodane');
+  };
+
+  /**
+   * Remove achievement from the list
+   */
+  const handleRemoveAchievement = (index: number) => {
+    setFormData({
+      ...formData,
+      achievements: formData.achievements.filter((_, i) => i !== index)
+    });
+    toast.success('Osiągnięcie usunięte');
   };
 
   return (
@@ -307,9 +338,70 @@ const EducationSection: React.FC = () => {
                   id="description"
                   value={formData.description || ''}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="Osiągnięcia, wyróżnienia, prace naukowe..."
+                  placeholder="Krótki opis studiów, specjalizacji..."
                   className="min-h-[100px]"
                 />
+              </div>
+
+              {/* Achievements Section */}
+              <div className="space-y-2 pt-4 border-t">
+                <Label>Osiągnięcia i wyróżnienia</Label>
+                <p className="text-xs text-muted-foreground">
+                  Wyróżnienia, nagrody, prace naukowe, projekty, stypendia
+                </p>
+
+                {/* Lista achievements */}
+                {formData.achievements.length > 0 && (
+                  <div className="space-y-2 max-h-60 overflow-y-auto">
+                    {formData.achievements.map((achievement, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-start gap-2 p-3 bg-muted rounded-lg border hover:border-primary/50 transition-colors group"
+                      >
+                        <span className="text-sm flex-1 leading-relaxed">
+                          • {achievement}
+                        </span>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleRemoveAchievement(idx)}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X className="h-4 w-4 text-destructive" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Add new achievement */}
+                <div className="flex gap-2">
+                  <Textarea
+                    placeholder="np. Praca magisterska nagrodzona w konkursie naukowym, Stypendium rektora"
+                    value={newAchievement}
+                    onChange={(e) => setNewAchievement(e.target.value)}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleAddAchievement();
+                      }
+                    }}
+                    maxLength={500}
+                    className="flex-1 min-h-[80px]"
+                  />
+                  <Button
+                    type="button"
+                    onClick={handleAddAchievement}
+                    disabled={!newAchievement.trim()}
+                    className="self-end"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {formData.achievements.length} osiągnięć dodanych • Enter aby dodać
+                </p>
               </div>
             </div>
             <DialogFooter>
