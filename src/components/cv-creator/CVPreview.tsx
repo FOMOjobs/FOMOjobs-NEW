@@ -75,10 +75,27 @@ const CVPreview: React.FC = memo(() => {
 
   // Render appropriate template with Suspense for lazy loading
   const renderTemplate = () => {
+    const fallback = (
+      <div className="space-y-4">
+        <Skeleton className="h-[600px] w-full" />
+        <div className="text-center text-sm text-muted-foreground">
+          Ładowanie szablonu...
+        </div>
+      </div>
+    );
+
+    // ATS template doesn't accept color props
+    if (template === 'ats') {
+      return (
+        <Suspense fallback={fallback}>
+          <ATSTemplate data={cvData} />
+        </Suspense>
+      );
+    }
+
+    // All other templates accept color props
     const TemplateComponent = (() => {
       switch (template) {
-        case 'ats':
-          return ATSTemplate;
         case 'executive':
           return ExecutiveTemplate;
         case 'modern':
@@ -101,19 +118,8 @@ const CVPreview: React.FC = memo(() => {
     })();
 
     return (
-      <Suspense fallback={
-        <div className="space-y-4">
-          <Skeleton className="h-[600px] w-full" />
-          <div className="text-center text-sm text-muted-foreground">
-            Ładowanie szablonu...
-          </div>
-        </div>
-      }>
-        {template === 'ats' ? (
-          <TemplateComponent data={cvData} />
-        ) : (
-          <TemplateComponent data={cvData} primaryColor={primaryColor} secondaryColor={secondaryColor} />
-        )}
+      <Suspense fallback={fallback}>
+        <TemplateComponent data={cvData} primaryColor={primaryColor} secondaryColor={secondaryColor} />
       </Suspense>
     );
   };
