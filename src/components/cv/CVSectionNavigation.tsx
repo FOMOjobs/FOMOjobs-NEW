@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo, useMemo, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -17,85 +17,96 @@ import {
 import { useCVStore } from '@/stores/cvStore';
 import { CVSection } from '@/types/cv';
 
-const CVSectionNavigation: React.FC = () => {
+// Section config moved outside component to prevent recreation on every render
+const sectionConfig = [
+  {
+    id: 'personal' as CVSection,
+    icon: User,
+    title: 'Dane osobowe',
+    description: 'Podstawowe informacje'
+  },
+  {
+    id: 'experience' as CVSection,
+    icon: Briefcase,
+    title: 'Doświadczenie',
+    description: 'Historia zawodowa'
+  },
+  {
+    id: 'education' as CVSection,
+    icon: GraduationCap,
+    title: 'Wykształcenie',
+    description: 'Edukacja i kursy'
+  },
+  {
+    id: 'skills' as CVSection,
+    icon: Zap,
+    title: 'Umiejętności',
+    description: 'Twoje kompetencje'
+  },
+  {
+    id: 'languages' as CVSection,
+    icon: Globe,
+    title: 'Języki',
+    description: 'Znajomość języków'
+  },
+  {
+    id: 'settings' as CVSection,
+    icon: Settings,
+    title: '⚙️ Personalizacja',
+    description: 'Szablony i kolory'
+  }
+];
+
+const CVSectionNavigation: React.FC = memo(() => {
   const { activeSection, setActiveSection, cvData } = useCVStore();
 
-  const sectionConfig = [
-    {
-      id: 'personal' as CVSection,
-      icon: User,
-      title: 'Dane osobowe',
-      description: 'Podstawowe informacje'
-    },
-    {
-      id: 'experience' as CVSection,
-      icon: Briefcase,
-      title: 'Doświadczenie',
-      description: 'Historia zawodowa'
-    },
-    {
-      id: 'education' as CVSection,
-      icon: GraduationCap,
-      title: 'Wykształcenie',
-      description: 'Edukacja i kursy'
-    },
-    {
-      id: 'skills' as CVSection,
-      icon: Zap,
-      title: 'Umiejętności',
-      description: 'Twoje kompetencje'
-    },
-    {
-      id: 'languages' as CVSection,
-      icon: Globe,
-      title: 'Języki',
-      description: 'Znajomość języków'
-    },
-    {
-      id: 'settings' as CVSection,
-      icon: Settings,
-      title: '⚙️ Personalizacja',
-      description: 'Szablony i kolory'
-    }
-  ];
+  // Memoize section completion calculations to avoid recalculating on every render
+  const sectionCompletions = useMemo(() => {
+    const completions = new Map<CVSection, number>();
 
-  // Calculate completion for each section
-  const calculateSectionCompletion = (sectionId: CVSection): number => {
-    switch (sectionId) {
-      case 'personal':
-        const { personal } = cvData;
-        const requiredFields = ['fullName', 'email', 'phone', 'address', 'summary'];
-        const completed = requiredFields.filter(field => personal[field as keyof typeof personal]).length;
-        return Math.round((completed / requiredFields.length) * 100);
+    sectionConfig.forEach(section => {
+      let completion = 0;
 
-      case 'experience':
-        return cvData.experience.length > 0 ? 100 : 0;
+      switch (section.id) {
+        case 'personal':
+          const { personal } = cvData;
+          const requiredFields = ['fullName', 'email', 'phone', 'address', 'summary'];
+          const completed = requiredFields.filter(field => personal[field as keyof typeof personal]).length;
+          completion = Math.round((completed / requiredFields.length) * 100);
+          break;
 
-      case 'education':
-        return cvData.education.length > 0 ? 100 : 0;
+        case 'experience':
+          completion = cvData.experience.length > 0 ? 100 : 0;
+          break;
 
-      case 'skills':
-        return cvData.skills.length > 0 ? 100 : 0;
+        case 'education':
+          completion = cvData.education.length > 0 ? 100 : 0;
+          break;
 
-      case 'languages':
-        return cvData.languages.length > 0 ? 100 : 0;
+        case 'skills':
+          completion = cvData.skills.length > 0 ? 100 : 0;
+          break;
 
-      case 'settings':
-        // Settings is always accessible, mark as complete if template is selected
-        return cvData.customization.template ? 100 : 0;
+        case 'languages':
+          completion = cvData.languages.length > 0 ? 100 : 0;
+          break;
 
-      default:
-        return 0;
-    }
-  };
+        case 'settings':
+          completion = cvData.customization.template ? 100 : 0;
+          break;
+      }
 
-  const getValidationStatus = (sectionId: CVSection): 'valid' | 'warning' | 'incomplete' => {
-    const completion = calculateSectionCompletion(sectionId);
+      completions.set(section.id, completion);
+    });
 
+    return completions;
+  }, [cvData]);
+
+  const getValidationStatus = useCallback((completion: number): 'valid' | 'warning' | 'incomplete' => {
     if (completion >= 80) return 'valid';
     if (completion >= 40) return 'warning';
     return 'incomplete';
-  };
+  }, []);
 
   const getStatusIcon = (status: 'valid' | 'warning' | 'incomplete') => {
     switch (status) {
@@ -121,12 +132,11 @@ const CVSectionNavigation: React.FC = () => {
     return <Badge variant="outline" className="text-xs">Nowe</Badge>;
   };
 
-  // Calculate overall completion
-  const overallCompletion = Math.round(
-    sectionConfig.reduce((sum, section) => {
-      return sum + calculateSectionCompletion(section.id);
-    }, 0) / sectionConfig.length
-  );
+  // Calculate overall completion - memoized
+  const overallCompletion = useMemo(() => {
+    const total = Array.from(sectionCompletions.values()).reduce((sum, val) => sum + val, 0);
+    return Math.round(total / sectionConfig.length);
+  }, [sectionCompletions]);
 
   return (
     <Card className="sticky top-4 h-fit shadow-card border-0 bg-gradient-card">
@@ -144,8 +154,8 @@ const CVSectionNavigation: React.FC = () => {
       <CardContent className="space-y-2">
         {sectionConfig.map((section) => {
           const Icon = section.icon;
-          const completion = calculateSectionCompletion(section.id);
-          const status = getValidationStatus(section.id);
+          const completion = sectionCompletions.get(section.id) || 0;
+          const status = getValidationStatus(completion);
           const isActive = activeSection === section.id;
 
           return (
@@ -182,6 +192,8 @@ const CVSectionNavigation: React.FC = () => {
       </CardContent>
     </Card>
   );
-};
+});
+
+CVSectionNavigation.displayName = 'CVSectionNavigation';
 
 export default CVSectionNavigation;

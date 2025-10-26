@@ -26,9 +26,9 @@ export default defineConfig(({ mode }) => ({
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
           'ui-vendor': ['@radix-ui/react-dialog', '@radix-ui/react-select', '@radix-ui/react-dropdown-menu'],
           'chart-vendor': ['recharts'],
-          'form-vendor': ['react-hook-form', '@hookform/resolvers', 'zod'],
+          'form-vendor': ['react-hook-form', 'zod'],
           'pdf-vendor': ['jspdf', 'jspdf-autotable'],
-          'map-vendor': ['leaflet', 'react-leaflet'],
+          'docx-vendor': ['docx', 'file-saver'],
           'utils': ['date-fns', 'clsx', 'tailwind-merge'],
         },
       },
@@ -36,6 +36,11 @@ export default defineConfig(({ mode }) => ({
     chunkSizeWarningLimit: 600,
     // Enable minification
     minify: 'esbuild',
+    // Drop console and debugger statements in production
+    target: 'esnext',
+    esbuild: {
+      drop: mode === 'production' ? ['console', 'debugger'] : [],
+    },
     // Source maps for production debugging (optional)
     sourcemap: false,
   },

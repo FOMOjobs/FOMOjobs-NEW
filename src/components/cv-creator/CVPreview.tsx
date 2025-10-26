@@ -1,7 +1,8 @@
-import React, { useState, memo } from 'react';
+import React, { useState, memo, lazy, Suspense, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   Select,
   SelectContent,
@@ -18,16 +19,18 @@ import {
 import { Eye, FileText, Palette, ZoomIn, ZoomOut } from 'lucide-react';
 import { useCVStore } from '@/stores/cvStore';
 import { CVTemplate } from '@/types/cv';
-import ATSTemplate from './templates/ATSTemplate';
-import ExecutiveTemplate from './templates/ExecutiveTemplate';
-import ModernTemplate from './templates/ModernTemplate';
-import ProfessionalTemplate from './templates/ProfessionalTemplate';
-import MinimalistTemplate from './templates/MinimalistTemplate';
-import ClassicTemplate from './templates/ClassicTemplate';
-import TechTemplate from './templates/TechTemplate';
-import CreativeTemplate from './templates/CreativeTemplate';
-import AcademicTemplate from './templates/AcademicTemplate';
 import { toast } from 'sonner';
+
+// Lazy load templates - only loaded when actually selected
+const ATSTemplate = lazy(() => import('./templates/ATSTemplate'));
+const ExecutiveTemplate = lazy(() => import('./templates/ExecutiveTemplate'));
+const ModernTemplate = lazy(() => import('./templates/ModernTemplate'));
+const ProfessionalTemplate = lazy(() => import('./templates/ProfessionalTemplate'));
+const MinimalistTemplate = lazy(() => import('./templates/MinimalistTemplate'));
+const ClassicTemplate = lazy(() => import('./templates/ClassicTemplate'));
+const TechTemplate = lazy(() => import('./templates/TechTemplate'));
+const CreativeTemplate = lazy(() => import('./templates/CreativeTemplate'));
+const AcademicTemplate = lazy(() => import('./templates/AcademicTemplate'));
 
 const CVPreview: React.FC = memo(() => {
   const { cvData, setTemplate, updateCustomization } = useCVStore();
@@ -36,8 +39,8 @@ const CVPreview: React.FC = memo(() => {
   const template = cvData.customization.template;
   const { primaryColor, secondaryColor } = cvData.customization;
 
-  // Calculate completeness
-  const getCompleteness = () => {
+  // Calculate completeness - memoized to avoid recalculation on every render
+  const completeness = useMemo(() => {
     const { personal, experience, education, skills, languages } = cvData;
     let sections = 0;
 
@@ -48,9 +51,7 @@ const CVPreview: React.FC = memo(() => {
     if (languages.length > 0) sections++;
 
     return Math.round((sections / 5) * 100);
-  };
-
-  const completeness = getCompleteness();
+  }, [cvData]);
 
   const handleTemplateChange = (value: CVTemplate) => {
     setTemplate(value);
@@ -72,31 +73,45 @@ const CVPreview: React.FC = memo(() => {
     return names[template] || template;
   };
 
-  // Render appropriate template
+  // Render appropriate template with Suspense for lazy loading
   const renderTemplate = () => {
-    switch (template) {
-      case 'ats':
-        return <ATSTemplate data={cvData} />;
-      case 'executive':
-        return <ExecutiveTemplate data={cvData} primaryColor={primaryColor} secondaryColor={secondaryColor} />;
-      case 'modern':
-        return <ModernTemplate data={cvData} primaryColor={primaryColor} secondaryColor={secondaryColor} />;
-      case 'professional':
-        return <ProfessionalTemplate data={cvData} primaryColor={primaryColor} secondaryColor={secondaryColor} />;
-      case 'minimal':
-        return <MinimalistTemplate data={cvData} primaryColor={primaryColor} secondaryColor={secondaryColor} />;
-      case 'classic':
-        return <ClassicTemplate data={cvData} primaryColor={primaryColor} secondaryColor={secondaryColor} />;
-      case 'tech':
-        return <TechTemplate data={cvData} primaryColor={primaryColor} secondaryColor={secondaryColor} />;
-      case 'creative':
-        return <CreativeTemplate data={cvData} primaryColor={primaryColor} secondaryColor={secondaryColor} />;
-      case 'academic':
-        return <AcademicTemplate data={cvData} primaryColor={primaryColor} secondaryColor={secondaryColor} />;
-      default:
-        // Fallback to modern template
-        return <ModernTemplate data={cvData} primaryColor={primaryColor} secondaryColor={secondaryColor} />;
-    }
+    const TemplateComponent = (() => {
+      switch (template) {
+        case 'ats':
+          return ATSTemplate;
+        case 'executive':
+          return ExecutiveTemplate;
+        case 'modern':
+          return ModernTemplate;
+        case 'professional':
+          return ProfessionalTemplate;
+        case 'minimal':
+          return MinimalistTemplate;
+        case 'classic':
+          return ClassicTemplate;
+        case 'tech':
+          return TechTemplate;
+        case 'creative':
+          return CreativeTemplate;
+        case 'academic':
+          return AcademicTemplate;
+        default:
+          return ModernTemplate;
+      }
+    })();
+
+    return (
+      <Suspense fallback={
+        <div className="space-y-4">
+          <Skeleton className="h-[600px] w-full" />
+          <div className="text-center text-sm text-muted-foreground">
+            Ładowanie szablonu...
+          </div>
+        </div>
+      }>
+        <TemplateComponent data={cvData} primaryColor={primaryColor} secondaryColor={secondaryColor} />
+      </Suspense>
+    );
   };
 
   const zoomLevels = [0.5, 0.75, 1, 1.25, 1.5];

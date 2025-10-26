@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -51,24 +51,25 @@ const colorPresets: ColorPreset[] = [
   }
 ];
 
-const CustomizationPanel: React.FC = () => {
+const CustomizationPanel: React.FC = memo(() => {
   const { cvData, setColors } = useCVStore();
   const { primaryColor, secondaryColor, template } = cvData.customization;
 
   const [isOpen, setIsOpen] = React.useState(false);
 
-  const handlePresetClick = (preset: ColorPreset) => {
+  // Memoized handlers to prevent unnecessary re-renders
+  const handlePresetClick = useCallback((preset: ColorPreset) => {
     setColors(preset.primary, preset.secondary);
     toast.success(`Kolory zmienione na: ${preset.name}`);
-  };
+  }, [setColors]);
 
-  const handlePrimaryColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePrimaryColorChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setColors(e.target.value, secondaryColor);
-  };
+  }, [setColors, secondaryColor]);
 
-  const handleSecondaryColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSecondaryColorChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setColors(primaryColor, e.target.value);
-  };
+  }, [setColors, primaryColor]);
 
   // Disable color customization for ATS template
   const isATS = template === 'ats';
@@ -218,6 +219,8 @@ const CustomizationPanel: React.FC = () => {
       </Card>
     </Collapsible>
   );
-};
+});
+
+CustomizationPanel.displayName = 'CustomizationPanel';
 
 export default CustomizationPanel;
