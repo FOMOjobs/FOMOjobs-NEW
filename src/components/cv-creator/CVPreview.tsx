@@ -109,7 +109,11 @@ const CVPreview: React.FC = memo(() => {
           </div>
         </div>
       }>
-        <TemplateComponent data={cvData} primaryColor={primaryColor} secondaryColor={secondaryColor} />
+        {template === 'ats' ? (
+          <TemplateComponent data={cvData} />
+        ) : (
+          <TemplateComponent data={cvData} primaryColor={primaryColor} secondaryColor={secondaryColor} />
+        )}
       </Suspense>
     );
   };
