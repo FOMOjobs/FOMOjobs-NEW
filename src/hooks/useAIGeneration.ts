@@ -1,6 +1,7 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
 import * as mockAI from '@/lib/mockAI';
+import { getRemainingRequests, getResetTime, decrementAIUsage } from '@/utils/aiRateLimiter';
 // import api from '@/lib/api'; // TODO: Uncomment when backend ready
 
 /**
@@ -11,7 +12,6 @@ const USE_MOCK_API = true;
 
 export interface AIGenerationHook {
   // State
-  limits: mockAI.AILimits | null;
   isLoading: boolean;
 
   // Functions
@@ -19,21 +19,24 @@ export interface AIGenerationHook {
   generateSummary: (params: mockAI.GenerateSummaryParams) => Promise<string | null>;
   improveDescription: (params: mockAI.ImproveDescriptionParams) => Promise<string[] | null>;
   suggestKeywords: (params: mockAI.SuggestKeywordsParams) => Promise<string[] | null>;
-  fetchLimits: () => Promise<void>;
 }
 
 /**
  * React hook for AI-powered CV generation features
  *
+ * NEW RATE LIMITING:
+ * - Simple: 4 requests/hour (no token tracking)
+ * - Managed by src/utils/aiRateLimiter.ts
+ * - Professional error messages
+ *
  * Features:
  * - Generate professional CV summaries
  * - Improve job descriptions with achievements
  * - Suggest ATS keywords
- * - Track usage limits (hourly/daily)
  *
  * Usage:
  * ```tsx
- * const { generateSummary, limits, isLoading } = useAIGeneration();
+ * const { generateSummary, isLoading } = useAIGeneration();
  *
  * const handleGenerate = async () => {
  *   const summary = await generateSummary({ ...params });
@@ -44,33 +47,7 @@ export interface AIGenerationHook {
  * ```
  */
 export const useAIGeneration = (): AIGenerationHook => {
-  const [limits, setLimits] = useState<mockAI.AILimits | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-
-  /**
-   * Fetch current usage limits
-   */
-  const fetchLimits = useCallback(async () => {
-    try {
-      if (USE_MOCK_API) {
-        const limitsData = await mockAI.getLimits();
-        setLimits(limitsData);
-      } else {
-        // TODO: Uncomment when backend ready
-        // const { data } = await api.get('/api/ai/limits');
-        // setLimits(data);
-      }
-    } catch (error) {
-      console.error('Failed to fetch AI limits:', error);
-    }
-  }, []);
-
-  /**
-   * Load limits on mount
-   */
-  useEffect(() => {
-    fetchLimits();
-  }, [fetchLimits]);
 
   /**
    * Check if user can make AI request
@@ -138,30 +115,34 @@ export const useAIGeneration = (): AIGenerationHook => {
       }
 
       if (result.success && result.data) {
-        toast.success('✅ Podsumowanie wygenerowane!', {
-          description: `Użyto ${result.tokensUsed || 0} tokenów`
+        const remaining = getRemainingRequests();
+        toast.success('Podsumowanie wygenerowane!', {
+          description: `Pozostało ${remaining}/4 generacji. Reset za: ${getResetTime()}`
         });
-
-        // Refresh limits after successful generation
-        await fetchLimits();
 
         return result.data;
       } else {
-        toast.error('⚠️ Błąd generowania', {
-          description: result.error || 'Nieznany błąd'
+        // If generation failed, give back the request
+        decrementAIUsage();
+
+        toast.error('Nie udało się wygenerować podsumowania', {
+          description: result.error || 'Spróbuj ponownie lub napisz własne podsumowanie'
         });
         return null;
       }
     } catch (error) {
+      // If error, give back the request
+      decrementAIUsage();
+
       console.error('Generate summary error:', error);
-      toast.error('⚠️ Błąd połączenia', {
-        description: 'Nie udało się połączyć z serwerem'
+      toast.error('Nie udało się wygenerować podsumowania', {
+        description: 'Spróbuj ponownie lub napisz własne podsumowanie'
       });
       return null;
     } finally {
       setIsLoading(false);
     }
-  }, [canUseAI, fetchLimits]);
+  }, [canUseAI]);
 
   /**
    * Improve job description by converting to achievement-focused bullet points
@@ -196,30 +177,34 @@ export const useAIGeneration = (): AIGenerationHook => {
       }
 
       if (result.success && result.data) {
-        toast.success('✅ Opis ulepszony!', {
-          description: `Dodano ${result.data.length} osiągnięć`
+        const remaining = getRemainingRequests();
+        toast.success('Opis ulepszony!', {
+          description: `Dodano ${result.data.length} osiągnięć. Pozostało ${remaining}/4 generacji.`
         });
-
-        // Refresh limits after successful generation
-        await fetchLimits();
 
         return result.data;
       } else {
-        toast.error('⚠️ Błąd ulepszania', {
-          description: result.error || 'Nieznany błąd'
+        // If generation failed, give back the request
+        decrementAIUsage();
+
+        toast.error('Nie udało się ulepszyć opisu', {
+          description: result.error || 'Spróbuj ponownie'
         });
         return null;
       }
     } catch (error) {
+      // If error, give back the request
+      decrementAIUsage();
+
       console.error('Improve description error:', error);
-      toast.error('⚠️ Błąd połączenia', {
-        description: 'Nie udało się połączyć z serwerem'
+      toast.error('Nie udało się ulepszyć opisu', {
+        description: 'Spróbuj ponownie'
       });
       return null;
     } finally {
       setIsLoading(false);
     }
-  }, [canUseAI, fetchLimits]);
+  }, [canUseAI]);
 
   /**
    * Suggest relevant keywords for ATS optimization
@@ -254,38 +239,40 @@ export const useAIGeneration = (): AIGenerationHook => {
       }
 
       if (result.success && result.data) {
-        toast.success('✅ Słowa kluczowe wygenerowane!', {
-          description: `Znaleziono ${result.data.length} słów kluczowych`
+        const remaining = getRemainingRequests();
+        toast.success('Słowa kluczowe wygenerowane!', {
+          description: `Znaleziono ${result.data.length} słów. Pozostało ${remaining}/4 generacji.`
         });
-
-        // Refresh limits after successful generation
-        await fetchLimits();
 
         return result.data;
       } else {
-        toast.error('⚠️ Błąd generowania słów kluczowych', {
-          description: result.error || 'Nieznany błąd'
+        // If generation failed, give back the request
+        decrementAIUsage();
+
+        toast.error('Nie udało się wygenerować słów kluczowych', {
+          description: result.error || 'Spróbuj ponownie'
         });
         return null;
       }
     } catch (error) {
+      // If error, give back the request
+      decrementAIUsage();
+
       console.error('Suggest keywords error:', error);
-      toast.error('⚠️ Błąd połączenia', {
-        description: 'Nie udało się połączyć z serwerem'
+      toast.error('Nie udało się wygenerować słów kluczowych', {
+        description: 'Spróbuj ponownie'
       });
       return null;
     } finally {
       setIsLoading(false);
     }
-  }, [canUseAI, fetchLimits]);
+  }, [canUseAI]);
 
   return {
-    limits,
     isLoading,
     canUseAI,
     generateSummary,
     improveDescription,
-    suggestKeywords,
-    fetchLimits
+    suggestKeywords
   };
 };

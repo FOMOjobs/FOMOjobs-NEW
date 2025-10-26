@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   Mic,
   MicOff,
@@ -16,17 +19,20 @@ import {
   PlayCircle,
   CheckCircle,
   ArrowRight,
-  Sparkles
+  Sparkles,
+  AlertCircle
 } from "lucide-react";
 import FOMOJobsNavbar from '@/components/FOMOJobsNavbar';
 import FOMOJobsFooter from '@/components/landing/FOMOJobsFooter';
 import { Helmet } from 'react-helmet-async';
 import { toast } from 'sonner';
+import { loadCVFromStorage } from '@/lib/cvStorage';
 
 const InterviewCoach = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [cvUploaded, setCvUploaded] = useState(false);
   const [cvFileName, setCvFileName] = useState('');
+  const [cvSource, setCvSource] = useState<'upload' | 'fomojobs'>('upload');
   const [jobDescription, setJobDescription] = useState('');
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [sessionStarted, setSessionStarted] = useState(false);
@@ -94,9 +100,22 @@ const InterviewCoach = () => {
     }
   };
 
+  const handleLoadFOMOJobsCV = () => {
+    const cvData = loadCVFromStorage();
+    if (!cvData) {
+      toast.error('Nie znaleziono CV w FOMO.cvcreator');
+      return;
+    }
+
+    const cvName = cvData.personal.fullName || 'Twoje CV';
+    setCvFileName(`${cvName} (FOMO.cvcreator)`);
+    setCvUploaded(true);
+    toast.success(`CV "${cvName}" załadowane z FOMO.cvcreator!`);
+  };
+
   const startSession = () => {
     if (!cvUploaded) {
-      toast.error('Proszę najpierw przesłać CV');
+      toast.error('Proszę najpierw przesłać CV lub załadować z FOMO.cvcreator');
       return;
     }
     if (!jobDescription.trim()) {
@@ -202,42 +221,113 @@ const InterviewCoach = () => {
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent>
-                    <div
-                      className="border-2 border-dashed border-primary/30 rounded-xl p-12 text-center hover:border-primary/60 transition-colors cursor-pointer bg-muted/30"
-                      onDragOver={handleDragOver}
-                      onDrop={handleDrop}
-                    >
-                      <Input
-                        id="cv-upload"
-                        type="file"
-                        accept=".pdf,.doc,.docx"
-                        className="hidden"
-                        onChange={handleFileUpload}
-                      />
-                      <Label htmlFor="cv-upload" className="cursor-pointer">
-                        {cvUploaded ? (
-                          <div className="flex flex-col items-center gap-4">
-                            <CheckCircle className="w-16 h-16 text-green-500" />
-                            <div>
-                              <p className="text-lg font-semibold text-foreground">CV przesłane pomyślnie!</p>
-                              <p className="text-sm text-muted-foreground mt-2">{cvFileName}</p>
+                  <CardContent className="space-y-4">
+                    {/* Wybór źródła CV */}
+                    <RadioGroup value={cvSource} onValueChange={(v) => setCvSource(v as 'upload' | 'fomojobs')}>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="upload" id="upload" />
+                        <Label htmlFor="upload" className="cursor-pointer">Wgraj plik (PDF/DOCX)</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="fomojobs" id="fomojobs" />
+                        <Label htmlFor="fomojobs" className="cursor-pointer">Wybierz z FOMO.cvcreator</Label>
+                      </div>
+                    </RadioGroup>
+
+                    {/* Upload pliku */}
+                    {cvSource === 'upload' && (
+                      <div
+                        className="border-2 border-dashed border-primary/30 rounded-xl p-12 text-center hover:border-primary/60 transition-colors cursor-pointer bg-muted/30"
+                        onDragOver={handleDragOver}
+                        onDrop={handleDrop}
+                      >
+                        <Input
+                          id="cv-upload"
+                          type="file"
+                          accept=".pdf,.doc,.docx"
+                          className="hidden"
+                          onChange={handleFileUpload}
+                        />
+                        <Label htmlFor="cv-upload" className="cursor-pointer">
+                          {cvUploaded ? (
+                            <div className="flex flex-col items-center gap-4">
+                              <CheckCircle className="w-16 h-16 text-green-500" />
+                              <div>
+                                <p className="text-lg font-semibold text-foreground">CV przesłane pomyślnie!</p>
+                                <p className="text-sm text-muted-foreground mt-2">{cvFileName}</p>
+                              </div>
+                              <Button variant="outline" size="sm">
+                                Zmień plik
+                              </Button>
                             </div>
-                            <Button variant="outline" size="sm">
-                              Zmień plik
-                            </Button>
-                          </div>
+                          ) : (
+                            <div className="flex flex-col items-center gap-4">
+                              <Upload className="w-16 h-16 text-primary" />
+                              <div>
+                                <p className="text-lg font-semibold text-foreground">Przeciągnij plik CV tutaj</p>
+                                <p className="text-sm text-muted-foreground mt-2">lub kliknij, aby wybrać plik (PDF, DOC, DOCX)</p>
+                              </div>
+                            </div>
+                          )}
+                        </Label>
+                      </div>
+                    )}
+
+                    {/* Wybór CV z FOMOjobs */}
+                    {cvSource === 'fomojobs' && (
+                      <div className="space-y-4">
+                        {!loadCVFromStorage() ? (
+                          <Alert>
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertDescription>
+                              Nie masz jeszcze CV w FOMO.cvcreator.{' '}
+                              <Link to="/cv-creator" className="underline font-semibold">
+                                Stwórz swoje pierwsze CV
+                              </Link>
+                            </AlertDescription>
+                          </Alert>
                         ) : (
-                          <div className="flex flex-col items-center gap-4">
-                            <Upload className="w-16 h-16 text-primary" />
-                            <div>
-                              <p className="text-lg font-semibold text-foreground">Przeciągnij plik CV tutaj</p>
-                              <p className="text-sm text-muted-foreground mt-2">lub kliknij, aby wybrać plik (PDF, DOC, DOCX)</p>
-                            </div>
+                          <div className="border-2 border-primary/30 rounded-xl p-8 bg-muted/30">
+                            {cvUploaded ? (
+                              <div className="flex flex-col items-center gap-4">
+                                <CheckCircle className="w-16 h-16 text-green-500" />
+                                <div className="text-center">
+                                  <p className="text-lg font-semibold text-foreground">CV załadowane pomyślnie!</p>
+                                  <p className="text-sm text-muted-foreground mt-2">{cvFileName}</p>
+                                </div>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    setCvUploaded(false);
+                                    setCvFileName('');
+                                  }}
+                                >
+                                  Zmień CV
+                                </Button>
+                              </div>
+                            ) : (
+                              <div className="flex flex-col items-center gap-4">
+                                <FileText className="w-16 h-16 text-primary" />
+                                <div className="text-center">
+                                  <p className="text-lg font-semibold text-foreground">Załaduj CV z FOMO.cvcreator</p>
+                                  <p className="text-sm text-muted-foreground mt-2">
+                                    Użyj CV stworzonego w naszym kreatorze
+                                  </p>
+                                </div>
+                                <Button
+                                  onClick={handleLoadFOMOJobsCV}
+                                  className="bg-gradient-to-r from-primary to-secondary"
+                                >
+                                  <FileText className="w-4 h-4 mr-2" />
+                                  Załaduj CV
+                                </Button>
+                              </div>
+                            )}
                           </div>
                         )}
-                      </Label>
-                    </div>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </motion.div>

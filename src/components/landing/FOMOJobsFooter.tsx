@@ -1,9 +1,185 @@
-import { Facebook, Instagram, Mail, Phone, MapPin } from 'lucide-react';
+import { Linkedin, Youtube, Mail, Phone, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { useState } from 'react';
 import { toast } from 'sonner';
+
+// Komponent Help Center Dialog
+const HelpCenterDialog = () => {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <button className="text-primary-foreground/80 hover:text-secondary transition-colors">
+          Centrum Pomocy
+        </button>
+      </DialogTrigger>
+      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>❓ Centrum Pomocy FOMOjobs</DialogTitle>
+        </DialogHeader>
+
+        <div className="space-y-6">
+          {/* FAQ Sections */}
+          <div>
+            <h3 className="font-semibold mb-3">Najczęściej zadawane pytania</h3>
+            <Accordion type="single" collapsible>
+              <AccordionItem value="item-1">
+                <AccordionTrigger>Jak działa FOMO.alerts?</AccordionTrigger>
+                <AccordionContent>
+                  FOMO.alerts automatycznie monitoruje strony karier firm i wysyła Ci powiadomienia
+                  o nowych ofertach dopasowanych do Twoich preferencji.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-2">
+                <AccordionTrigger>Ile kosztuje subskrypcja?</AccordionTrigger>
+                <AccordionContent>
+                  Mamy plany od 0 PLN (Start), przez 15 PLN (Alerts), 29 PLN (Pro),
+                  do 249 PLN (Insights dla firm). Plan Open dla #opentowork jest darmowy.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-3">
+                <AccordionTrigger>Jak aplikować o plan Open (#opentowork)?</AccordionTrigger>
+                <AccordionContent>
+                  Kliknij "Aplikuj o darmowy dostęp", wypełnij formularz i dołącz link do
+                  swojego profilu LinkedIn z #opentowork. Weryfikacja zajmuje do 24h.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-4">
+                <AccordionTrigger>Czy mogę anulować subskrypcję?</AccordionTrigger>
+                <AccordionContent>
+                  Tak! Możesz anulować w dowolnym momencie bez dodatkowych opłat.
+                  Dostęp pozostanie aktywny do końca opłaconego okresu.
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </div>
+
+          <div className="pt-4 border-t">
+            <p className="text-sm text-muted-foreground">
+              Nie znalazłeś odpowiedzi? <strong>Zgłoś problem</strong> lub napisz na:{' '}
+              <a href="mailto:pomoc@fomojobs.com" className="text-primary underline">
+                pomoc@fomojobs.com
+              </a>
+            </p>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+// Komponent Report Problem Dialog
+const ReportProblemDialog = () => {
+  const [formData, setFormData] = useState({
+    type: '',
+    email: '',
+    subject: '',
+    description: '',
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // TODO: Połącz z backend API do wysyłania zgłoszeń
+    console.log('Zgłoszenie:', formData);
+
+    toast.success('Zgłoszenie wysłane!', {
+      description: 'Odpowiemy w ciągu 24-48 godzin.'
+    });
+
+    // Reset form
+    setFormData({ type: '', email: '', subject: '', description: '' });
+  };
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <button className="text-primary-foreground/80 hover:text-secondary transition-colors">
+          Zgłoś problem
+        </button>
+      </DialogTrigger>
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle>🐛 Zgłoś problem lub wyślij feedback</DialogTitle>
+        </DialogHeader>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <Label htmlFor="type">Typ zgłoszenia</Label>
+            <Select
+              value={formData.type}
+              onValueChange={(v) => setFormData({ ...formData, type: v })}
+              required
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Wybierz typ..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="bug">🐛 Błąd techniczny</SelectItem>
+                <SelectItem value="feature">💡 Propozycja funkcji</SelectItem>
+                <SelectItem value="feedback">💬 Feedback / Opinia</SelectItem>
+                <SelectItem value="account">👤 Problem z kontem</SelectItem>
+                <SelectItem value="payment">💳 Problem z płatnością</SelectItem>
+                <SelectItem value="other">❓ Inne</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <Label htmlFor="email">Twój email</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="twoj@email.com"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              required
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="subject">Temat</Label>
+            <Input
+              id="subject"
+              placeholder="Krótki opis problemu..."
+              value={formData.subject}
+              onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+              required
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="description">Opis szczegółowy</Label>
+            <Textarea
+              id="description"
+              placeholder="Opisz problem lub swoją propozycję..."
+              rows={6}
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              required
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              Im więcej szczegółów, tym szybciej pomożemy!
+            </p>
+          </div>
+
+          <Button type="submit" className="w-full">
+            Wyślij zgłoszenie
+          </Button>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 const FOMOJobsFooter = () => {
   const [email, setEmail] = useState('');
@@ -34,28 +210,28 @@ const FOMOJobsFooter = () => {
                 FOMO<span className="text-white">jobs</span>
               </span>
             </div>
-            <p className="text-primary-foreground/90 leading-relaxed">
-              Portal pracy nowej generacji. Nigdy więcej nie przegap idealnej oferty pracy dzięki codziennym alertom dopasowanym do Twoich preferencji.
+            <p className="text-primary-foreground/90 leading-relaxed contrast-more:text-black dark:contrast-more:text-white">
+              Nigdy więcej nie przegap idealnej oferty pracy dzięki codziennym alertom dopasowanym do Twoich preferencji.
             </p>
             <div className="flex space-x-4">
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-primary-foreground/80 hover:text-secondary hover:bg-primary-foreground/10 transition-all"
+                className="text-primary-foreground/80 hover:text-secondary hover:bg-primary-foreground/10 transition-all contrast-more:text-black dark:contrast-more:text-white"
                 asChild
               >
-                <a href="https://facebook.com/mlodykrakow" target="_blank" rel="noopener noreferrer">
-                  <Facebook className="h-5 w-5" />
+                <a href="https://linkedin.com/company/fomojobs" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                  <Linkedin className="h-5 w-5" />
                 </a>
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-primary-foreground/80 hover:text-secondary hover:bg-primary-foreground/10 transition-all"
+                className="text-primary-foreground/80 hover:text-secondary hover:bg-primary-foreground/10 transition-all contrast-more:text-black dark:contrast-more:text-white"
                 asChild
               >
-                <a href="https://instagram.com/mlodykrakow" target="_blank" rel="noopener noreferrer">
-                  <Instagram className="h-5 w-5" />
+                <a href="https://youtube.com/@fomojobs" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+                  <Youtube className="h-5 w-5" />
                 </a>
               </Button>
             </div>
@@ -76,27 +252,15 @@ const FOMOJobsFooter = () => {
             </ul>
           </div>
 
-          {/* Quick Links */}
+          {/* Quick Links + Pomoc */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-secondary">Szybkie linki</h3>
+            <h3 className="text-lg font-semibold text-secondary">Pomoc</h3>
             <ul className="space-y-2">
               <li>
-                <button
-                  onClick={() => scrollToSection('about')}
-                  className="text-primary-foreground/80 hover:text-secondary transition-colors"
-                >
-                  O Platformie
-                </button>
+                <HelpCenterDialog />
               </li>
               <li>
-                <Link to="/help" className="text-primary-foreground/80 hover:text-secondary transition-colors">
-                  Centrum Pomocy
-                </Link>
-              </li>
-              <li>
-                <Link to="/report-issue" className="text-primary-foreground/80 hover:text-secondary transition-colors">
-                  Zgłoś problem
-                </Link>
+                <ReportProblemDialog />
               </li>
               <li>
                 <Link to="/auth" className="text-primary-foreground/80 hover:text-secondary transition-colors">
@@ -105,10 +269,10 @@ const FOMOJobsFooter = () => {
               </li>
               <li>
                 <button
-                  onClick={() => scrollToSection('faq')}
+                  onClick={() => scrollToSection('pricing')}
                   className="text-primary-foreground/80 hover:text-secondary transition-colors"
                 >
-                  FAQ
+                  Plany
                 </button>
               </li>
               <li>
@@ -124,37 +288,37 @@ const FOMOJobsFooter = () => {
             <h3 className="text-lg font-semibold text-secondary">Narzędzia</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="#" className="text-primary-foreground/80 hover:text-secondary transition-colors">
+                <Link to="/cvs" className="text-primary-foreground/80 hover:text-secondary transition-colors">
                   FOMO.cvcreator
                 </Link>
               </li>
               <li>
-                <Link to="#" className="text-primary-foreground/80 hover:text-secondary transition-colors">
+                <Link to="/job-tracker" className="text-primary-foreground/80 hover:text-secondary transition-colors">
                   FOMO.jobstracker
                 </Link>
               </li>
               <li>
-                <Link to="#" className="text-primary-foreground/80 hover:text-secondary transition-colors">
+                <Link to="/alerts" className="text-primary-foreground/80 hover:text-secondary transition-colors">
                   FOMO.alerts
                 </Link>
               </li>
               <li>
-                <Link to="#" className="text-primary-foreground/80 hover:text-secondary transition-colors">
+                <Link to="/b2b/analytics" className="text-primary-foreground/80 hover:text-secondary transition-colors">
                   FOMO.analytics
                 </Link>
               </li>
               <li>
-                <Link to="#" className="text-primary-foreground/80 hover:text-secondary transition-colors">
+                <Link to="/recruiter" className="text-primary-foreground/80 hover:text-secondary transition-colors">
                   FOMO.recruiter
                 </Link>
               </li>
               <li>
-                <Link to="#" className="text-primary-foreground/80 hover:text-secondary transition-colors">
+                <Link to="/interview-coach" className="text-primary-foreground/80 hover:text-secondary transition-colors">
                   FOMO.coach
                 </Link>
               </li>
               <li>
-                <Link to="#" className="text-primary-foreground/80 hover:text-secondary transition-colors">
+                <Link to="/job-prompts" className="text-primary-foreground/80 hover:text-secondary transition-colors">
                   FOMO.jobprompts
                 </Link>
               </li>

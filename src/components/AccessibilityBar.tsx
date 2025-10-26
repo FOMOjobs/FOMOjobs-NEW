@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Sun, Moon, Circle, Info } from 'lucide-react';
+import { Sun, Moon, Circle } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
@@ -103,7 +103,7 @@ export const AccessibilityBar = () => {
               </TooltipContent>
             </Tooltip>
             <span className="text-sm text-muted-foreground hidden sm:block">
-              Motyw
+              Tryb jasny / ciemny
             </span>
           </div>
 
@@ -168,19 +168,6 @@ export const AccessibilityBar = () => {
                 A+
               </Button>
             </div>
-
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" className="hover:bg-muted">
-                  <Info className="h-5 w-5 text-muted-foreground" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="top" className="max-w-xs">
-                <p className="text-sm">
-                  Dostosuj wygląd strony do swoich potrzeb: zmień motyw, kontrast lub rozmiar czcionki.
-                </p>
-              </TooltipContent>
-            </Tooltip>
           </div>
         </div>
       </div>

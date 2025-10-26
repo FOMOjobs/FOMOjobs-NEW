@@ -1,185 +1,266 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Check, Star, Crown } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Check, Star, Sparkles, Bell, Crown, Heart, Building2 } from "lucide-react";
 
 const FOMOJobsPricing = () => {
-  const plans = [
+  // Główne plany - 3 obok siebie
+  const mainPlans = [
     {
-      name: "Freemium",
-      price: "0",
-      currency: "PLN",
+      name: "Start",
+      price: "0 PLN",
       period: "na zawsze",
-      description: "Podstawowy dostęp do monitorowania ofert pracy",
+      description: "Podstawowy dostęp do narzędzi kariery",
+      icon: Sparkles,
       features: [
-        "Podstawowe alerty",
-        "Ograniczone filtry",
-        "Dostęp do FOMO.cvcreator"
+        "Alerty do 5 pracodawców",
       ],
-      cta: "Wybierz plan",
-      popular: false,
-      gradient: "from-gray-50 to-gray-100"
+      cta: "Rozpocznij za darmo",
+      highlight: false
     },
     {
-      name: "Standard",
-      price: "29",
-      currency: "PLN",
+      name: "Alerts",
+      price: "15 PLN",
       period: "miesięcznie",
-      description: "Więcej możliwości dla aktywnie poszukujących",
+      description: "Alerty o nowych ofertach pracy",
+      icon: Bell,
       features: [
-        "Dostęp do wszystkich alertów",
-        "Zaawansowane filtry i powiadomienia",
-        "Support email"
+        "Alerty do wszystkich pracodawców",
+        "Dostęp do narzędzia FOMO.alert",
+        "Zaawansowane filtry alertów",
       ],
       cta: "Wybierz plan",
-      popular: true,
-      gradient: "from-primary to-primary/80"
+      highlight: false
     },
     {
       name: "Pro",
-      price: "49",
-      currency: "PLN",
+      price: "29 PLN",
       period: "miesięcznie",
-      description: "Pełny dostęp dla profesjonalistów",
+      description: "Kompletny pakiet dla szukających pracy",
+      icon: Crown,
       features: [
-        "Dostęp do wszystkich Narzędzi do Sukcesu",
-        "Priorytetowe alerty i powiadomienia",
-        "Support telefoniczny i priorytetowy"
+        "Wszystko z planu Alerts",
+        "Priorytetowe powiadomienia",
+        "Unlimited CV exports",
+        "AI-powered CV improvements",
+        "Dostęp do wszystkich FOMO narzędzi dla szukających pracy",
       ],
-      cta: "Wybierz plan",
-      popular: false,
-      gradient: "from-secondary to-secondary/80"
+      cta: "Wybierz Pro",
+      highlight: true
+    }
+  ];
+
+  // Specjalne plany - 2 większe na dole
+  const specialPlans = [
+    {
+      name: "Open (#opentowork)",
+      price: "0 PLN",
+      period: "na zawsze",
+      description: "Pełny dostęp dla osób szukających pracy",
+      icon: Heart,
+      badge: "Program społeczny",
+      badgeColor: "bg-green-500",
+      cardColor: "border-green-500 bg-green-50 dark:bg-green-950/20",
+      features: [
+        "Wszystkie funkcje z planu Pro",
+        "Dla osób z #opentowork na LinkedIn",
+        "Wymagana weryfikacja statusu",
+        "Po znalezieniu pracy - przejście na plan Start"
+      ],
+      cta: "Aplikuj o darmowy dostęp",
+      ctaVariant: "default" as const
+    },
+    {
+      name: "Insights",
+      price: "249 PLN",
+      period: "miesięcznie",
+      description: "Dla pracodawców i agencji rekrutacyjnych",
+      icon: Building2,
+      badge: "Dla firm",
+      badgeColor: "bg-purple-500",
+      cardColor: "border-purple-500 bg-purple-50 dark:bg-purple-950/20",
+      features: [
+        "Dostęp do analityki rynku pracy",
+        "Monitoring konkurencji",
+      ],
+      cta: "Skontaktuj się",
+      ctaVariant: "default" as const
     }
   ];
 
   return (
-    <section id="pricing" className="py-20 bg-background dark:bg-background">
+    <section id="pricing" className="py-20 bg-muted/30">
       <div className="container mx-auto px-4">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-12"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            Wybierz plan idealny dla Ciebie
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground contrast-more:text-black dark:contrast-more:text-white mb-4">
+            Plany subskrypcyjne FOMOjobs (2025)
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Dopasuj plan do swoich potrzeb i osiągnij sukces
+          <p className="text-lg text-muted-foreground contrast-more:text-black dark:contrast-more:text-white max-w-2xl mx-auto">
+            Wybierz plan dopasowany do Twoich potrzeb
           </p>
         </motion.div>
 
+        {/* GŁÓWNE PLANY - 3 obok siebie */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto px-2 md:px-0"
+          className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-8"
         >
-          {plans.map((plan, index) => (
-            <div
-              key={plan.name}
-              className={`pricing-card relative bg-card rounded-2xl shadow-card hover:shadow-xl transition-all duration-300 hover:-translate-y-2 overflow-hidden min-h-[500px] flex flex-col border-0 ${
-                plan.popular ? 'ring-2 ring-primary md:scale-105' :
-                plan.name === 'Pro' ? 'ring-2 ring-secondary' : ''
-              }`}
-            >
-              {plan.popular && (
-                <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground text-center py-2 text-sm font-semibold">
-                  <Star className="inline w-4 h-4 mr-1" />
-                  Najpopularniejszy
-                </div>
-              )}
+          {mainPlans.map((plan) => {
+            const Icon = plan.icon;
+            return (
+              <Card
+                key={plan.name}
+                className={`relative ${
+                  plan.highlight ? 'border-primary shadow-xl scale-105 ring-2 ring-primary' : ''
+                }`}
+              >
+                {plan.highlight && (
+                  <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary">
+                    <Star className="inline w-3 h-3 mr-1" />
+                    Najpopularniejszy
+                  </Badge>
+                )}
 
-              <div className={`p-6 md:p-8 ${plan.popular ? 'pt-12 md:pt-16' : ''} flex-1 flex flex-col`}>
-                {/* Plan name and icon */}
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-2xl font-bold text-foreground">
-                    {plan.name}
-                  </h3>
-                  {plan.name === 'Pro' && <Crown className="w-6 h-6 text-secondary" />}
-                </div>
-
-                {/* Price */}
-                <div className="mb-6">
-                  <div className="flex items-baseline">
-                    <span className="text-5xl font-bold text-primary">
-                      {plan.price}
-                    </span>
-                    <span className="text-xl text-muted-foreground ml-2">
-                      {plan.currency} {plan.period}
-                    </span>
+                <CardHeader>
+                  <div className="flex items-center gap-2 mb-2">
+                    <Icon className="h-6 w-6 text-primary contrast-more:text-black dark:contrast-more:text-white" />
+                    <CardTitle className="text-xl contrast-more:text-black dark:contrast-more:text-white">
+                      {plan.name}
+                    </CardTitle>
                   </div>
-                  <p className="text-muted-foreground mt-2">
+
+                  <div className="space-y-1">
+                    <div className="text-4xl font-bold text-primary contrast-more:text-black dark:contrast-more:text-white">
+                      {plan.price}
+                    </div>
+                    <div className="text-sm text-muted-foreground contrast-more:text-gray-700 dark:contrast-more:text-gray-300">
+                      {plan.period}
+                    </div>
+                  </div>
+
+                  <CardDescription className="text-sm contrast-more:text-gray-700 dark:contrast-more:text-gray-300 mt-2">
                     {plan.description}
-                  </p>
-                </div>
+                  </CardDescription>
+                </CardHeader>
 
-                {/* Features */}
-                <ul className="space-y-3 mb-8">
-                  {plan.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-start">
-                      <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                      <span className="text-muted-foreground">
-                        {feature}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
+                <CardContent className="space-y-4">
+                  <ul className="space-y-3 min-h-[180px]">
+                    {plan.features.map((feature, idx) => (
+                      <li key={idx} className="flex items-start gap-2 text-sm">
+                        <Check className="h-4 w-4 text-green-500 contrast-more:text-black dark:contrast-more:text-white mt-0.5 flex-shrink-0" />
+                        <span className="contrast-more:text-black dark:contrast-more:text-white">
+                          {feature}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
 
-                {/* CTA Button */}
-                <div className="mt-auto">
                   <Button
-                    className={`w-full text-base md:text-lg py-4 md:py-6 font-semibold transition-all duration-300 ${
-                      plan.popular
-                        ? 'bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl'
-                        : plan.name === 'Pro'
-                        ? 'bg-secondary hover:bg-secondary/90 text-secondary-foreground shadow-lg hover:shadow-xl'
-                        : 'bg-muted hover:bg-muted/80 text-foreground'
-                    }`}
+                    className="w-full"
+                    variant={plan.highlight ? 'default' : 'outline'}
+                    size="lg"
                   >
                     {plan.cta}
                   </Button>
-                </div>
-              </div>
-            </div>
-          ))}
+                </CardContent>
+              </Card>
+            );
+          })}
         </motion.div>
 
-        {/* Special #opentowork plan */}
+        {/* SPECJALNE PLANY - 2 większe obok siebie na dole */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
           viewport={{ once: true }}
-          className="mt-16 max-w-5xl mx-auto"
+          className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mt-12"
         >
-          <div className="bg-card rounded-2xl p-8 border-4 border-green-500 relative overflow-hidden shadow-card">
-            <div className="grid lg:grid-cols-2 gap-8 items-center">
-              <div className="text-center lg:text-left">
-                <h3 className="text-3xl font-bold mb-4 text-green-600 dark:text-green-400">
-                  #opentowork
-                </h3>
-                <p className="text-xl mb-6 text-foreground">
-                  Jesteś bez pracy i masz #opentowork na LinkedIn? Otrzymaj pełny dostęp za darmo!
-                </p>
-                <p className="text-muted-foreground mb-8">
-                  * Wymagana weryfikacja statusu. Po znalezieniu pracy przejście na plan Freemium lub płatny.
-                </p>
-                <Button
-                  size="lg"
-                  className="bg-green-600 hover:bg-green-700 text-white font-semibold px-8 py-4"
-                >
-                  Aplikuj o darmowy dostęp
-                </Button>
-              </div>
-              <div className="flex justify-center lg:justify-end">
-                <div className="w-64 h-64 rounded-full bg-green-100 dark:bg-green-900/20 flex items-center justify-center">
-                  <span className="text-6xl font-bold text-green-600 dark:text-green-400">#</span>
-                </div>
-              </div>
-            </div>
-          </div>
+          {specialPlans.map((plan) => {
+            const Icon = plan.icon;
+            return (
+              <Card
+                key={plan.name}
+                className={`relative ${plan.cardColor} border-2`}
+              >
+                <Badge className={`absolute -top-3 left-1/2 -translate-x-1/2 ${plan.badgeColor} text-white`}>
+                  {plan.badge}
+                </Badge>
+
+                <CardHeader className="pb-4">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className={`p-2 rounded-lg ${plan.badgeColor} bg-opacity-20`}>
+                      <Icon className="h-7 w-7 contrast-more:text-black dark:contrast-more:text-white" />
+                    </div>
+                    <CardTitle className="text-2xl contrast-more:text-black dark:contrast-more:text-white">
+                      {plan.name}
+                    </CardTitle>
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="text-5xl font-bold contrast-more:text-black dark:contrast-more:text-white">
+                      {plan.price}
+                    </div>
+                    <div className="text-base text-muted-foreground contrast-more:text-gray-700 dark:contrast-more:text-gray-300">
+                      {plan.period}
+                    </div>
+                  </div>
+
+                  <CardDescription className="text-base mt-2 contrast-more:text-gray-700 dark:contrast-more:text-gray-300">
+                    {plan.description}
+                  </CardDescription>
+                </CardHeader>
+
+                <CardContent className="space-y-6">
+                  <ul className="space-y-3">
+                    {plan.features.map((feature, idx) => (
+                      <li key={idx} className="flex items-start gap-3">
+                        <Check className="h-5 w-5 text-green-600 dark:text-green-400 contrast-more:text-black dark:contrast-more:text-white mt-0.5 flex-shrink-0" />
+                        <span className="contrast-more:text-black dark:contrast-more:text-white">
+                          {feature}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <Button
+                    className="w-full"
+                    variant={plan.ctaVariant}
+                    size="lg"
+                  >
+                    {plan.cta}
+                  </Button>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </motion.div>
+
+        {/* Footer note */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          viewport={{ once: true }}
+          className="mt-12 text-center"
+        >
+          <p className="text-sm text-muted-foreground contrast-more:text-black dark:contrast-more:text-white">
+            Wszystkie plany można anulować w dowolnym momencie. Brak ukrytych opłat.
+          </p>
+          <p className="text-sm text-muted-foreground contrast-more:text-black dark:contrast-more:text-white mt-2">
+            <span className="font-semibold">#opentowork:</span> Wymagana weryfikacja statusu poprzez LinkedIn. Po znalezieniu pracy automatyczne przejście na plan Start.
+          </p>
         </motion.div>
       </div>
     </section>

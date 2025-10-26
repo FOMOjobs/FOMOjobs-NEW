@@ -22,6 +22,7 @@ import {
   validateDateNotFuture,
   validateDateRange
 } from '@/utils/validation';
+import { MonthPicker } from '@/components/ui/month-picker';
 
 const EducationSection: React.FC = () => {
   const { cvData, addEducation, updateEducation, deleteEducation } = useCVStore();
@@ -290,21 +291,18 @@ const EducationSection: React.FC = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="startDate">Data rozpoczęcia</Label>
-                  <Input
-                    id="startDate"
-                    type="month"
+                  <MonthPicker
                     value={formData.startDate}
-                    onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                    onChange={(value) => setFormData({ ...formData, startDate: value })}
+                    placeholder="Wybierz datę rozpoczęcia..."
                   />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="endDate">Data zakończenia</Label>
-                  <Input
-                    id="endDate"
-                    type="month"
-                    value={formData.endDate}
-                    onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-                    disabled={formData.current}
+                  <MonthPicker
+                    value={formData.current ? '' : formData.endDate}
+                    onChange={(value) => setFormData({ ...formData, endDate: value })}
+                    placeholder={formData.current ? "Nadal studiuję" : "Wybierz datę zakończenia..."}
                   />
                 </div>
               </div>

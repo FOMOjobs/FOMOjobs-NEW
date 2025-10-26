@@ -4,22 +4,22 @@
  * Simulates OpenAI API responses for CV generation features.
  * This allows frontend development without backend dependency.
  * When Andrzej completes the backend, simply switch USE_MOCK_API flag in useAIGeneration.ts
+ *
+ * NEW RATE LIMITING:
+ * - Simple: 4 requests per hour (was 10/hour + 50k tokens/day)
+ * - Managed by src/utils/aiRateLimiter.ts
+ * - No token tracking (simplified)
  */
+
+import {
+  canUseAI as checkRateLimit,
+  incrementAIUsage,
+  getRemainingRequests,
+  getResetTime
+} from '@/utils/aiRateLimiter';
 
 export type AITone = 'formal' | 'friendly' | 'technical';
 export type AILanguage = 'pl' | 'en';
-
-export interface AILimits {
-  hourly: {
-    used: number;
-    limit: number;
-  };
-  daily: {
-    tokens: number;
-    limit: number;
-  };
-  resetTime: string; // ISO string
-}
 
 export interface GenerateSummaryParams {
   experience: Array<{
@@ -55,86 +55,18 @@ export interface AIResponse<T> {
   success: boolean;
   data?: T;
   error?: string;
-  tokensUsed?: number;
 }
 
-// Simulated usage tracking
-let mockUsage = {
-  hourlyRequests: 3,
-  dailyTokens: 12450,
-  lastResetHour: new Date().getHours(),
-  lastResetDay: new Date().getDate()
-};
-
 /**
- * Reset counters if time has passed
- */
-const checkAndResetLimits = () => {
-  const now = new Date();
-
-  // Reset hourly counter
-  if (now.getHours() !== mockUsage.lastResetHour) {
-    mockUsage.hourlyRequests = 0;
-    mockUsage.lastResetHour = now.getHours();
-  }
-
-  // Reset daily counter
-  if (now.getDate() !== mockUsage.lastResetDay) {
-    mockUsage.dailyTokens = 0;
-    mockUsage.lastResetDay = now.getDate();
-  }
-};
-
-/**
- * Get current AI usage limits
- */
-export const getLimits = async (): Promise<AILimits> => {
-  checkAndResetLimits();
-
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 100));
-
-  const nextHour = new Date();
-  nextHour.setHours(nextHour.getHours() + 1, 0, 0, 0);
-
-  return {
-    hourly: {
-      used: mockUsage.hourlyRequests,
-      limit: 10
-    },
-    daily: {
-      tokens: mockUsage.dailyTokens,
-      limit: 50000
-    },
-    resetTime: nextHour.toISOString()
-  };
-};
-
-/**
- * Increment usage counters
- */
-const incrementUsage = (tokensUsed: number) => {
-  mockUsage.hourlyRequests += 1;
-  mockUsage.dailyTokens += tokensUsed;
-};
-
-/**
- * Check if user can make AI request
+ * Check if user can make AI request (using new rate limiter)
  */
 export const canUseAI = async (): Promise<{ allowed: boolean; reason?: string }> => {
-  const limits = await getLimits();
+  const remaining = getRemainingRequests();
 
-  if (limits.hourly.used >= limits.hourly.limit) {
+  if (remaining <= 0) {
     return {
       allowed: false,
-      reason: 'Osiągnięto limit godzinowy (10 żądań/godz). Spróbuj ponownie za godzinę.'
-    };
-  }
-
-  if (limits.daily.tokens >= limits.daily.limit) {
-    return {
-      allowed: false,
-      reason: 'Osiągnięto dzienny limit tokenów (50,000). Spróbuj ponownie jutro.'
+      reason: `Limit generacji wykorzystany. Reset za: ${getResetTime()}`
     };
   }
 
@@ -177,15 +109,13 @@ export const generateSummary = async (
     };
 
     const summary = summaries[language][tone];
-    const tokensUsed = Math.floor(summary.length / 4); // Rough token estimation
 
-    // Increment usage
-    incrementUsage(tokensUsed);
+    // Increment usage (new rate limiter)
+    incrementAIUsage();
 
     return {
       success: true,
-      data: summary,
-      tokensUsed
+      data: summary
     };
   } catch (error) {
     return {
@@ -240,16 +170,12 @@ export const improveDescription = async (
       .sort(() => Math.random() - 0.5)
       .slice(0, 4);
 
-    const totalText = selectedAchievements.join(' ');
-    const tokensUsed = Math.floor(totalText.length / 4);
-
-    // Increment usage
-    incrementUsage(tokensUsed);
+    // Increment usage (new rate limiter)
+    incrementAIUsage();
 
     return {
       success: true,
-      data: selectedAchievements,
-      tokensUsed
+      data: selectedAchievements
     };
   } catch (error) {
     return {
@@ -308,16 +234,12 @@ export const suggestKeywords = async (
       .sort(() => Math.random() - 0.5)
       .slice(0, 10 + Math.floor(Math.random() * 3));
 
-    const totalText = selectedKeywords.join(', ');
-    const tokensUsed = Math.floor(totalText.length / 4);
-
-    // Increment usage
-    incrementUsage(tokensUsed);
+    // Increment usage (new rate limiter)
+    incrementAIUsage();
 
     return {
       success: true,
-      data: selectedKeywords,
-      tokensUsed
+      data: selectedKeywords
     };
   } catch (error) {
     return {
@@ -327,14 +249,3 @@ export const suggestKeywords = async (
   }
 };
 
-/**
- * Reset mock usage (for testing purposes)
- */
-export const resetMockUsage = () => {
-  mockUsage = {
-    hourlyRequests: 0,
-    dailyTokens: 0,
-    lastResetHour: new Date().getHours(),
-    lastResetDay: new Date().getDate()
-  };
-};

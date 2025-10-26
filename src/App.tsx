@@ -21,6 +21,7 @@ const JobPrompts = lazy(() => import("./pages/JobPrompts"));
 const Recruiter = lazy(() => import("./pages/Recruiter"));
 const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
+const FAQ = lazy(() => import("./pages/FAQ"));
 const About = lazy(() => import("./pages/About"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const FAQ = lazy(() => import("./pages/FAQ"));
@@ -60,6 +61,7 @@ const App = () => (
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/blog" element={<Blog />} />
                   <Route path="/blog/:slug" element={<BlogPost />} />
+                  <Route path="/faq" element={<FAQ />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                   <Route path="/faq" element={<FAQ />} />

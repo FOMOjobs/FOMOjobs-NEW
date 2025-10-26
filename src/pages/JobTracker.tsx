@@ -453,7 +453,7 @@ const JobTracker = () => {
   });
 
   return (
-    <>
+    <div>
       <SEO
         title="Job Tracker - FOMOjobs"
         description="Śledź swoje aplikacje o pracę, organizuj rozmowy i nie przegap żadnej okazji."
@@ -461,30 +461,29 @@ const JobTracker = () => {
 
       <FOMOJobsNavbar />
 
-      {/* Animated gradient background - same as Job Prompts */}
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative overflow-hidden pt-16">
-        {/* Animated gradient orbs */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-300 dark:bg-purple-600/30 rounded-full mix-blend-multiply dark:mix-blend-normal filter blur-xl opacity-30 dark:opacity-20 animate-blob" />
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-yellow-300 dark:bg-yellow-600/30 rounded-full mix-blend-multiply dark:mix-blend-normal filter blur-xl opacity-30 dark:opacity-20 animate-blob animation-delay-2000" />
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-purple-400 dark:bg-purple-500/20 rounded-full mix-blend-multiply dark:mix-blend-normal filter blur-xl opacity-20 dark:opacity-10 animate-blob animation-delay-4000" />
-        </div>
+      {/* Main container */}
+      <div className="min-h-screen bg-background pt-16">
+        {/* Animated Gradient Header - same as CVCreator */}
+        <div className="relative overflow-hidden bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 py-20">
+          {/* Animated background blobs */}
+          <div className="absolute inset-0 opacity-30">
+            <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl animate-blob" />
+            <div className="absolute top-0 -right-4 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000" />
+            <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000" />
+          </div>
 
-        {/* Content - positioned above animated background */}
-        <div className="relative z-10">
-          {/* Header */}
-          <div className="bg-gradient-to-br from-primary via-accent to-primary dark:from-primary/80 dark:via-accent/80 dark:to-primary/70 text-primary-foreground">
-            <div className="container mx-auto px-4 py-20">
+          {/* Content */}
+          <div className="container mx-auto px-4 relative z-10">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
               className="text-center"
             >
-              <h1 className="text-4xl md:text-6xl font-bold mb-6 drop-shadow-md">
-                FOMO.<span className="text-secondary">jobstracker</span>
+              <h1 className="text-5xl font-bold text-white mb-4">
+                📊 FOMO.jobstracker
               </h1>
-              <p className="text-xl md:text-2xl mb-8 opacity-95 max-w-3xl mx-auto drop-shadow">
+              <p className="text-xl text-white opacity-90">
                 Śledź swoje aplikacje, organizuj rozmowy i nie przegap żadnej okazji.
               </p>
               {/* FEATURE 8 - Reminders Banner */}
@@ -697,10 +696,10 @@ const JobTracker = () => {
                 </Dialog>
               </div>
             </motion.div>
-            </div>
           </div>
         </div>
 
+        {/* Main Content */}
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col xl:flex-row gap-8">
             {/* Sidebar */}
@@ -985,7 +984,7 @@ const JobTracker = () => {
       </div>
 
       <FOMOJobsFooter />
-    </>
+    </div>
   );
 };
 

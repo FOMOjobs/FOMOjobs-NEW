@@ -4,11 +4,18 @@ import { Menu, X, ChevronDown, User, Calendar, Award, MessageSquare, Briefcase, 
 import { motion } from "framer-motion";
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const FOMOJobsNavbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isToolsOpen, setIsToolsOpen] = useState(false);
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
   const navigate = useNavigate();
 
   // Delay closing to allow moving cursor from trigger to menu (Stripe-like)
@@ -116,12 +123,18 @@ const FOMOJobsNavbar = () => {
           <div className="flex-shrink-0">
             <Link to="/" className="flex items-center gap-2">
               <div className="flex items-center">
-                <img src="/fomo-bell-logo.png" alt="FOMO Jobs" className="w-8 h-8" />
+                <img
+                  src="/fomo-bell-logo.png"
+                  alt="FOMO Jobs"
+                  className="w-8 h-8 contrast-more:brightness-0 dark:contrast-more:brightness-100"
+                />
                 <span className={cn(
                   "ml-2 text-xl font-bold",
-                  isScrolled ? "text-foreground" : "text-primary-foreground"
+                  isScrolled ? "text-foreground contrast-more:text-black dark:contrast-more:text-white" : "text-primary-foreground contrast-more:text-black dark:contrast-more:text-white"
                 )}>
-                  FOMO<span className="text-secondary">jobs</span>
+                  FOMO<span className={cn(
+                    isScrolled ? "text-secondary contrast-more:text-black dark:contrast-more:text-white" : "text-secondary contrast-more:text-black dark:contrast-more:text-white"
+                  )}>jobs</span>
                 </span>
               </div>
             </Link>
@@ -129,15 +142,32 @@ const FOMOJobsNavbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6">
-            <button
-              className={cn(
-                "hover:text-secondary transition-colors font-medium",
-                isScrolled ? "text-foreground" : "text-primary-foreground"
-              )}
-              onClick={() => scrollToSection('about')}
-            >
-              O Platformie
-            </button>
+            {/* O Platformie Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className={cn(
+                    "flex items-center gap-1 hover:text-secondary transition-colors font-medium",
+                    isScrolled ? "text-foreground" : "text-primary-foreground"
+                  )}
+                >
+                  O platformie
+                  <ChevronDown className="h-4 w-4" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="bg-card border border-border">
+                <DropdownMenuItem asChild>
+                  <Link to="/blog" className="cursor-pointer flex items-center gap-2 w-full">
+                    📝 Blog
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/faq" className="cursor-pointer flex items-center gap-2 w-full">
+                    ❓ FAQ
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             <button
               className={cn(
@@ -200,9 +230,9 @@ const FOMOJobsNavbar = () => {
                 "hover:text-secondary transition-colors font-medium",
                 isScrolled ? "text-foreground" : "text-primary-foreground"
               )}
-              onClick={() => scrollToSection('faq')}
+              onClick={() => scrollToSection('pricing')}
             >
-              FAQ
+              Plany
             </button>
 
             <Link to="/alerts/create">
@@ -259,15 +289,35 @@ const FOMOJobsNavbar = () => {
               Strona Główna
             </Link>
 
-            <button
-              className="flex items-center gap-2 text-foreground hover:text-primary py-2 text-lg font-medium w-full text-left"
-              onClick={() => {
-                scrollToSection('about');
-                setIsMenuOpen(false);
-              }}
-            >
-              O Platformie
-            </button>
+            {/* Mobile O Platformie Dropdown */}
+            <div>
+              <button
+                className="flex items-center justify-between w-full text-foreground hover:text-primary py-2 text-lg font-medium"
+                onClick={() => setIsAboutOpen(!isAboutOpen)}
+              >
+                O platformie
+                <ChevronDown className={cn("w-4 h-4 transition-transform", isAboutOpen && "rotate-180")} />
+              </button>
+
+              {isAboutOpen && (
+                <div className="ml-4 space-y-1 border-l-2 border-secondary pl-4 mt-2">
+                  <Link
+                    to="/blog"
+                    className="flex items-center gap-2 text-foreground hover:text-primary py-2 text-base"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    📝 Blog
+                  </Link>
+                  <Link
+                    to="/faq"
+                    className="flex items-center gap-2 text-foreground hover:text-primary py-2 text-base"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    ❓ FAQ
+                  </Link>
+                </div>
+              )}
+            </div>
 
             <button
               className="flex items-center gap-2 text-foreground hover:text-primary py-2 text-lg font-medium w-full text-left"
@@ -309,11 +359,11 @@ const FOMOJobsNavbar = () => {
             <button
               className="flex items-center gap-2 text-foreground hover:text-primary py-2 text-lg font-medium w-full text-left"
               onClick={() => {
-                scrollToSection('faq');
+                scrollToSection('pricing');
                 setIsMenuOpen(false);
               }}
             >
-              FAQ
+              Plany
             </button>
 
             <Link to="/alerts/create" onClick={() => setIsMenuOpen(false)}>

@@ -19,13 +19,14 @@ import {
   validateAndSanitizeURL
 } from '@/utils/validation';
 import { toast } from 'sonner';
+import { getRemainingRequests } from '@/utils/aiRateLimiter';
 
 const PersonalInfoForm: React.FC = memo(() => {
   const { cvData, updatePersonalInfo } = useCVStore();
   const { personal, experience, education, skills, customization } = cvData;
 
-  // AI Generation
-  const { generateSummary, limits, isLoading } = useAIGeneration();
+  // AI Generation (NEW: simpler rate limiting)
+  const { generateSummary, isLoading } = useAIGeneration();
   const [selectedTone, setSelectedTone] = useState<AITone>('friendly');
 
   /**
@@ -131,7 +132,7 @@ const PersonalInfoForm: React.FC = memo(() => {
   };
 
   const handleSummaryChange = (value: string) => {
-    const sanitized = sanitizeInput(value, 500);
+    const sanitized = sanitizeInput(value, 800);
     updatePersonalInfo({ summary: sanitized });
   };
 
@@ -250,15 +251,15 @@ const PersonalInfoForm: React.FC = memo(() => {
           <Label htmlFor="summary">O mnie *</Label>
           <Textarea
             id="summary"
-            placeholder="Krótkie podsumowanie Twoich kwalifikacji i celów zawodowych..."
+            placeholder="Wygeneruj podsumowanie AI lub napisz własne..."
             className="min-h-[120px]"
             value={personal.summary}
             onChange={(e) => handleSummaryChange(e.target.value)}
-            maxLength={500}
+            maxLength={800}
           />
           <div className="flex justify-end">
             <span className="text-xs text-muted-foreground">
-              {personal.summary?.length || 0}/500 znaków
+              {personal.summary?.length || 0}/800 znaków
             </span>
           </div>
 
@@ -303,7 +304,7 @@ const PersonalInfoForm: React.FC = memo(() => {
             <Button
               type="button"
               onClick={handleGenerateSummary}
-              disabled={isLoading || (limits?.hourly.used ?? 0) >= (limits?.hourly.limit ?? 10)}
+              disabled={isLoading || getRemainingRequests() === 0}
               className="w-full bg-gradient-to-r from-purple-600 to-yellow-500 hover:from-purple-700 hover:to-yellow-600 text-white"
             >
               {isLoading ? (
@@ -314,13 +315,13 @@ const PersonalInfoForm: React.FC = memo(() => {
               ) : (
                 <>
                   <Sparkles className="w-4 h-4 mr-2" />
-                  Generuj AI
+                  Generuj AI ({getRemainingRequests()}/4)
                 </>
               )}
             </Button>
 
             {/* Usage Indicator */}
-            <AIUsageIndicator limits={limits} />
+            <AIUsageIndicator />
           </div>
         </div>
       </CardContent>

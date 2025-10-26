@@ -211,7 +211,7 @@ const Index = () => {
               viewport={{ once: true }}
               className="text-center mb-12"
             >
-              <h2 className="text-4xl md:text-5xl font-bold text-gradient mb-6 pb-2 overflow-visible">
+              <h2 className="text-4xl md:text-5xl font-bold text-gradient mb-6 pb-2 overflow-visible contrast-more:text-black dark:contrast-more:text-white">
                 Poznaj FOMOjobs
               </h2>
             </motion.div>
@@ -222,6 +222,7 @@ const Index = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
                 viewport={{ once: true }}
+                className="contrast-more:text-black dark:contrast-more:text-white"
               >
                 Rynek pracy się zmienił. Pracodawcy coraz częściej publikują oferty na własnych, mniej widocznych stronach, zamiast na dużych portalach.
               </motion.p>
@@ -231,8 +232,9 @@ const Index = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
                 viewport={{ once: true }}
+                className="contrast-more:text-black dark:contrast-more:text-white"
               >
-                <span className="text-primary font-bold text-xl">FOMOjobs</span> to Twój osobisty radar, który dzięki technologii wyszukuje i filtruje te ukryte oferty. Otrzymujesz od nas jeden alert dziennie z precyzyjnie dobranymi propozycjami, dopasowanymi do Twoich preferencji i szans.
+                <span className="text-primary font-bold text-xl contrast-more:text-black dark:contrast-more:text-white">FOMOjobs</span> to Twój osobisty radar, który dzięki technologii wyszukuje i filtruje te ukryte oferty. Otrzymujesz od nas jeden alert dziennie z precyzyjnie dobranymi propozycjami, dopasowanymi do Twoich preferencji i szans.
               </motion.p>
 
               <motion.p
@@ -240,7 +242,7 @@ const Index = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
                 viewport={{ once: true }}
-                className="text-foreground font-semibold text-xl"
+                className="text-foreground font-semibold text-xl contrast-more:text-black dark:contrast-more:text-white"
               >
                 Skup się na swoim CV i przygotowaniu do rozmowy – my zajmiemy się resztą.
               </motion.p>
@@ -590,6 +592,26 @@ const Index = () => {
                   </AccordionTrigger>
                   <AccordionContent className="text-muted-foreground leading-relaxed pl-11 pb-6">
                     Plan #opentowork jest dedykowany osobom, które aktualnie poszukują pracy i mają odpowiedni status na LinkedIn. Po weryfikacji statusu, otrzymujesz pełny dostęp do wszystkich funkcji FOMOjobs za darmo.
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="item-5" className="bg-card border-0 rounded-xl shadow-card px-6 overflow-hidden">
+                  <AccordionTrigger className="text-left hover:no-underline py-6">
+                    <div className="flex items-center gap-3 text-lg font-semibold">
+                      <div className="w-8 h-8 rounded-full bg-gradient-primary text-white flex items-center justify-center font-bold shadow-primary flex-shrink-0 text-sm">
+                        5
+                      </div>
+                      Gdzie znajdę więcej odpowiedzi?
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground leading-relaxed pl-11 pb-6">
+                    Przygotowaliśmy obszerny dokument FAQ ze wszystkimi szczegółami.{' '}
+                    <Link
+                      to="/faq"
+                      className="text-primary underline font-semibold hover:text-primary/80 transition contrast-more:text-black dark:contrast-more:text-white"
+                    >
+                      Przejdź do pełnej listy FAQ →
+                    </Link>
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
