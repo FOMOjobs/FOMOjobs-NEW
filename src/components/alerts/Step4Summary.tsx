@@ -16,6 +16,8 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { validateAlertData } from '@/schemas/alertValidation';
+import { sanitizeInput } from '@/utils/validation';
 
 interface Step4SummaryProps {
   editMode?: boolean;
@@ -88,6 +90,39 @@ const Step4Summary = ({ editMode = false, alertId }: Step4SummaryProps) => {
         return;
       }
 
+      // SECURITY: Sanitize alert name input
+      const sanitizedAlertName = sanitizeInput(alertName, 100);
+
+      // SECURITY: Validate input data before submission
+      const validationResult = validateAlertData({
+        alert_name: sanitizedAlertName,
+        notification_time: notificationTime,
+        selected_companies: selectedCompanies,
+        selected_levels: selectedLevels,
+        selected_categories: selectedCategories,
+      });
+
+      if (!validationResult.success) {
+        const firstError = validationResult.error.issues[0];
+        toast.error(firstError.message);
+        return;
+      }
+
+      // SECURITY: Validate selections against known values
+      const validCompanyIds = COMPANIES.map(c => c.id.toString());
+      const validLevelIds = EXPERIENCE_LEVELS.map(l => l.id.toString());
+      const allPositions = JOB_CATEGORIES.flatMap((g) => g.positions);
+      const validCategoryIds = allPositions.map(p => p.id.toString());
+
+      const invalidCompanies = selectedCompanies.filter(id => !validCompanyIds.includes(id));
+      const invalidLevels = selectedLevels.filter(id => !validLevelIds.includes(id));
+      const invalidCategories = selectedCategories.filter(id => !validCategoryIds.includes(id));
+
+      if (invalidCompanies.length > 0 || invalidLevels.length > 0 || invalidCategories.length > 0) {
+        toast.error('Wykryto nieprawidłowe wybory. Odśwież stronę i spróbuj ponownie.');
+        return;
+      }
+
       // Convert IDs to names for storage
       const companyNames = COMPANIES
         .filter((c) => selectedCompanies.includes(c.id.toString()))
@@ -97,14 +132,13 @@ const Step4Summary = ({ editMode = false, alertId }: Step4SummaryProps) => {
         .filter((l) => selectedLevels.includes(l.id.toString()))
         .map((l) => l.name);
 
-      const allPositions = JOB_CATEGORIES.flatMap((g) => g.positions);
       const categoryNames = allPositions
         .filter((p) => selectedCategories.includes(p.id.toString()))
         .map((p) => p.name);
 
       const alertData = {
         user_id: user.id,
-        alert_name: alertName.trim(),
+        alert_name: sanitizedAlertName,
         notification_time: notificationTime,
         selected_companies: companyNames,
         selected_levels: levelNames,
@@ -125,7 +159,10 @@ const Step4Summary = ({ editMode = false, alertId }: Step4SummaryProps) => {
       }
 
       if (result.error) {
-        console.error('Error saving alert:', result.error);
+        // SECURITY: Don't log database errors to console in production
+        if (import.meta.env.DEV) {
+          console.error('Alert save error:', result.error);
+        }
         toast.error('Nie udało się zapisać alertu. Spróbuj ponownie.');
         return;
       }
@@ -136,7 +173,7 @@ const Step4Summary = ({ editMode = false, alertId }: Step4SummaryProps) => {
           ? 'Alert zaktualizowany pomyślnie! 🎉'
           : 'Alert utworzony pomyślnie! 🎉',
         {
-          description: `"${alertName}" został pomyślnie ${
+          description: `"${sanitizedAlertName}" został pomyślnie ${
             editMode ? 'zaktualizowany' : 'utworzony'
           }`,
         }
@@ -144,7 +181,10 @@ const Step4Summary = ({ editMode = false, alertId }: Step4SummaryProps) => {
       resetAlert();
       navigate('/alerts');
     } catch (error) {
-      console.error('Unexpected error:', error);
+      // SECURITY: Don't expose error details in production
+      if (import.meta.env.DEV) {
+        console.error('Unexpected error:', error);
+      }
       toast.error('Wystąpił nieoczekiwany błąd');
     } finally {
       setIsSaving(false);
@@ -172,6 +212,7 @@ const Step4Summary = ({ editMode = false, alertId }: Step4SummaryProps) => {
           onChange={(e) => setAlertName(e.target.value)}
           placeholder="np. HR Kraków, Manager IT Warszawa"
           className="mt-1 focus:ring-purple-600 focus:border-purple-600"
+          maxLength={100}
         />
         <p className="mt-1 text-xs text-gray-600">
           Ta nazwa pomoże Ci zidentyfikować alert na liście.

@@ -73,7 +73,10 @@ export default function Admin() {
       setIsAdmin(true);
       loadData();
     } catch (error) {
-      console.error('Error checking admin status:', error);
+      // SECURITY: Only log in development
+      if (import.meta.env.DEV) {
+        console.error('Error checking admin status:', error);
+      }
       navigate('/');
     }
   };
@@ -106,7 +109,10 @@ export default function Admin() {
       setProfiles((profilesRes.data || []) as Profile[]);
       setApplications(applicationsWithVolunteers as Application[]);
     } catch (error) {
-      console.error('Error loading data:', error);
+      // SECURITY: Only log in development
+      if (import.meta.env.DEV) {
+        console.error('Error loading data:', error);
+      }
       toast.error("Failed to load admin data");
     } finally {
       setLoading(false);
@@ -125,7 +131,10 @@ export default function Admin() {
       toast.success(`User ${status === 'verified' ? 'verified' : 'rejected'} successfully`);
       loadData();
     } catch (error) {
-      console.error('Error updating verification:', error);
+      // SECURITY: Only log in development
+      if (import.meta.env.DEV) {
+        console.error('Error updating verification:', error);
+      }
       toast.error("Failed to update verification status");
     }
   };
@@ -142,7 +151,10 @@ export default function Admin() {
       toast.success(`Attendance marked as ${attended ? 'present' : 'absent'}`);
       loadData();
     } catch (error) {
-      console.error('Error marking attendance:', error);
+      // SECURITY: Only log in development
+      if (import.meta.env.DEV) {
+        console.error('Error marking attendance:', error);
+      }
       toast.error("Failed to mark attendance");
     }
   };
@@ -169,7 +181,10 @@ export default function Admin() {
       toast.success("Certificate issued successfully");
       loadData();
     } catch (error) {
-      console.error('Error issuing certificate:', error);
+      // SECURITY: Only log in development
+      if (import.meta.env.DEV) {
+        console.error('Error issuing certificate:', error);
+      }
       toast.error("Failed to issue certificate");
     }
   };
