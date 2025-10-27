@@ -1,32 +1,40 @@
 import { motion } from "framer-motion";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { HelpCircle } from "lucide-react";
+import { HelpCircle, ExternalLink } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const FOMOJobsFAQ = () => {
   const faqItems = [
     {
-      question: "Jak mogę zacząć wolontariat?",
-      answer: "Wystarczy zarejestrować się na platformie, przeglądnąć dostępne oferty i aplikować jednym kliknięciem. Po zaakceptowaniu aplikacji otrzymasz wszystkie szczegóły dotyczące wolontariatu."
+      category: "O platformie",
+      question: "Po co powstało FOMOjobs?",
+      answer: "Żebyś nie musiał(a) scrollować przez cały dzień przez ogłoszenia na stronach karier różnych firm. Pomagamy ludziom #opentowork i tym, którzy mniej aktywnie szukają pracy – podsuwamy konkretne oferty, dopasowane do doświadczenia i sektora."
     },
     {
-      question: "Czy muszę mieć doświadczenie?",
-      answer: "Nie! Wiele projektów jest skierowanych do osób bez doświadczenia. Każda oferta zawiera informację o poziomie trudności i wymaganiach, dzięki czemu łatwo znajdziesz coś dla siebie."
+      category: "O platformie",
+      question: "Skąd macie oferty pracy?",
+      answer: "Przeszukujemy strony karier za pomocą autorskiego systemu ekstrakcji danych. Filtrujemy i wybieramy tylko te oferty, które naprawdę mają sens – bez spamu i bez bezmyślnego kopiowania."
     },
     {
-      question: "Czy otrzymam certyfikat?",
-      answer: "Tak! Po ukończeniu wolontariatu otrzymasz oficjalny certyfikat potwierdzający Twoje zaangażowanie. Certyfikat możesz dodać do swojego CV i profilu na LinkedIn."
+      category: "Plany i subskrypcje",
+      question: "Jakie macie plany?",
+      answer: "Freemium (0 PLN), Plan 15 PLN, Plan 29 PLN oraz specjalny plan dla osób z statusem #opentowork na LinkedIn. Szczegóły znajdziesz na dedykowanej stronie FAQ."
     },
     {
-      question: "Ile czasu muszę poświęcić?",
-      answer: "To zależy od projektu! Mamy zarówno jednorazowe akcje (np. 2-3 godziny), jak i długoterminowe projekty. Każda oferta zawiera informację o wymaganym czasie zaangażowania."
+      category: "Plany i subskrypcje",
+      question: "Czy mogę zrezygnować z subskrypcji?",
+      answer: "Tak. Wystarczy kliknąć \"Anuluj subskrypcję\" w ustawieniach. Do końca miesiąca masz jeszcze dostęp, potem wracasz na Freemium. Zero kombinowania."
     },
     {
-      question: "Czy mogę wolontariować z przyjaciółmi?",
-      answer: "Oczywiście! Wiele projektów jest idealnych do wykonania w grupie. Możesz aplikować razem z przyjaciółmi lub poznać nowych ludzi podczas wolontariatu."
+      category: "Alerty i powiadomienia",
+      question: "Kiedy dostanę alerty?",
+      answer: "Tylko o godzinie, którą ustawisz – i tylko w sensownych godzinach (naprawdę nie wysyłamy nic o 3:00 w nocy). Ilość alertów zależy od planu."
     },
     {
-      question: "Jak działa system osiągnięć?",
-      answer: "Za każdą ukończoną aktywność zdobywasz punkty i odznaki. System motywuje do regularnego uczestnictwa i pozwala śledzić swój rozwój oraz porównywać osiągnięcia z innymi wolontariuszami."
+      category: "Bezpieczeństwo",
+      question: "Czy moje dane są bezpieczne?",
+      answer: "Tak. Trzymamy je tylko dla siebie – żeby dopasować oferty i wysyłać alerty. Zero reklam, zero przekazywania \"partnerom\". Pełna ochrona."
     }
   ];
 
@@ -47,7 +55,7 @@ const FOMOJobsFAQ = () => {
             </h2>
           </div>
           <p className="text-muted-foreground text-lg">
-            Znajdź odpowiedzi na najczęstsze pytania o wolontariat
+            Najważniejsze informacje o FOMOjobs
           </p>
         </motion.div>
 
@@ -70,7 +78,12 @@ const FOMOJobsFAQ = () => {
                     <span className="w-8 h-8 bg-gradient-primary text-primary-foreground rounded-full flex items-center justify-center text-sm font-bold mr-4 flex-shrink-0 shadow-primary">
                       {index + 1}
                     </span>
-                    {item.question}
+                    <span className="flex-1">{item.question}</span>
+                    {item.category === "O platformie" && index === 0 && (
+                      <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full ml-2">
+                        {item.category}
+                      </span>
+                    )}
                   </span>
                 </AccordionTrigger>
                 <AccordionContent className="text-muted-foreground leading-relaxed pb-6 pl-12">
@@ -79,6 +92,21 @@ const FOMOJobsFAQ = () => {
               </AccordionItem>
             ))}
           </Accordion>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            viewport={{ once: true }}
+            className="mt-12 text-center"
+          >
+            <Link to="/faq">
+              <Button size="lg" className="gap-2 shadow-primary hover:shadow-glow">
+                Zobacz wszystkie pytania i odpowiedzi
+                <ExternalLink className="w-4 h-4" />
+              </Button>
+            </Link>
+          </motion.div>
         </motion.div>
       </div>
     </section>
