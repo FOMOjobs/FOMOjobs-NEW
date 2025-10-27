@@ -31,11 +31,14 @@ const memoryStorageAdapter = {
   },
 };
 
-export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-  auth: {
-    storage: memoryStorageAdapter, // ✅ Memory-only storage (XSS protection)
-    persistSession: false, // ✅ Don't persist to localStorage
-    autoRefreshToken: true, // Keep session alive during browsing
-    detectSessionInUrl: true, // Handle OAuth redirects
-  }
-});
+// Only create client if credentials are available
+export const supabase = SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY 
+  ? createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+      auth: {
+        storage: memoryStorageAdapter, // ✅ Memory-only storage (XSS protection)
+        persistSession: false, // ✅ Don't persist to localStorage
+        autoRefreshToken: true, // Keep session alive during browsing
+        detectSessionInUrl: true, // Handle OAuth redirects
+      }
+    })
+  : null;
