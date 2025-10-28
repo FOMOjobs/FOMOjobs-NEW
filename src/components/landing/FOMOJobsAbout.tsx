@@ -1,5 +1,5 @@
-import { motion } from "framer-motion";
-import { Heart, Users, Target } from "lucide-react";
+import { motion } from 'framer-motion'
+import { Heart, Target, Users } from 'lucide-react'
 
 const FOMOJobsAbout = () => {
   return (

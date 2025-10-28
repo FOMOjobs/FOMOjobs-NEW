@@ -1,7 +1,7 @@
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, BookOpen, ExternalLink } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom'
+import { ArrowRight, BookOpen, ExternalLink } from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
 
 const blogPosts = [
   {

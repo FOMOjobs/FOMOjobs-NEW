@@ -1,15 +1,24 @@
-import { useState, useEffect, useRef } from 'react';
-import { cn } from '@/lib/utils';
-import { Menu, X, ChevronDown, User, Calendar, Award, MessageSquare, Briefcase, Home, FileText, BarChart, BookOpen, BarChart2, Bell } from "lucide-react";
-import { motion } from "framer-motion";
-import { Link, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
+import { useState, useEffect, useRef } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  BarChart,
+  BarChart2,
+  Bell,
+  BookOpen,
+  ChevronDown,
+  FileText,
+  HelpCircle,
+  Home,
+  Menu,
+  MessageSquare,
+  Sparkles,
+  User,
+  X,
+} from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 const FOMOJobsNavbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -19,17 +28,32 @@ const FOMOJobsNavbar = () => {
   const navigate = useNavigate();
 
   // Delay closing to allow moving cursor from trigger to menu (Stripe-like)
-  const closeTimer = useRef<number | undefined>(undefined);
-  const scheduleClose = () => {
-    if (closeTimer.current) window.clearTimeout(closeTimer.current);
-    closeTimer.current = window.setTimeout(() => {
+  const closeToolsTimer = useRef<number | undefined>(undefined);
+  const closeAboutTimer = useRef<number | undefined>(undefined);
+
+  const scheduleToolsClose = () => {
+    if (closeToolsTimer.current) window.clearTimeout(closeToolsTimer.current);
+    closeToolsTimer.current = window.setTimeout(() => {
       setIsToolsOpen(false);
     }, 300);
   };
-  const cancelClose = () => {
-    if (closeTimer.current) {
-      window.clearTimeout(closeTimer.current);
-      closeTimer.current = undefined;
+  const cancelToolsClose = () => {
+    if (closeToolsTimer.current) {
+      window.clearTimeout(closeToolsTimer.current);
+      closeToolsTimer.current = undefined;
+    }
+  };
+
+  const scheduleAboutClose = () => {
+    if (closeAboutTimer.current) window.clearTimeout(closeAboutTimer.current);
+    closeAboutTimer.current = window.setTimeout(() => {
+      setIsAboutOpen(false);
+    }, 300);
+  };
+  const cancelAboutClose = () => {
+    if (closeAboutTimer.current) {
+      window.clearTimeout(closeAboutTimer.current);
+      closeAboutTimer.current = undefined;
     }
   };
 
@@ -61,48 +85,79 @@ const FOMOJobsNavbar = () => {
     setIsMenuOpen(false);
   };
 
+  const aboutMenuItems = [
+    {
+      to: '/#about',
+      icon: Sparkles,
+      label: 'Poznaj FOMOjobs',
+      description: 'Dowiedz się jak działamy i dlaczego jesteśmy inni',
+      gradient: 'from-purple-500 to-pink-500'
+    },
+    {
+      to: '/blog',
+      icon: BookOpen,
+      label: 'Blog',
+      description: 'Porady, trendy i inspiracje do szukania pracy',
+      gradient: 'from-blue-500 to-cyan-500'
+    },
+    {
+      to: '/faq',
+      icon: HelpCircle,
+      label: 'FAQ',
+      description: 'Odpowiedzi na najczęściej zadawane pytania',
+      gradient: 'from-green-500 to-emerald-500'
+    }
+  ];
+
   const toolsMenuItems = [
     {
       to: '/cvs',
       icon: FileText,
       label: 'FOMO.cvcreator',
-      description: 'Kreator CV z AI'
+      description: 'Kreator CV z AI',
+      gradient: 'from-purple-500 to-purple-600'
     },
     {
       to: '/job-tracker',
       icon: BarChart,
       label: 'FOMO.jobstracker',
-      description: 'Śledź swoje aplikacje'
+      description: 'Śledź swoje aplikacje',
+      gradient: 'from-blue-500 to-blue-600'
     },
     {
       to: '/alerts',
       icon: Bell,
       label: 'FOMO.alerts',
-      description: 'Zarządzaj alertami pracy'
+      description: 'Zarządzaj alertami pracy',
+      gradient: 'from-orange-500 to-orange-600'
     },
     {
       to: '/b2b/analytics',
       icon: BarChart2,
       label: 'FOMO.analytics',
-      description: 'Analiza rynku pracy dla HR'
+      description: 'Analiza rynku pracy dla HR',
+      gradient: 'from-pink-500 to-pink-600'
     },
     {
       to: '/recruiter',
       icon: User,
       label: 'FOMO.recruiter',
-      description: 'Portal dla rekruterów'
+      description: 'Portal dla rekruterów',
+      gradient: 'from-indigo-500 to-indigo-600'
     },
     {
       to: '/interview-coach',
       icon: MessageSquare,
       label: 'FOMO.coach',
-      description: 'Trening rozmów kwalifikacyjnych'
+      description: 'Trening rozmów kwalifikacyjnych',
+      gradient: 'from-green-500 to-green-600'
     },
     {
       to: '/job-prompts',
       icon: BookOpen,
       label: 'FOMO.jobprompts',
-      description: 'Prompty AI do poszukiwania pracy'
+      description: 'Prompty AI do poszukiwania pracy',
+      gradient: 'from-cyan-500 to-cyan-600'
     }
   ];
 
@@ -142,32 +197,78 @@ const FOMOJobsNavbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6">
-            {/* O Platformie Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button
-                  className={cn(
-                    "flex items-center gap-1 hover:text-secondary transition-colors font-medium",
-                    isScrolled ? "text-foreground" : "text-primary-foreground"
-                  )}
+            {/* O Platformie Dropdown - Hover trigger like Narzędzia */}
+            <div
+              className="relative"
+              onMouseEnter={cancelAboutClose}
+              onMouseLeave={scheduleAboutClose}
+            >
+              <button
+                className={cn(
+                  "flex items-center gap-1 transition-colors font-medium",
+                  isAboutOpen && "text-secondary",
+                  isScrolled
+                    ? "text-foreground hover:text-secondary"
+                    : "text-primary-foreground hover:text-secondary"
+                )}
+                aria-expanded={isAboutOpen}
+                onMouseEnter={() => { cancelAboutClose(); setIsAboutOpen(true); }}
+                onClick={() => setIsAboutOpen(!isAboutOpen)}
+              >
+                O platformie
+                <ChevronDown className="w-4 h-4" />
+              </button>
+
+              {isAboutOpen && (
+                <div
+                  className="dropdown-smooth absolute top-full left-0 mt-2 w-80 bg-card rounded-lg shadow-glow border border-border py-2 z-50"
+                  onMouseEnter={cancelAboutClose}
+                  onMouseLeave={scheduleAboutClose}
                 >
-                  O platformie
-                  <ChevronDown className="h-4 w-4" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="bg-card border border-border">
-                <DropdownMenuItem asChild>
-                  <Link to="/blog" className="cursor-pointer flex items-center gap-2 w-full">
-                    📝 Blog
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/faq" className="cursor-pointer flex items-center gap-2 w-full">
-                    ❓ FAQ
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  {aboutMenuItems.map((item) => {
+                    const isScrollLink = item.to.startsWith('/#');
+
+                    if (isScrollLink) {
+                      return (
+                        <button
+                          key={item.to}
+                          onClick={() => {
+                            scrollToSection('about');
+                            setIsAboutOpen(false);
+                          }}
+                          className="flex items-center gap-3 px-4 py-3 text-foreground hover:bg-gradient-to-r hover:from-secondary/10 hover:to-secondary/5 transition-all duration-300 w-full text-left"
+                        >
+                          <div className={cn("flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br", item.gradient)}>
+                            <item.icon className="h-5 w-5 text-white" />
+                          </div>
+                          <div>
+                            <div className="font-medium text-sm">{item.label}</div>
+                            <div className="text-xs text-muted-foreground leading-snug">{item.description}</div>
+                          </div>
+                        </button>
+                      );
+                    }
+
+                    return (
+                      <Link
+                        key={item.to}
+                        to={item.to}
+                        className="flex items-center gap-3 px-4 py-3 text-foreground hover:bg-gradient-to-r hover:from-secondary/10 hover:to-secondary/5 transition-all duration-300"
+                        onClick={() => setIsAboutOpen(false)}
+                      >
+                        <div className={cn("flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br", item.gradient)}>
+                          <item.icon className="h-5 w-5 text-white" />
+                        </div>
+                        <div>
+                          <div className="font-medium text-sm">{item.label}</div>
+                          <div className="text-xs text-muted-foreground leading-snug">{item.description}</div>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
 
             <button
               className={cn(
@@ -182,8 +283,8 @@ const FOMOJobsNavbar = () => {
             {/* Tools Dropdown */}
             <div
               className="relative"
-              onMouseEnter={cancelClose}
-              onMouseLeave={scheduleClose}
+              onMouseEnter={cancelToolsClose}
+              onMouseLeave={scheduleToolsClose}
             >
               <button
                 className={cn(
@@ -194,7 +295,7 @@ const FOMOJobsNavbar = () => {
                     : "text-primary-foreground hover:text-secondary"
                 )}
                 aria-expanded={isToolsOpen}
-                onMouseEnter={() => { cancelClose(); setIsToolsOpen(true); }}
+                onMouseEnter={() => { cancelToolsClose(); setIsToolsOpen(true); }}
                 onClick={() => setIsToolsOpen(!isToolsOpen)}
               >
                 Narzędzia
@@ -203,21 +304,23 @@ const FOMOJobsNavbar = () => {
 
               {isToolsOpen && (
                 <div
-                  className="dropdown-smooth absolute top-full right-0 mt-2 w-64 bg-card rounded-lg shadow-glow border border-border py-2 z-50"
-                  onMouseEnter={cancelClose}
-                  onMouseLeave={scheduleClose}
+                  className="dropdown-smooth absolute top-full right-0 mt-2 w-80 bg-card rounded-lg shadow-glow border border-border py-2 z-50"
+                  onMouseEnter={cancelToolsClose}
+                  onMouseLeave={scheduleToolsClose}
                 >
                   {toolsMenuItems.map((item) => (
                     <Link
                       key={item.to}
                       to={item.to}
-                      className="flex items-center gap-3 px-4 py-3 text-foreground border-l-4 border-transparent hover:border-secondary hover:bg-gradient-to-r hover:from-secondary/10 hover:to-secondary/5 transition-all duration-300"
+                      className="flex items-center gap-3 px-4 py-3 text-foreground hover:bg-gradient-to-r hover:from-secondary/10 hover:to-secondary/5 transition-all duration-300"
                       onClick={() => setIsToolsOpen(false)}
                     >
-                      <item.icon className="w-5 h-5 text-primary" />
+                      <div className={cn("flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br", item.gradient)}>
+                        <item.icon className="h-5 w-5 text-white" />
+                      </div>
                       <div>
-                        <div className="font-medium">{item.label}</div>
-                        <div className="text-sm text-muted-foreground">{item.description}</div>
+                        <div className="font-medium text-sm">{item.label}</div>
+                        <div className="text-xs text-muted-foreground leading-snug">{item.description}</div>
                       </div>
                     </Link>
                   ))}
@@ -301,19 +404,31 @@ const FOMOJobsNavbar = () => {
 
               {isAboutOpen && (
                 <div className="ml-4 space-y-1 border-l-2 border-secondary pl-4 mt-2">
+                  <button
+                    className="flex items-center gap-2 text-foreground hover:text-primary py-2 text-base w-full text-left"
+                    onClick={() => {
+                      scrollToSection('about');
+                      setIsMenuOpen(false);
+                    }}
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    Poznaj FOMOjobs
+                  </button>
                   <Link
                     to="/blog"
                     className="flex items-center gap-2 text-foreground hover:text-primary py-2 text-base"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    📝 Blog
+                    <BookOpen className="w-4 h-4" />
+                    Blog
                   </Link>
                   <Link
                     to="/faq"
                     className="flex items-center gap-2 text-foreground hover:text-primary py-2 text-base"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    ❓ FAQ
+                    <HelpCircle className="w-4 h-4" />
+                    FAQ
                   </Link>
                 </div>
               )}
@@ -340,16 +455,18 @@ const FOMOJobsNavbar = () => {
               </button>
 
               {isToolsOpen && (
-                <div className="ml-4 space-y-1 border-l-2 border-secondary pl-4 mt-2">
+                <div className="ml-4 space-y-2 border-l-2 border-secondary pl-4 mt-2">
                   {toolsMenuItems.map((item) => (
                     <Link
                       key={item.to}
                       to={item.to}
-                      className="flex items-center gap-2 text-foreground hover:text-primary py-2 text-base"
+                      className="flex items-center gap-3 text-foreground hover:text-primary py-2 text-base"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      <item.icon className="w-4 h-4" />
-                      {item.label}
+                      <div className={cn("flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br", item.gradient)}>
+                        <item.icon className="h-4 w-4 text-white" />
+                      </div>
+                      <span>{item.label}</span>
                     </Link>
                   ))}
                 </div>

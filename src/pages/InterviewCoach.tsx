@@ -1,32 +1,33 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useState } from 'react'
+import { Helmet } from 'react-helmet-async'
+import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import {
+  AlertCircle,
+  ArrowRight,
+  CheckCircle,
+  FileText,
   Mic,
   MicOff,
-  Upload,
-  FileText,
+  PlayCircle,
+  Sparkles,
   Target,
+  Upload,
   Volume2,
   Zap,
-  PlayCircle,
-  CheckCircle,
-  ArrowRight,
-  Sparkles,
-  AlertCircle
-} from "lucide-react";
-import FOMOJobsNavbar from '@/components/FOMOJobsNavbar';
-import FOMOJobsFooter from '@/components/landing/FOMOJobsFooter';
-import { Helmet } from 'react-helmet-async';
-import { toast } from 'sonner';
-import { loadCVFromStorage } from '@/lib/cvStorage';
+} from 'lucide-react'
+import { toast } from 'sonner'
+
+import FOMOJobsNavbar from '@/components/FOMOJobsNavbar'
+import FOMOJobsFooter from '@/components/landing/FOMOJobsFooter'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { Textarea } from '@/components/ui/textarea'
+import { loadCVFromStorage } from '@/lib/cvStorage'
 
 const InterviewCoach = () => {
   const [isRecording, setIsRecording] = useState(false);

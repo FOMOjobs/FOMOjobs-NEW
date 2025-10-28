@@ -1,8 +1,9 @@
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Check, Star, Sparkles, Bell, Crown, Heart, Building2 } from "lucide-react";
+import { motion } from 'framer-motion'
+import { Bell, Building2, Check, Crown, Heart, Sparkles, Star } from 'lucide-react'
+
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 const FOMOJobsPricing = () => {
   // Główne plany - 3 obok siebie

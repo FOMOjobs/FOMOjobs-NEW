@@ -1,36 +1,39 @@
-import FOMOJobsPageLayout from '@/components/FOMOJobsPageLayout';
-import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import {
-  Briefcase,
-  Target,
-  Zap,
-  Filter,
+  ArrowRight,
+  Badge as BadgeIcon,
   Bell,
-  TrendingUp,
-  Users,
-  Clock,
-  MapPin,
-  Euro,
+  Briefcase,
   Building2,
   CheckCircle2,
-  ArrowRight,
+  ChevronDown,
+  Clock,
+  Euro,
+  Filter,
+  MapPin,
   Search,
   Star,
-  ChevronDown
-} from 'lucide-react';
-import SEO from '@/components/SEO';
-import FOMOJobsPricing from '@/components/landing/FOMOJobsPricing';
-import FOMOJobsBlogPreview from '@/components/landing/FOMOJobsBlogPreview';
+  Target,
+  TrendingUp,
+  Users,
+  Zap,
+} from 'lucide-react'
+
+import FOMOJobsPageLayout from '@/components/FOMOJobsPageLayout'
+import SEO from '@/components/SEO'
+import { IndustryStatsCarousel } from '@/components/landing/IndustryStatsCarousel'
+import FOMOJobsBlogPreview from '@/components/landing/FOMOJobsBlogPreview'
+import FOMOJobsPricing from '@/components/landing/FOMOJobsPricing'
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
+} from '@/components/ui/accordion'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 const Index = () => {
   const scrollToSection = (id: string) => {
@@ -39,110 +42,6 @@ const Index = () => {
       element.scrollIntoView({ behavior: 'smooth' });
     }
   };
-
-  // Mock job offers data
-  const featuredJobs = [
-    {
-      id: 1,
-      title: 'Junior Frontend Developer',
-      company: 'Tech Startup Kraków',
-      location: 'Kraków',
-      salary: '8,000 - 12,000 PLN',
-      logo: '💻',
-      type: 'Full-time',
-      level: 'Junior'
-    },
-    {
-      id: 2,
-      title: 'Marketing Manager',
-      company: 'E-commerce Giant',
-      location: 'Warszawa',
-      salary: '10,000 - 15,000 PLN',
-      logo: '📈',
-      type: 'Full-time',
-      level: 'Mid'
-    },
-    {
-      id: 3,
-      title: 'UX Designer',
-      company: 'Design Studio',
-      location: 'Remote',
-      salary: '9,000 - 14,000 PLN',
-      logo: '🎨',
-      type: 'Remote',
-      level: 'Mid'
-    },
-    {
-      id: 4,
-      title: 'Backend Developer',
-      company: 'FinTech Company',
-      location: 'Wrocław',
-      salary: '12,000 - 18,000 PLN',
-      logo: '⚙️',
-      type: 'Full-time',
-      level: 'Senior'
-    },
-    {
-      id: 5,
-      title: 'Product Manager',
-      company: 'SaaS Platform',
-      location: 'Gdańsk',
-      salary: '11,000 - 16,000 PLN',
-      logo: '🚀',
-      type: 'Full-time',
-      level: 'Senior'
-    },
-    {
-      id: 6,
-      title: 'Data Analyst',
-      company: 'Analytics Firm',
-      location: 'Poznań',
-      salary: '7,000 - 11,000 PLN',
-      logo: '📊',
-      type: 'Full-time',
-      level: 'Junior'
-    },
-    {
-      id: 7,
-      title: 'DevOps Engineer',
-      company: 'Cloud Provider',
-      location: 'Remote',
-      salary: '13,000 - 19,000 PLN',
-      logo: '☁️',
-      type: 'Remote',
-      level: 'Senior'
-    },
-    {
-      id: 8,
-      title: 'Content Writer',
-      company: 'Media Agency',
-      location: 'Kraków',
-      salary: '6,000 - 9,000 PLN',
-      logo: '✍️',
-      type: 'Full-time',
-      level: 'Junior'
-    },
-    {
-      id: 9,
-      title: 'QA Engineer',
-      company: 'Software House',
-      location: 'Katowice',
-      salary: '8,500 - 13,000 PLN',
-      logo: '🔍',
-      type: 'Full-time',
-      level: 'Mid'
-    },
-    {
-      id: 10,
-      title: 'Sales Manager',
-      company: 'B2B Services',
-      location: 'Łódź',
-      salary: '9,000 - 14,000 PLN',
-      logo: '💼',
-      type: 'Full-time',
-      level: 'Mid'
-    },
-  ];
 
   return (
     <>
@@ -433,80 +332,10 @@ const Index = () => {
           </div>
         </section>
 
-        {/* FEATURED JOB OFFERS SECTION */}
-        <section id="oferty-pracy" className="py-20 bg-card dark:bg-card/50">
-          <div className="container mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className="text-center mb-12"
-            >
-              <h2 className="text-4xl md:text-5xl font-bold text-gradient mb-4">
-                Wyróżnione Oferty Pracy
-              </h2>
-              <p className="text-xl text-muted-foreground">
-                Najnowsze oferty od sprawdzonych pracodawców
-              </p>
-            </motion.div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-              {featuredJobs.map((job, index) => (
-                <motion.div
-                  key={job.id}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.4, delay: index * 0.05 }}
-                  viewport={{ once: true }}
-                >
-                  <Card className="h-full hover-lift shadow-card border-0 bg-gradient-card cursor-pointer group">
-                    <CardHeader className="pb-3">
-                      <div className="text-4xl mb-3">{job.logo}</div>
-                      <CardTitle className="text-base leading-tight group-hover:text-primary transition-colors">
-                        {job.title}
-                      </CardTitle>
-                      <CardDescription className="text-sm font-medium">
-                        {job.company}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-2">
-                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                        <MapPin className="w-3 h-3" />
-                        {job.location}
-                      </div>
-                      <div className="flex items-center gap-1 text-xs font-semibold text-primary">
-                        <Euro className="w-3 h-3" />
-                        {job.salary}
-                      </div>
-                      <div className="flex gap-1 flex-wrap">
-                        <Badge variant="outline" className="text-xs">
-                          {job.type}
-                        </Badge>
-                        <Badge variant="secondary" className="text-xs">
-                          {job.level}
-                        </Badge>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              viewport={{ once: true }}
-              className="text-center mt-12"
-            >
-              <Button size="lg" className="bg-gradient-primary hover:shadow-primary text-white">
-                Zobacz wszystkie oferty
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-            </motion.div>
-          </div>
-        </section>
+        {/* INDUSTRY STATS CAROUSEL SECTION */}
+        <div id="oferty-pracy">
+          <IndustryStatsCarousel />
+        </div>
 
         {/* PRICING SECTION */}
         <FOMOJobsPricing />

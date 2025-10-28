@@ -1,48 +1,38 @@
-import { useState, useMemo, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import SEO from '@/components/SEO';
-import FOMOJobsNavbar from '@/components/FOMOJobsNavbar';
-import FOMOJobsFooter from '@/components/landing/FOMOJobsFooter';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { useState, useMemo, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
-  Plus,
-  Filter,
-  ExternalLink,
-  Edit,
-  Trash2,
-  Target,
-  Calendar,
-  MessageCircle,
-  CheckCircle,
-  X,
-  Clock,
-  Smile,
-  BookOpen,
-  Eye,
-  Activity,
-  Briefcase,
-  Building2,
-  MapPin,
-  Euro,
-  Send,
-  Phone,
-  Video,
-  Building,
-  XCircle,
-  History,
   BarChart3,
   Bell,
-  TrendingUp,
-  TrendingDown,
-  Zap
-} from 'lucide-react';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+  Briefcase,
+  Building,
+  Building2,
+  Calendar,
+  CheckCircle,
+  Clock,
+  Edit,
+  Euro,
+  ExternalLink,
+  History,
+  MessageCircle,
+  Phone,
+  Plus,
+  Send,
+  Trash2,
+  Video,
+  XCircle,
+} from 'lucide-react'
+
+import SEO from '@/components/SEO'
+import FOMOJobsNavbar from '@/components/FOMOJobsNavbar'
+import FOMOJobsFooter from '@/components/landing/FOMOJobsFooter'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
 
 // Status types with icons and colors
 type ApplicationStatus =
@@ -464,12 +454,12 @@ const JobTracker = () => {
       {/* Main container */}
       <div className="min-h-screen bg-background pt-16">
         {/* Animated Gradient Header - same as CVCreator */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 py-20">
+        <div className="relative overflow-hidden bg-gradient-to-r from-purple-600 via-pink-500 via-orange-500 to-yellow-400 py-20">
           {/* Animated background blobs */}
           <div className="absolute inset-0 opacity-30">
             <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl animate-blob" />
             <div className="absolute top-0 -right-4 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000" />
-            <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000" />
+            <div className="absolute -bottom-8 left-20 w-72 h-72 bg-orange-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000" />
           </div>
 
           {/* Content */}

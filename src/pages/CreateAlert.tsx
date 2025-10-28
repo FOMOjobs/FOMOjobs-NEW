@@ -1,20 +1,21 @@
 // CreateAlert Page - 4-Step Wizard for Alert Creation & Editing
 // Orchestrates the entire alert creation/edit flow with progress tracking
 
-import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useAlertStore } from '@/stores/alertStore';
-import { useAlerts } from '@/hooks/useAlerts';
-import { COMPANIES, EXPERIENCE_LEVELS, JOB_CATEGORIES } from '@/data/alertData';
-import { Button } from '@/components/ui/button';
-import FOMOJobsNavbar from '@/components/FOMOJobsNavbar';
-import ProgressBar from '@/components/alerts/ProgressBar';
-import Step1Companies from '@/components/alerts/Step1Companies';
-import Step2Levels from '@/components/alerts/Step2Levels';
-import Step3Categories from '@/components/alerts/Step3Categories';
-import Step4Summary from '@/components/alerts/Step4Summary';
-import { Helmet } from 'react-helmet-async';
-import { toast } from 'sonner';
+import { useEffect, useState } from 'react'
+import { Helmet } from 'react-helmet-async'
+import { useParams, useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
+
+import FOMOJobsNavbar from '@/components/FOMOJobsNavbar'
+import ProgressBar from '@/components/alerts/ProgressBar'
+import Step1Companies from '@/components/alerts/Step1Companies'
+import Step2Levels from '@/components/alerts/Step2Levels'
+import Step3Categories from '@/components/alerts/Step3Categories'
+import Step4Summary from '@/components/alerts/Step4Summary'
+import { Button } from '@/components/ui/button'
+import { COMPANIES, EXPERIENCE_LEVELS, JOB_CATEGORIES } from '@/data/alertData'
+import { useAlerts } from '@/hooks/useAlerts'
+import { useAlertStore } from '@/stores/alertStore'
 
 const STEPS = [
   { number: 1, label: 'Firmy' },

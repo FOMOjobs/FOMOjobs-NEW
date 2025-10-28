@@ -1,5 +1,6 @@
-import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
+import { motion } from 'framer-motion'
+
+import { Button } from '@/components/ui/button'
 
 interface FOMOJobsHeroProps {
   onNavigate?: (section: string) => void;

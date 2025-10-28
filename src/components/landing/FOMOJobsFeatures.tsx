@@ -1,6 +1,6 @@
-import { motion } from "framer-motion";
-import { Search, Heart, Calendar, Award, Clock, Sparkles } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
+import { Award, Calendar, Clock, Heart, Search, Sparkles } from 'lucide-react'
 
 const FOMOJobsFeatures = () => {
   const [currentStep, setCurrentStep] = useState(0);

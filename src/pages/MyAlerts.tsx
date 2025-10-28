@@ -1,8 +1,9 @@
-import FOMOJobsPageLayout from '@/components/FOMOJobsPageLayout';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Edit2, Trash2, Plus } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
+import { Edit2, Plus, Trash2 } from 'lucide-react'
+
+import FOMOJobsPageLayout from '@/components/FOMOJobsPageLayout'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 
 const MyAlerts = () => {
   const navigate = useNavigate();

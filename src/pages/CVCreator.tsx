@@ -1,53 +1,31 @@
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Plus, Download, Eye, Save, RotateCcw, FileText, FileDown, Cloud } from "lucide-react";
-import { useCVStore } from '@/stores/cvStore';
-import { autoSaveCVData, loadAutoSavedCVData } from '@/lib/cvStorage';
-import CVSectionNavigation from '@/components/cv/CVSectionNavigation';
-import PersonalInfoForm from '@/components/cv/forms/PersonalInfoForm';
-import ExperienceSection from '@/components/cv/forms/ExperienceSection';
-import EducationSection from '@/components/cv/forms/EducationSection';
-import SkillsManager from '@/components/cv/forms/SkillsManager';
-import LanguagesManager from '@/components/cv/forms/LanguagesManager';
-import SettingsSection from '@/components/cv/forms/SettingsSection';
-import CVPreview from '@/components/cv-creator/CVPreview';
-import CustomizationPanel from '@/components/cv-creator/CustomizationPanel';
-import FOMOJobsNavbar from '@/components/FOMOJobsNavbar';
-import FOMOJobsFooter from '@/components/landing/FOMOJobsFooter';
-import { Helmet } from 'react-helmet-async';
-import { toast } from 'sonner';
+import { useEffect, useState } from 'react'
+import { Helmet } from 'react-helmet-async'
+import { motion } from 'framer-motion'
+import { Cloud, Download, Eye, FileDown, FileText, Plus, RotateCcw, Save } from 'lucide-react'
+import { toast } from 'sonner'
+
+import FOMOJobsNavbar from '@/components/FOMOJobsNavbar'
+import CVSectionNavigation from '@/components/cv/CVSectionNavigation'
+import EducationSection from '@/components/cv/forms/EducationSection'
+import ExperienceSection from '@/components/cv/forms/ExperienceSection'
+import LanguagesManager from '@/components/cv/forms/LanguagesManager'
+import PersonalInfoForm from '@/components/cv/forms/PersonalInfoForm'
+import SettingsSection from '@/components/cv/forms/SettingsSection'
+import SkillsManager from '@/components/cv/forms/SkillsManager'
+import CustomizationPanel from '@/components/cv-creator/CustomizationPanel'
+import CVPreview from '@/components/cv-creator/CVPreview'
+import FOMOJobsFooter from '@/components/landing/FOMOJobsFooter'
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { autoSaveCVData, loadAutoSavedCVData } from '@/lib/cvStorage'
+import { useCVStore } from '@/stores/cvStore'
+
 // Removed static imports - now using dynamic imports for PDF/DOCX export to reduce bundle size
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 
 const CVCreator = () => {
   const { activeSection, cvData, isDirty, setDirty, loadCVData, resetCV, saveCurrentCV, currentCVId } = useCVStore();
