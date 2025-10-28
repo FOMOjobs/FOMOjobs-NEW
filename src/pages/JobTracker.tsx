@@ -24,6 +24,8 @@ import {
 
 import SEO from '@/components/SEO'
 import FOMOJobsNavbar from '@/components/FOMOJobsNavbar'
+import { GradientHeader } from '@/components/shared/GradientHeader'
+import { StatCard } from '@/components/shared/StatCard'
 import FOMOJobsFooter from '@/components/landing/FOMOJobsFooter'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -453,50 +455,31 @@ const JobTracker = () => {
 
       {/* Main container */}
       <div className="min-h-screen bg-background pt-16">
-        {/* Animated Gradient Header - same as CVCreator */}
-        <div className="relative overflow-hidden bg-gradient-to-r from-purple-600 via-pink-500 via-orange-500 to-yellow-400 py-20">
-          {/* Animated background blobs */}
-          <div className="absolute inset-0 opacity-30">
-            <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl animate-blob" />
-            <div className="absolute top-0 -right-4 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000" />
-            <div className="absolute -bottom-8 left-20 w-72 h-72 bg-orange-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000" />
-          </div>
+        <GradientHeader
+          title="📊 FOMO.jobstracker"
+          subtitle="Śledź swoje aplikacje, organizuj rozmowy i nie przegap żadnej okazji."
+        >
+          {/* FEATURE 8 - Reminders Banner */}
+          {reminders.length > 0 && (
+            <div className="mb-6 max-w-2xl mx-auto mt-6">
+              <AnimatePresence>
+                {reminders.map((reminder) => (
+                  <motion.div
+                    key={reminder.id}
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="bg-yellow-400/90 text-yellow-900 px-4 py-3 rounded-lg mb-2 flex items-center gap-2 shadow-lg"
+                  >
+                    <Bell className="w-5 h-5 animate-pulse" />
+                    <span className="font-medium">{reminder.message}</span>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          )}
 
-          {/* Content */}
-          <div className="container mx-auto px-4 relative z-10">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="text-center"
-            >
-              <h1 className="text-5xl font-bold text-white mb-4">
-                📊 FOMO.jobstracker
-              </h1>
-              <p className="text-xl text-white opacity-90">
-                Śledź swoje aplikacje, organizuj rozmowy i nie przegap żadnej okazji.
-              </p>
-              {/* FEATURE 8 - Reminders Banner */}
-              {reminders.length > 0 && (
-                <div className="mb-6 max-w-2xl mx-auto">
-                  <AnimatePresence>
-                    {reminders.map((reminder) => (
-                      <motion.div
-                        key={reminder.id}
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="bg-yellow-400/90 text-yellow-900 px-4 py-3 rounded-lg mb-2 flex items-center gap-2 shadow-lg"
-                      >
-                        <Bell className="w-5 h-5 animate-pulse" />
-                        <span className="font-medium">{reminder.message}</span>
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
-                </div>
-              )}
-
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6">
                 {/* FEATURE 7 - Statistics Button */}
                 <Dialog open={isStatsOpen} onOpenChange={setIsStatsOpen}>
                   <DialogTrigger asChild>
@@ -685,9 +668,7 @@ const JobTracker = () => {
                   </DialogContent>
                 </Dialog>
               </div>
-            </motion.div>
-          </div>
-        </div>
+        </GradientHeader>
 
         {/* Main Content */}
         <div className="container mx-auto px-4 py-8">
@@ -727,27 +708,19 @@ const JobTracker = () => {
             {/* Main Content */}
             <div className="flex-1 space-y-6">
               {/* Status Cards */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4"
-              >
-                {statusCards.map((card, index) => {
-                  const IconComponent = card.icon;
-                  return (
-                    <Card key={index} className="text-center hover-lift shadow-card border-0 bg-white dark:bg-gray-800 cursor-pointer">
-                      <CardContent className="p-4">
-                        <div className={`w-12 h-12 rounded-lg ${card.color} flex items-center justify-center mx-auto mb-3 shadow-lg`}>
-                          <IconComponent className={`w-6 h-6 ${card.textColor}`} />
-                        </div>
-                        <h3 className="font-semibold text-foreground mb-1 text-sm">{card.title}</h3>
-                        <p className="text-2xl font-bold text-primary">{card.count}</p>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </motion.div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                {statusCards.map((card, index) => (
+                  <StatCard
+                    key={index}
+                    title={card.title}
+                    count={card.count}
+                    icon={card.icon}
+                    color={card.color}
+                    textColor={card.textColor}
+                    index={index}
+                  />
+                ))}
+              </div>
 
               {/* Applications List */}
               <motion.div

@@ -1,10 +1,11 @@
 // src/pages/FAQ.tsx
 
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
-import { ArrowLeft } from 'lucide-react'
+
+import { GradientHeader } from '@/components/shared/GradientHeader'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 
 export default function FAQ() {
   const faqSections = [
@@ -158,30 +159,11 @@ export default function FAQ() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Animated Gradient Header */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-purple-600 via-pink-500 via-orange-500 to-yellow-400 py-20">
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl animate-blob" />
-          <div className="absolute top-0 -right-4 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000" />
-          <div className="absolute -bottom-8 left-20 w-72 h-72 bg-orange-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000" />
-        </div>
-
-        <div className="container mx-auto px-4 relative z-10">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-white hover:underline mb-6 transition"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Powrót do strony głównej
-          </Link>
-          <h1 className="text-5xl font-bold text-white mb-4">
-            ❓ FAQ – czyli pytania, które pewnie chcesz zadać
-          </h1>
-          <p className="text-xl text-white/90 max-w-3xl">
-            Proste odpowiedzi na wszystkie pytania o FOMOjobs
-          </p>
-        </div>
-      </div>
+      <GradientHeader
+        title="❓ FAQ – czyli pytania, które pewnie chcesz zadać"
+        subtitle="Proste odpowiedzi na wszystkie pytania o FOMOjobs"
+        showBackButton
+      />
 
       {/* Content */}
       <div className="container mx-auto px-4 py-12">
