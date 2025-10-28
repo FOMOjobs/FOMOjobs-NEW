@@ -38,7 +38,7 @@ const InterviewCoach = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [sessionStarted, setSessionStarted] = useState(false);
 
-  const mockQuestions = [
+  const MOCK_QUESTIONS = [
     "Opowiedz mi o sobie i swoim doświadczeniu zawodowym.",
     "Dlaczego chcesz pracować w naszej firmie?",
     "Jakie są twoje największe mocne strony?",
@@ -46,7 +46,7 @@ const InterviewCoach = () => {
     "Gdzie widzisz siebie za 5 lat?"
   ];
 
-  const features = [
+  const FEATURES = [
     {
       icon: Mic,
       title: "Trening głosowy",
@@ -129,7 +129,7 @@ const InterviewCoach = () => {
   };
 
   const nextQuestion = () => {
-    if (currentQuestion < mockQuestions.length - 1) {
+    if (currentQuestion < MOCK_QUESTIONS.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
       setIsRecording(false);
     } else {
@@ -186,7 +186,7 @@ const InterviewCoach = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            {features.map((feature, index) => (
+            {FEATURES.map((feature, index) => (
               <Card key={index} className="border-0 shadow-card hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                 <CardHeader>
                   <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-4">
@@ -410,16 +410,16 @@ const InterviewCoach = () => {
                   <CardContent className="pt-6">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-sm text-muted-foreground">
-                        Pytanie {currentQuestion + 1} z {mockQuestions.length}
+                        Pytanie {currentQuestion + 1} z {MOCK_QUESTIONS.length}
                       </span>
                       <span className="text-sm font-semibold text-primary">
-                        {Math.round(((currentQuestion + 1) / mockQuestions.length) * 100)}%
+                        {Math.round(((currentQuestion + 1) / MOCK_QUESTIONS.length) * 100)}%
                       </span>
                     </div>
                     <div className="w-full bg-muted rounded-full h-2">
                       <div
                         className="bg-gradient-to-r from-primary to-secondary h-2 rounded-full transition-all duration-500"
-                        style={{ width: `${((currentQuestion + 1) / mockQuestions.length) * 100}%` }}
+                        style={{ width: `${((currentQuestion + 1) / MOCK_QUESTIONS.length) * 100}%` }}
                       />
                     </div>
                   </CardContent>
@@ -429,7 +429,7 @@ const InterviewCoach = () => {
                 <Card className="border-0 shadow-card bg-gradient-to-br from-primary/5 to-secondary/5">
                   <CardHeader>
                     <CardTitle className="text-2xl md:text-3xl">
-                      {mockQuestions[currentQuestion]}
+                      {MOCK_QUESTIONS[currentQuestion]}
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-6">
@@ -498,7 +498,7 @@ const InterviewCoach = () => {
                         onClick={nextQuestion}
                         className="flex-1 bg-gradient-to-r from-primary to-secondary hover:opacity-90"
                       >
-                        {currentQuestion < mockQuestions.length - 1 ? (
+                        {currentQuestion < MOCK_QUESTIONS.length - 1 ? (
                           <>
                             Następne pytanie
                             <ArrowRight className="ml-2 h-5 w-5" />

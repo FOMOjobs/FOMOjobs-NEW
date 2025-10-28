@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 
-const industryStats = [
+const INDUSTRY_STATS = [
   {
     icon: "👔",
     name: "HR",
@@ -99,17 +99,17 @@ export const IndustryStatsCarousel = () => {
 
   const next = () => {
     setCurrentIndex((prev) =>
-      prev + itemsPerPage >= industryStats.length ? 0 : prev + itemsPerPage
+      prev + itemsPerPage >= INDUSTRY_STATS.length ? 0 : prev + itemsPerPage
     )
   }
 
   const prev = () => {
     setCurrentIndex((prev) =>
-      prev === 0 ? industryStats.length - itemsPerPage : prev - itemsPerPage
+      prev === 0 ? INDUSTRY_STATS.length - itemsPerPage : prev - itemsPerPage
     )
   }
 
-  const visibleStats = industryStats.slice(currentIndex, currentIndex + itemsPerPage)
+  const visibleStats = INDUSTRY_STATS.slice(currentIndex, currentIndex + itemsPerPage)
 
   return (
     <section className="py-20 bg-muted/30">
@@ -173,7 +173,7 @@ export const IndustryStatsCarousel = () => {
             </Button>
 
             <div className="flex gap-2">
-              {Array.from({ length: Math.ceil(industryStats.length / itemsPerPage) }).map((_, idx) => (
+              {Array.from({ length: Math.ceil(INDUSTRY_STATS.length / itemsPerPage) }).map((_, idx) => (
                 <button
                   key={idx}
                   onClick={() => setCurrentIndex(idx * itemsPerPage)}

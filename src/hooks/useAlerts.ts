@@ -37,9 +37,12 @@ export const useAlerts = () => {
 
       const { data } = await api.get('/alerts');
       setAlerts(data.data || data);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error fetching alerts:', err);
-      setError(err.response?.data?.message || 'Nie udało się pobrać alertów');
+      const errorMessage = err instanceof Error && 'response' in err
+        ? ((err as any).response?.data?.message || 'Nie udało się pobrać alertów')
+        : 'Nie udało się pobrać alertów';
+      setError(errorMessage);
 
       toast.error('Błąd', {
         description: 'Nie udało się wczytać alertów',
@@ -60,11 +63,15 @@ export const useAlerts = () => {
       });
 
       return data.data;
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error creating alert:', err);
 
+      const errorMessage = err instanceof Error && 'response' in err
+        ? ((err as any).response?.data?.message || 'Nie udało się utworzyć alertu')
+        : 'Nie udało się utworzyć alertu';
+
       toast.error('Błąd', {
-        description: err.response?.data?.message || 'Nie udało się utworzyć alertu',
+        description: errorMessage,
       });
 
       throw err;
@@ -82,11 +89,15 @@ export const useAlerts = () => {
       });
 
       return data.data;
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error updating alert:', err);
 
+      const errorMessage = err instanceof Error && 'response' in err
+        ? ((err as any).response?.data?.message || 'Nie udało się zaktualizować alertu')
+        : 'Nie udało się zaktualizować alertu';
+
       toast.error('Błąd', {
-        description: err.response?.data?.message || 'Nie udało się zaktualizować alertu',
+        description: errorMessage,
       });
 
       throw err;
@@ -110,7 +121,7 @@ export const useAlerts = () => {
             : 'Powiadomienia zostały wstrzymane'
         }
       );
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error toggling alert status:', err);
 
       toast.error('Błąd', {
@@ -128,7 +139,7 @@ export const useAlerts = () => {
       toast.success('🗑️ Alert usunięty', {
         description: 'Alert został pomyślnie usunięty'
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error deleting alert:', err);
 
       toast.error('Błąd', {
@@ -142,7 +153,7 @@ export const useAlerts = () => {
     try {
       const { data } = await api.get(`/alerts/${id}`);
       return data.data || data;
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error fetching alert:', err);
 
       toast.error('Błąd', {

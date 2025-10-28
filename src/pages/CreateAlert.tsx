@@ -95,7 +95,7 @@ const CreateAlert = () => {
       setCategories(categoryIds);
 
       toast.success('Alert wczytany do edycji');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error loading alert:', err);
       toast.error('Błąd', {
         description: 'Nie udało się wczytać alertu do edycji',

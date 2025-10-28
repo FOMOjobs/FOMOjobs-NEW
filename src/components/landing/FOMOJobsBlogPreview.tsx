@@ -3,7 +3,7 @@ import { ArrowRight, BookOpen, ExternalLink } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 
-const blogPosts = [
+const BLOG_POSTS = [
   {
     title: "Dlaczego 80% ofert pracy nigdy nie trafia na portale?",
     description: "o ukrytym rynku pracy, poleceniach i jak złapać robotę zanim pojawi się na Pracuj.pl. (Tu świetnie pasuje FOMOjobs – bo łapie oferty szybciej i dopasowuje alerty).",
@@ -59,7 +59,7 @@ const FOMOJobsBlogPreview = () => {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {blogPosts.slice(0, 6).map((post, index) => (
+          {BLOG_POSTS.slice(0, 6).map((post, index) => (
             <Link
               key={index}
               to={`/blog/${post.slug}`}
