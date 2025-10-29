@@ -42,7 +42,7 @@ export default function FAQ() {
                 <ul className="list-disc ml-6 mt-2 space-y-1">
                   <li>Alerty z 5 wybranych firm</li>
                 </ul>
-                <p className="text-sm text-muted-foreground mt-2">
+                <p className="text-sm text-muted-foreground mt-2 contrast-more:text-black dark:contrast-more:text-white">
                   Dla kogo: osoby które chcą spróbować lub szukają u konkretnych pracodawców
                 </p>
               </div>
@@ -54,7 +54,7 @@ export default function FAQ() {
                   <li>Pełna wersja FOMO.alerts</li>
                   <li>Zaawansowane filtry (wykluczanie słów, języków, itp.)</li>
                 </ul>
-                <p className="text-sm text-muted-foreground mt-2">
+                <p className="text-sm text-muted-foreground mt-2 contrast-more:text-black dark:contrast-more:text-white">
                   Dla kogo: aktywnie szukających pracy, którzy chcą więcej opcji
                 </p>
               </div>
@@ -68,7 +68,7 @@ export default function FAQ() {
                   <li>AI pomaga poprawić Twoje CV</li>
                   <li>Dostęp do wszystkich narzędzi FOMO (CV creator, job tracker, coach, prompts)</li>
                 </ul>
-                <p className="text-sm text-muted-foreground mt-2">
+                <p className="text-sm text-muted-foreground mt-2 contrast-more:text-black dark:contrast-more:text-white">
                   Dla kogo: osoby które traktują szukanie pracy poważnie i chcą maksymalną przewagę
                 </p>
               </div>
@@ -85,7 +85,7 @@ export default function FAQ() {
                   <li>Weryfikujemy Twój profil (prosimy o screen)</li>
                   <li>Po znalezieniu pracy - przechodzisz na plan Start lub płatny</li>
                 </ul>
-                <p className="text-sm text-muted-foreground mt-2">
+                <p className="text-sm text-muted-foreground mt-2 contrast-more:text-black dark:contrast-more:text-white">
                   Dla kogo: osoby które są bez pracy i aktywnie szukają. Wiemy, że to stresujący moment - nie dokładamy Ci kosztów.
                 </p>
               </div>

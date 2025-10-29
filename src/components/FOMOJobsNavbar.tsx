@@ -243,7 +243,7 @@ const FOMOJobsNavbar = () => {
                           </div>
                           <div>
                             <div className="font-medium text-sm">{item.label}</div>
-                            <div className="text-xs text-muted-foreground leading-snug">{item.description}</div>
+                            <div className="text-xs text-muted-foreground leading-snug contrast-more:text-black dark:contrast-more:text-white">{item.description}</div>
                           </div>
                         </button>
                       );
@@ -261,7 +261,7 @@ const FOMOJobsNavbar = () => {
                         </div>
                         <div>
                           <div className="font-medium text-sm">{item.label}</div>
-                          <div className="text-xs text-muted-foreground leading-snug">{item.description}</div>
+                          <div className="text-xs text-muted-foreground leading-snug contrast-more:text-black dark:contrast-more:text-white">{item.description}</div>
                         </div>
                       </Link>
                     );
@@ -320,7 +320,7 @@ const FOMOJobsNavbar = () => {
                       </div>
                       <div>
                         <div className="font-medium text-sm">{item.label}</div>
-                        <div className="text-xs text-muted-foreground leading-snug">{item.description}</div>
+                        <div className="text-xs text-muted-foreground leading-snug contrast-more:text-black dark:contrast-more:text-white">{item.description}</div>
                       </div>
                     </Link>
                   ))}

@@ -116,7 +116,7 @@ const Index = () => {
               </h2>
             </motion.div>
 
-            <div className="max-w-4xl mx-auto space-y-6 text-lg text-muted-foreground">
+            <div className="max-w-4xl mx-auto space-y-6 text-lg text-muted-foreground contrast-more:text-black dark:contrast-more:text-white">
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -163,7 +163,7 @@ const Index = () => {
               <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
                 Oszczędzaj godziny scrollowania
               </h2>
-              <p className="text-xl text-muted-foreground">
+              <p className="text-xl text-muted-foreground contrast-more:text-black dark:contrast-more:text-white">
                 W czterech prostych krokach do szybszego znalezienia pracy
               </p>
             </motion.div>
@@ -211,7 +211,7 @@ const Index = () => {
                       <CardTitle className="text-2xl">{feature.title}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-muted-foreground">{feature.description}</p>
+                      <p className="text-muted-foreground contrast-more:text-black dark:contrast-more:text-white">{feature.description}</p>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -268,7 +268,7 @@ const Index = () => {
                       <CardTitle className="text-2xl">{benefit.title}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-muted-foreground leading-relaxed">{benefit.description}</p>
+                      <p className="text-muted-foreground leading-relaxed contrast-more:text-black dark:contrast-more:text-white">{benefit.description}</p>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -356,7 +356,7 @@ const Index = () => {
               <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
                 Często zadawane pytania (FAQ)
               </h2>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto contrast-more:text-black dark:contrast-more:text-white">
                 Znajdź odpowiedzi na najczęściej zadawane pytania o FOMOjobs
               </p>
             </motion.div>
@@ -378,7 +378,7 @@ const Index = () => {
                       Po co właściwie powstało FOMOjobs?
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground leading-relaxed pl-11 pb-6">
+                  <AccordionContent className="text-muted-foreground leading-relaxed pl-11 pb-6 contrast-more:text-black dark:contrast-more:text-white">
                     FOMOjobs powstało z potrzeby rozwiązania problemu, z którym sam się zmagałem podczas poszukiwania pracy. Zauważyłem, że wiele świetnych ofert pracy jest publikowanych na stronach firm, a nie na głównych portalach pracy. FOMOjobs automatyzuje ten proces i oszczędza Ci czas.
                   </AccordionContent>
                 </AccordionItem>
@@ -392,7 +392,7 @@ const Index = () => {
                       Co oznacza hasło "Nie musisz szukać sam"?
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground leading-relaxed pl-11 pb-6">
+                  <AccordionContent className="text-muted-foreground leading-relaxed pl-11 pb-6 contrast-more:text-black dark:contrast-more:text-white">
                     Zamiast samotnie przeszukiwać internet w poszukiwaniu ofert pracy, FOMOjobs robi to za Ciebie. Nasza technologia monitoruje setki stron firm i dopasowuje oferty do Twoich preferencji.
                   </AccordionContent>
                 </AccordionItem>
@@ -406,7 +406,7 @@ const Index = () => {
                       Skąd macie oferty pracy?
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground leading-relaxed pl-11 pb-6">
+                  <AccordionContent className="text-muted-foreground leading-relaxed pl-11 pb-6 contrast-more:text-black dark:contrast-more:text-white">
                     Zbieramy oferty pracy bezpośrednio ze stron karier firm oraz z sprawdzonych portali pracy. Nasz system monitoruje ponad 500 źródeł w Polsce, włączając strony małych i średnich firm.
                   </AccordionContent>
                 </AccordionItem>
@@ -420,7 +420,7 @@ const Index = () => {
                       Dla kogo jest darmowy plan #opentowork?
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground leading-relaxed pl-11 pb-6">
+                  <AccordionContent className="text-muted-foreground leading-relaxed pl-11 pb-6 contrast-more:text-black dark:contrast-more:text-white">
                     Plan #opentowork jest dedykowany osobom, które aktualnie poszukują pracy i mają odpowiedni status na LinkedIn. Po weryfikacji statusu, otrzymujesz pełny dostęp do wszystkich funkcji FOMOjobs za darmo.
                   </AccordionContent>
                 </AccordionItem>
@@ -434,7 +434,7 @@ const Index = () => {
                       Gdzie znajdę więcej odpowiedzi?
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground leading-relaxed pl-11 pb-6">
+                  <AccordionContent className="text-muted-foreground leading-relaxed pl-11 pb-6 contrast-more:text-black dark:contrast-more:text-white">
                     Przygotowaliśmy obszerny dokument FAQ ze wszystkimi szczegółami.{' '}
                     <Link
                       to="/faq"

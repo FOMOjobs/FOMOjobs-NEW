@@ -65,7 +65,7 @@ const HelpCenterDialog = () => {
           </div>
 
           <div className="pt-4 border-t">
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground contrast-more:text-black dark:contrast-more:text-white">
               Nie znalazłeś odpowiedzi? <strong>Zgłoś problem</strong> lub napisz na:{' '}
               <a href="mailto:pomoc@fomojobs.com" className="text-primary underline">
                 pomoc@fomojobs.com
@@ -168,7 +168,7 @@ const ReportProblemDialog = () => {
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               required
             />
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-xs text-muted-foreground mt-1 contrast-more:text-black dark:contrast-more:text-white">
               Im więcej szczegółów, tym szybciej pomożemy!
             </p>
           </div>
