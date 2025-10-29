@@ -23,12 +23,12 @@ export const GradientHeader = ({
   className = '',
 }: GradientHeaderProps) => {
   return (
-    <div className={`relative overflow-hidden bg-gradient-to-r from-purple-600 via-pink-500 via-orange-500 to-yellow-400 py-20 ${className}`}>
+    <div className={`relative overflow-hidden bg-gradient-to-r from-purple-600 via-purple-500 to-yellow-400 py-20 ${className}`}>
       {/* Animated background blobs */}
       <div className="absolute inset-0 opacity-30">
         <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl animate-blob" />
         <div className="absolute top-0 -right-4 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000" />
-        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-orange-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000" />
+        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000" />
       </div>
 
       {/* Content */}
