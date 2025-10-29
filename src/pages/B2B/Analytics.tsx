@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Helmet } from 'react-helmet-async';
 import FOMOJobsNavbar from '@/components/FOMOJobsNavbar';
+import { GradientHeader } from '@/components/shared/GradientHeader';
 import {
   TrendingUp,
   Briefcase,
@@ -91,29 +92,14 @@ export default function Analytics() {
 
       <FOMOJobsNavbar />
 
-      {/* Animated gradient background - matching other tools */}
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative overflow-hidden">
-        {/* Animated gradient orbs */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-300 dark:bg-purple-600/30 rounded-full mix-blend-multiply dark:mix-blend-normal filter blur-xl opacity-30 dark:opacity-20 animate-blob" />
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-yellow-300 dark:bg-yellow-600/30 rounded-full mix-blend-multiply dark:mix-blend-normal filter blur-xl opacity-30 dark:opacity-20 animate-blob animation-delay-2000" />
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-purple-400 dark:bg-purple-500/20 rounded-full mix-blend-multiply dark:mix-blend-normal filter blur-xl opacity-20 dark:opacity-10 animate-blob animation-delay-4000" />
-        </div>
+      <div className="min-h-screen bg-background pt-16">
+        <GradientHeader
+          title="📊 FOMO.analytics"
+          subtitle="Analiza rynku pracy dla HR - dane, trendy i insights w jednym miejscu"
+          showBackButton
+        />
 
-        {/* Header */}
-        <div className="relative z-10 pt-24 pb-12 text-center">
-          <div className="container mx-auto px-4">
-            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-4">
-              📊 FOMO.analytics
-            </h1>
-            <p className="text-xl text-gray-600 dark:text-gray-300">
-              Competitive Intelligence dla Pracodawców
-            </p>
-          </div>
-        </div>
-
-        {/* Content - positioned above animated background */}
-        <div className="relative z-10 container mx-auto px-4 pb-16">
+        <div className="container mx-auto px-4 py-12">
           {/* Filters */}
           <Card className="mb-8">
           <CardHeader>

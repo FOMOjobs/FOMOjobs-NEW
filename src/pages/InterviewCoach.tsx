@@ -19,6 +19,7 @@ import {
 import { toast } from 'sonner'
 
 import FOMOJobsNavbar from '@/components/FOMOJobsNavbar'
+import { GradientHeader } from '@/components/shared/GradientHeader'
 import FOMOJobsFooter from '@/components/landing/FOMOJobsFooter'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
@@ -153,30 +154,11 @@ const InterviewCoach = () => {
       <FOMOJobsNavbar />
 
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 pt-16">
-        {/* Hero Section */}
-        <div className="bg-gradient-to-r from-primary via-secondary to-primary bg-[length:200%_100%] animate-gradient-x text-primary-foreground">
-          <div className="container mx-auto px-4 py-20">
-            <motion.div
-              className="text-center"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <div className="flex items-center justify-center gap-3 mb-6">
-                <Sparkles className="w-12 h-12" />
-                <h1 className="text-4xl md:text-6xl font-bold">
-                  <span className="text-white">FOMO</span>.<span className="text-secondary drop-shadow-lg">coach</span>
-                </h1>
-              </div>
-              <p className="text-xl md:text-2xl mb-8 opacity-90 max-w-3xl mx-auto">
-                Twój osobisty trener rozmów kwalifikacyjnych napędzany sztuczną inteligencją
-              </p>
-              <p className="text-lg opacity-80 max-w-2xl mx-auto">
-                Przećwicz odpowiedzi na trudne pytania, otrzymuj natychmiastowy feedback i zwiększ swoje szanse na sukces
-              </p>
-            </motion.div>
-          </div>
-        </div>
+        <GradientHeader
+          title="✨ FOMO.coach"
+          subtitle="Twój osobisty trener rozmów kwalifikacyjnych napędzany sztuczną inteligencją"
+          showBackButton
+        />
 
         <div className="container mx-auto px-4 py-12">
           {/* Features Grid */}
