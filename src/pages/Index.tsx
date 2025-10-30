@@ -122,7 +122,7 @@ const Index = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
                 viewport={{ once: true }}
-                className="contrast-more:text-black dark:contrast-more:text-white"
+                className="text-muted-foreground contrast-more:text-black dark:contrast-more:text-white"
               >
                 Rynek pracy się zmienił. Pracodawcy coraz częściej publikują oferty na własnych, mniej widocznych stronach, zamiast na dużych portalach.
               </motion.p>
@@ -132,7 +132,7 @@ const Index = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
                 viewport={{ once: true }}
-                className="contrast-more:text-black dark:contrast-more:text-white"
+                className="text-muted-foreground contrast-more:text-black dark:contrast-more:text-white"
               >
                 <span className="text-primary font-bold text-xl contrast-more:text-black dark:contrast-more:text-white">FOMOjobs</span> to Twój osobisty radar, który dzięki technologii wyszukuje i filtruje te ukryte oferty. Otrzymujesz od nas jeden alert dziennie z precyzyjnie dobranymi propozycjami, dopasowanymi do Twoich preferencji i szans.
               </motion.p>
