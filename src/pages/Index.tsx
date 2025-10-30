@@ -102,50 +102,24 @@ const Index = () => {
         </section>
 
         {/* ABOUT SECTION */}
-        <section id="about" className="py-20 bg-card dark:bg-card/50">
+        <section id="about" className="py-16 bg-white dark:bg-gray-900">
           <div className="container mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className="text-center mb-12"
-            >
-              <h2 className="text-4xl md:text-5xl font-bold text-gradient mb-6 pb-2 overflow-visible contrast-more:text-black dark:contrast-more:text-white">
-                Poznaj FOMOjobs
-              </h2>
-            </motion.div>
-
-            <div className="max-w-4xl mx-auto space-y-6 text-lg text-muted-foreground contrast-more:text-black dark:contrast-more:text-white">
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                viewport={{ once: true }}
-                className="text-muted-foreground contrast-more:text-black dark:contrast-more:text-white"
-              >
-                Rynek pracy się zmienił. Pracodawcy coraz częściej publikują oferty na własnych, mniej widocznych stronach, zamiast na dużych portalach.
-              </motion.p>
-
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                viewport={{ once: true }}
-                className="text-muted-foreground contrast-more:text-black dark:contrast-more:text-white"
-              >
-                <span className="text-primary font-bold text-xl contrast-more:text-black dark:contrast-more:text-white">FOMOjobs</span> to Twój osobisty radar, który dzięki technologii wyszukuje i filtruje te ukryte oferty. Otrzymujesz od nas jeden alert dziennie z precyzyjnie dobranymi propozycjami, dopasowanymi do Twoich preferencji i szans.
-              </motion.p>
-
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                viewport={{ once: true }}
-                className="text-foreground font-semibold text-xl contrast-more:text-black dark:contrast-more:text-white"
-              >
+            <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
+              Poznaj FOMOjobs
+            </h2>
+            <div className="space-y-4 max-w-3xl">
+              <p className="text-gray-700 dark:text-gray-300 text-lg">
+                Rynek pracy się zmienił. Pracodawcy coraz częściej publikują oferty na własnych,
+                mniej widocznych stronach, zamiast na dużych portalach.
+              </p>
+              <p className="text-gray-700 dark:text-gray-300 text-lg">
+                FOMOjobs to Twój osobisty radar, który dzięki technologii wyszukuje i filtruje
+                te ukryte oferty. Otrzymujesz od nas jeden alert dziennie z precyzyjnie dobranymi
+                propozycjami, dopasowanymi do Twoich preferencji i szans.
+              </p>
+              <p className="text-gray-700 dark:text-gray-300 text-lg">
                 Skup się na swoim CV i przygotowaniu do rozmowy – my zajmiemy się resztą.
-              </motion.p>
+              </p>
             </div>
           </div>
         </section>
