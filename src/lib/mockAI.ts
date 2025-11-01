@@ -74,7 +74,54 @@ export const canUseAI = async (): Promise<{ allowed: boolean; reason?: string }>
 };
 
 /**
+ * Helper: Extract years of experience from work history
+ */
+const calculateYearsOfExperience = (experience: GenerateSummaryParams['experience']): number => {
+  if (experience.length === 0) return 0;
+
+  // Simple heuristic: count total positions and estimate
+  // In real API, we would parse startDate/endDate
+  return Math.max(2, Math.min(15, experience.length * 2));
+};
+
+/**
+ * Helper: Detect industry/specialization from job titles
+ */
+const detectIndustry = (experience: GenerateSummaryParams['experience'], lang: AILanguage): string => {
+  const titles = experience.map(e => e.position.toLowerCase()).join(' ');
+
+  const industries: Record<string, { pl: string; en: string }> = {
+    'software|developer|engineer|programmer|tech|frontend|backend': { pl: 'technologii IT', en: 'technology' },
+    'manager|zarząd|dyrektor|kierownik': { pl: 'zarządzania', en: 'management' },
+    'designer|ux|ui|graphic': { pl: 'projektowania UX/UI', en: 'design' },
+    'marketing|seo|content|social media': { pl: 'marketingu', en: 'marketing' },
+    'data|analyt|scientist': { pl: 'analizy danych', en: 'data analytics' },
+    'sales|sprzedaż|handl': { pl: 'sprzedaży', en: 'sales' },
+    'hr|rekrut|human': { pl: 'HR', en: 'human resources' },
+    'finance|finans|księg': { pl: 'finansów', en: 'finance' }
+  };
+
+  for (const [pattern, labels] of Object.entries(industries)) {
+    if (new RegExp(pattern, 'i').test(titles)) {
+      return labels[lang];
+    }
+  }
+
+  return lang === 'pl' ? 'swojej branży' : 'their field';
+};
+
+/**
+ * Helper: Get top skills (max 5)
+ */
+const getTopSkills = (skills: GenerateSummaryParams['skills']): string[] => {
+  return skills
+    .slice(0, 5)
+    .map(s => s.name);
+};
+
+/**
  * Generate professional CV summary based on experience, education, and skills
+ * NOW: Actually uses user data to create personalized summary!
  */
 export const generateSummary = async (
   params: GenerateSummaryParams
@@ -92,23 +139,116 @@ export const generateSummary = async (
     // Simulate realistic API delay (2-3 seconds)
     await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 1000));
 
-    const { tone, language } = params;
+    const { tone, language, experience, education, skills } = params;
 
-    // Mock responses based on tone and language
-    const summaries: Record<AILanguage, Record<AITone, string>> = {
-      pl: {
-        formal: 'Doświadczony specjalista z wieloletnim doświadczeniem w branży technologicznej. Posiadam udokumentowane osiągnięcia w zakresie zarządzania projektami oraz wdrażania innowacyjnych rozwiązań. Charakteryzuję się analitycznym podejściem do problemów oraz silnymi umiejętnościami komunikacyjnymi. Dążę do ciągłego rozwoju kompetencji zawodowych i poszerzania wiedzy w dynamicznie zmieniającym się środowisku biznesowym.',
-        friendly: 'Jestem pasjonatem technologii z wieloletnim doświadczeniem w tworzeniu świetnych produktów. Uwielbiam pracować w zespole i dzielić się wiedzą z innymi. Moje motto to ciągły rozwój i wychodzenie poza strefę komfortu! Każdy dzień to nowa szansa na naukę czegoś nowego i realizację ambitnych celów. Szukam miejsca, gdzie będę mógł wykorzystać swoje umiejętności i jednocześnie rozwijać się w inspirującym środowisku.',
-        technical: 'Software Engineer z 5+ latami doświadczenia w full-stack development. Specjalizacja: React, TypeScript, Node.js, PostgreSQL. Doświadczenie w architekturze mikroserwisów, CI/CD, oraz metodykach Agile/Scrum. Track record: 20+ projektów produkcyjnych, 99.9% uptime. Ekspert w optymalizacji wydajności, code review, oraz mentoringu junior developers. Aktywny contributor w projektach open source.'
-      },
-      en: {
-        formal: 'Experienced professional with extensive background in the technology sector. Demonstrated achievements in project management and implementation of innovative solutions. Characterized by an analytical approach to problem-solving and strong communication skills. Committed to continuous professional development and expanding knowledge in a dynamically changing business environment.',
-        friendly: "I'm a technology enthusiast with years of experience creating amazing products. I love working in teams and sharing knowledge with others. My motto is continuous growth and stepping outside the comfort zone! Every day is a new opportunity to learn something new and achieve ambitious goals. I'm looking for a place where I can utilize my skills while growing in an inspiring environment.",
-        technical: 'Software Engineer with 5+ years of experience in full-stack development. Specialization: React, TypeScript, Node.js, PostgreSQL. Experience in microservices architecture, CI/CD, and Agile/Scrum methodologies. Track record: 20+ production projects, 99.9% uptime. Expert in performance optimization, code review, and mentoring junior developers. Active contributor to open source projects.'
+    // Extract context from user data
+    const yearsExp = calculateYearsOfExperience(experience);
+    const industry = detectIndustry(experience, language);
+    const topSkills = getTopSkills(skills);
+    const latestRole = experience[0]?.position || (language === 'pl' ? 'Specjalista' : 'Professional');
+    const hasHigherEd = education.length > 0;
+    const degree = education[0]?.degree || '';
+
+    // Build personalized summary based on tone
+    let summary = '';
+
+    if (language === 'pl') {
+      if (tone === 'formal') {
+        summary = `Doświadczony specjalista w obszarze ${industry} z ${yearsExp}+ latami praktycznej wiedzy. `;
+
+        if (experience.length > 0) {
+          summary += `Obecnie pełnię funkcję ${latestRole}, gdzie odpowiadam za ${experience[0].description?.slice(0, 80) || 'kluczowe projekty i inicjatywy'}. `;
+        }
+
+        if (topSkills.length > 0) {
+          summary += `Specjalizuję się w: ${topSkills.slice(0, 3).join(', ')}. `;
+        }
+
+        if (hasHigherEd) {
+          summary += `Posiadam wykształcenie ${degree}, które stanowi solidną podstawę do realizacji złożonych projektów. `;
+        }
+
+        summary += 'Charakteryzuję się analitycznym podejściem do problemów, silnymi umiejętnościami komunikacyjnymi oraz dążeniem do ciągłego rozwoju kompetencji zawodowych.';
       }
-    };
+      else if (tone === 'friendly') {
+        summary = `Jestem pasjonatem ${industry} z ${yearsExp}+ latami doświadczenia w tworzeniu świetnych rozwiązań! `;
 
-    const summary = summaries[language][tone];
+        if (topSkills.length > 0) {
+          summary += `Uwielbiam pracować z: ${topSkills.slice(0, 3).join(', ')}. `;
+        }
+
+        if (experience.length > 0) {
+          summary += `Ostatnio pracowałem jako ${latestRole}, gdzie mogłem rozwijać swoje umiejętności i pomagać zespołowi osiągać cele. `;
+        }
+
+        summary += 'Uwielbiam wyzwania, dzielenie się wiedzą i ciągły rozwój. Każdy projekt to dla mnie szansa na naukę czegoś nowego! Szukam miejsca, gdzie będę mógł wykorzystać swoje doświadczenie i jednocześnie rozwijać się w inspirującym środowisku.';
+      }
+      else { // technical
+        summary = `${latestRole} z ${yearsExp}+ latami doświadczenia w ${industry}. `;
+
+        if (topSkills.length > 0) {
+          summary += `Stack technologiczny: ${topSkills.join(', ')}. `;
+        }
+
+        if (experience.length > 0) {
+          summary += `Track record: ${experience.length} projektów komercyjnych. `;
+        }
+
+        if (hasHigherEd) {
+          summary += `Wykształcenie: ${degree}. `;
+        }
+
+        summary += 'Specjalizacja w architekturze systemów, optymalizacji wydajności oraz code review. Doświadczenie w metodykach Agile/Scrum, CI/CD oraz mentoringu zespołów.';
+      }
+    } else { // English
+      if (tone === 'formal') {
+        summary = `Experienced ${industry} professional with ${yearsExp}+ years of practical knowledge. `;
+
+        if (experience.length > 0) {
+          summary += `Currently serving as ${latestRole}, where I am responsible for ${experience[0].description?.slice(0, 80) || 'key projects and initiatives'}. `;
+        }
+
+        if (topSkills.length > 0) {
+          summary += `Specializing in: ${topSkills.slice(0, 3).join(', ')}. `;
+        }
+
+        if (hasHigherEd) {
+          summary += `Hold ${degree} degree, providing a solid foundation for executing complex projects. `;
+        }
+
+        summary += 'Characterized by analytical approach to problem-solving, strong communication skills, and commitment to continuous professional development.';
+      }
+      else if (tone === 'friendly') {
+        summary = `I'm a ${industry} enthusiast with ${yearsExp}+ years of experience creating great solutions! `;
+
+        if (topSkills.length > 0) {
+          summary += `Love working with: ${topSkills.slice(0, 3).join(', ')}. `;
+        }
+
+        if (experience.length > 0) {
+          summary += `Recently worked as ${latestRole}, where I could develop my skills and help the team achieve goals. `;
+        }
+
+        summary += "I love challenges, knowledge sharing, and continuous growth. Every project is an opportunity to learn something new! I'm looking for a place where I can use my experience while growing in an inspiring environment.";
+      }
+      else { // technical
+        summary = `${latestRole} with ${yearsExp}+ years of experience in ${industry}. `;
+
+        if (topSkills.length > 0) {
+          summary += `Tech stack: ${topSkills.join(', ')}. `;
+        }
+
+        if (experience.length > 0) {
+          summary += `Track record: ${experience.length} commercial projects. `;
+        }
+
+        if (hasHigherEd) {
+          summary += `Education: ${degree}. `;
+        }
+
+        summary += 'Specialization in system architecture, performance optimization, and code review. Experience in Agile/Scrum methodologies, CI/CD, and team mentoring.';
+      }
+    }
 
     // Increment usage (new rate limiter)
     incrementAIUsage();
