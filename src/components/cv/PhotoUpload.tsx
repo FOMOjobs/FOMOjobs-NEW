@@ -21,7 +21,8 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp'];
 const MAX_DIMENSIONS = { width: 2000, height: 2000 };
-const COMPRESS_MAX_SIZE = 800; // Resize to max 800x800 for storage efficiency
+const COMPRESS_MAX_SIZE = 600; // Resize to max 600x600 for < 100KB target
+const TARGET_SIZE_KB = 100; // Target file size in KB
 
 const createImage = (url: string): Promise<HTMLImageElement> =>
   new Promise((resolve, reject) => {
@@ -72,26 +73,45 @@ const getCroppedImg = async (
     height
   );
 
-  return new Promise((resolve, reject) => {
-    canvas.toBlob(
-      (blob) => {
-        if (!blob) {
-          reject(new Error('Failed to create image blob'));
-          return;
-        }
-        const reader = new FileReader();
-        reader.readAsDataURL(blob);
-        reader.onloadend = () => {
-          resolve(reader.result as string);
-        };
-        reader.onerror = () => {
-          reject(new Error('Failed to read image'));
-        };
-      },
-      'image/jpeg',
-      0.85 // Slightly lower quality for better compression
-    );
-  });
+  // Iterative compression to achieve < 100KB target
+  const compressToTarget = async (quality: number): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) {
+            reject(new Error('Failed to create image blob'));
+            return;
+          }
+          const reader = new FileReader();
+          reader.readAsDataURL(blob);
+          reader.onloadend = () => {
+            resolve(reader.result as string);
+          };
+          reader.onerror = () => {
+            reject(new Error('Failed to read image'));
+          };
+        },
+        'image/jpeg',
+        quality
+      );
+    });
+  };
+
+  // Try different quality levels to achieve target size
+  const qualityLevels = [0.75, 0.65, 0.55, 0.45];
+  const targetBytes = TARGET_SIZE_KB * 1024;
+
+  for (const quality of qualityLevels) {
+    const result = await compressToTarget(quality);
+    const sizeInBytes = Math.ceil((result.length * 3) / 4); // Approximate base64 to bytes
+
+    if (sizeInBytes <= targetBytes) {
+      return result;
+    }
+  }
+
+  // If still too large, return the lowest quality version
+  return compressToTarget(0.45);
 };
 
 export const PhotoUpload = memo(function PhotoUpload({ value, onChange }: PhotoUploadProps) {
@@ -178,23 +198,26 @@ export const PhotoUpload = memo(function PhotoUpload({ value, onChange }: PhotoU
     try {
       const croppedImage = await getCroppedImg(imageSrc, croppedAreaPixels);
 
-      // Check final size after crop/compression
-      const sizeInBytes = new Blob([croppedImage]).size;
-      const sizeMB = (sizeInBytes / (1024 * 1024)).toFixed(2);
-
-      // Warn if still large (but allow it)
-      if (sizeInBytes > 1024 * 1024) {
-        toast.warning(`Zdjęcie: ${sizeMB}MB`, {
-          description: 'Może spowolnić zapisywanie CV'
-        });
-      }
+      // Calculate final size after crop/compression (base64 to bytes)
+      const sizeInBytes = Math.ceil((croppedImage.length * 3) / 4);
+      const sizeInKB = Math.round(sizeInBytes / 1024);
 
       onChange(croppedImage);
       setIsOpen(false);
       setImageSrc(null);
       setCrop({ x: 0, y: 0 });
       setZoom(1);
-      toast.success('Zdjęcie dodane');
+
+      // Show success with size info
+      if (sizeInKB <= TARGET_SIZE_KB) {
+        toast.success('Zdjęcie dodane', {
+          description: `Rozmiar: ${sizeInKB}KB (zoptymalizowane)`
+        });
+      } else {
+        toast.success('Zdjęcie dodane', {
+          description: `Rozmiar: ${sizeInKB}KB`
+        });
+      }
     } catch (e) {
       console.error('Error cropping image:', e);
       toast.error('Błąd przetwarzania zdjęcia');
@@ -261,6 +284,8 @@ export const PhotoUpload = memo(function PhotoUpload({ value, onChange }: PhotoU
           />
           <p className="text-sm text-muted-foreground mt-2">
             Zalecane: kwadratowe, min. 400x400px, max 5MB
+            <br />
+            <span className="text-xs">Zdjęcie zostanie automatycznie skompresowane do ~{TARGET_SIZE_KB}KB</span>
           </p>
         </div>
       </div>
