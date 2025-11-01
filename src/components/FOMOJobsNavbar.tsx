@@ -176,7 +176,17 @@ const FOMOJobsNavbar = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link to="/" className="flex items-center gap-2">
+            <Link
+              to="/"
+              className="flex items-center gap-2"
+              onClick={(e) => {
+                // If already on home page, scroll to top instead of navigating
+                if (window.location.pathname === '/') {
+                  e.preventDefault();
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }}
+            >
               <div className="flex items-center">
                 <img
                   src="/fomo-bell-logo.png"
@@ -386,7 +396,14 @@ const FOMOJobsNavbar = () => {
             <Link
               to="/"
               className="flex items-center gap-2 text-foreground hover:text-primary py-2 text-lg font-medium"
-              onClick={() => setIsMenuOpen(false)}
+              onClick={(e) => {
+                setIsMenuOpen(false);
+                // If already on home page, scroll to top
+                if (window.location.pathname === '/') {
+                  e.preventDefault();
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }}
             >
               <Home className="w-5 h-5" />
               Strona Główna
