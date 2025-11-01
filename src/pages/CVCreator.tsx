@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { motion } from 'framer-motion'
-import { Cloud, Download, Eye, FileDown, FileText, Plus, RotateCcw, Save } from 'lucide-react'
+import { Cloud, Download, Eye, FileDown, FileText, Linkedin, Plus, RotateCcw, Save } from 'lucide-react'
 import { toast } from 'sonner'
 
 import FOMOJobsNavbar from '@/components/FOMOJobsNavbar'
@@ -14,6 +14,7 @@ import SettingsSection from '@/components/cv/forms/SettingsSection'
 import SkillsManager from '@/components/cv/forms/SkillsManager'
 import CustomizationPanel from '@/components/cv-creator/CustomizationPanel'
 import CVPreview from '@/components/cv-creator/CVPreview'
+import { LinkedInImportDialog } from '@/components/cv/LinkedInImportDialog'
 import FOMOJobsFooter from '@/components/landing/FOMOJobsFooter'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -24,15 +25,17 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { autoSaveCVData, loadAutoSavedCVData } from '@/lib/cvStorage'
 import { useCVStore } from '@/stores/cvStore'
+import type { LinkedInParseResult } from '@/utils/linkedInParser'
 
 // Removed static imports - now using dynamic imports for PDF/DOCX export to reduce bundle size
 
 const CVCreator = () => {
-  const { activeSection, cvData, isDirty, setDirty, loadCVData, resetCV, saveCurrentCV, currentCVId } = useCVStore();
+  const { activeSection, cvData, isDirty, setDirty, loadCVData, resetCV, saveCurrentCV, currentCVId, updatePersonalInfo, addExperience, addEducation, addSkill } = useCVStore();
   const [isExporting, setIsExporting] = useState(false);
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [cvName, setCVName] = useState('');
   const [mobilePreviewOpen, setMobilePreviewOpen] = useState(false);
+  const [linkedInImportOpen, setLinkedInImportOpen] = useState(false);
 
   // Auto-load from localStorage on mount
   useEffect(() => {
@@ -168,6 +171,37 @@ const CVCreator = () => {
     }
   };
 
+  const handleLinkedInImport = (data: LinkedInParseResult) => {
+    // Import personal info
+    if (data.personal.fullName) {
+      updatePersonalInfo({
+        fullName: data.personal.fullName,
+        email: data.personal.email || cvData.personal.email,
+        address: data.personal.location || cvData.personal.address,
+        linkedIn: data.personal.linkedIn || cvData.personal.linkedIn,
+        summary: data.summary || cvData.personal.summary,
+      });
+    }
+
+    // Import experience
+    data.experience.forEach((exp) => {
+      addExperience(exp);
+    });
+
+    // Import education
+    data.education.forEach((edu) => {
+      addEducation(edu);
+    });
+
+    // Import skills
+    data.skills.forEach((skill) => {
+      addSkill(skill);
+    });
+
+    // Mark as dirty to trigger auto-save
+    setDirty(true);
+  };
+
   return (
     <>
       <Helmet>
@@ -208,6 +242,23 @@ const CVCreator = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center max-w-3xl mx-auto">
                 <TooltipProvider>
+                  {/* LinkedIn Import Button */}
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        size="lg"
+                        onClick={() => setLinkedInImportOpen(true)}
+                        className="text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white w-full sm:w-auto"
+                      >
+                        <Linkedin className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+                        Import LinkedIn
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Szybko wypełnij CV danymi z LinkedIn</p>
+                    </TooltipContent>
+                  </Tooltip>
+
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button
@@ -419,6 +470,13 @@ const CVCreator = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* LinkedIn Import Dialog */}
+      <LinkedInImportDialog
+        open={linkedInImportOpen}
+        onOpenChange={setLinkedInImportOpen}
+        onImport={handleLinkedInImport}
+      />
     </>
   );
 };
