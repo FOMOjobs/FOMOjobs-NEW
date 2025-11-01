@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { motion } from 'framer-motion'
-import { Cloud, Download, Eye, FileDown, FileText, Linkedin, Plus, RotateCcw, Save, Shield } from 'lucide-react'
+import { Cloud, Download, Eye, FileDown, FileText, Layout, Linkedin, Plus, RotateCcw, Save, Shield } from 'lucide-react'
 import { toast } from 'sonner'
 
 import FOMOJobsNavbar from '@/components/FOMOJobsNavbar'
@@ -16,6 +16,7 @@ import CustomizationPanel from '@/components/cv-creator/CustomizationPanel'
 import CVPreview from '@/components/cv-creator/CVPreview'
 import { LinkedInImportDialog } from '@/components/cv/LinkedInImportDialog'
 import { ATSTestDialog } from '@/components/cv/ATSTestDialog'
+import { TemplateGalleryDialog } from '@/components/cv/TemplateGalleryDialog'
 import FOMOJobsFooter from '@/components/landing/FOMOJobsFooter'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -27,17 +28,19 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { autoSaveCVData, loadAutoSavedCVData } from '@/lib/cvStorage'
 import { useCVStore } from '@/stores/cvStore'
 import type { LinkedInParseResult } from '@/utils/linkedInParser'
+import { getAllTemplates } from '@/lib/templateMetadata'
 
 // Removed static imports - now using dynamic imports for PDF/DOCX export to reduce bundle size
 
 const CVCreator = () => {
-  const { activeSection, cvData, isDirty, setDirty, loadCVData, resetCV, saveCurrentCV, currentCVId, updatePersonalInfo, addExperience, addEducation, addSkill } = useCVStore();
+  const { activeSection, cvData, isDirty, setDirty, loadCVData, resetCV, saveCurrentCV, currentCVId, updatePersonalInfo, addExperience, addEducation, addSkill, updateCustomization } = useCVStore();
   const [isExporting, setIsExporting] = useState(false);
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [cvName, setCVName] = useState('');
   const [mobilePreviewOpen, setMobilePreviewOpen] = useState(false);
   const [linkedInImportOpen, setLinkedInImportOpen] = useState(false);
   const [atsTestOpen, setAtsTestOpen] = useState(false);
+  const [templateGalleryOpen, setTemplateGalleryOpen] = useState(false);
 
   // Auto-load from localStorage on mount
   useEffect(() => {
@@ -204,6 +207,11 @@ const CVCreator = () => {
     setDirty(true);
   };
 
+  const handleTemplateSelect = (templateId: string) => {
+    updateCustomization({ template: templateId });
+    setDirty(true);
+  };
+
   return (
     <>
       <Helmet>
@@ -244,6 +252,23 @@ const CVCreator = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center max-w-3xl mx-auto">
                 <TooltipProvider>
+                  {/* Template Gallery Button */}
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        size="lg"
+                        onClick={() => setTemplateGalleryOpen(true)}
+                        className="text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 bg-gradient-to-r from-indigo-600 to-violet-500 hover:from-indigo-700 hover:to-violet-600 text-white w-full sm:w-auto"
+                      >
+                        <Layout className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+                        Szablony ({getAllTemplates().length})
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Przeglądaj i wybieraj spośród 9 szablonów CV</p>
+                    </TooltipContent>
+                  </Tooltip>
+
                   {/* LinkedIn Import Button */}
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -502,6 +527,14 @@ const CVCreator = () => {
         onOpenChange={setAtsTestOpen}
         cvData={cvData}
         currentTemplate={cvData.customization.template}
+      />
+
+      {/* Template Gallery Dialog */}
+      <TemplateGalleryDialog
+        open={templateGalleryOpen}
+        onOpenChange={setTemplateGalleryOpen}
+        currentTemplate={cvData.customization.template}
+        onSelectTemplate={handleTemplateSelect}
       />
     </>
   );
