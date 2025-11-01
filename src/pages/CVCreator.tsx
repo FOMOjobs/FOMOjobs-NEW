@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { motion } from 'framer-motion'
-import { Cloud, Download, Eye, FileDown, FileText, Linkedin, Plus, RotateCcw, Save } from 'lucide-react'
+import { Cloud, Download, Eye, FileDown, FileText, Linkedin, Plus, RotateCcw, Save, Shield } from 'lucide-react'
 import { toast } from 'sonner'
 
 import FOMOJobsNavbar from '@/components/FOMOJobsNavbar'
@@ -15,6 +15,7 @@ import SkillsManager from '@/components/cv/forms/SkillsManager'
 import CustomizationPanel from '@/components/cv-creator/CustomizationPanel'
 import CVPreview from '@/components/cv-creator/CVPreview'
 import { LinkedInImportDialog } from '@/components/cv/LinkedInImportDialog'
+import { ATSTestDialog } from '@/components/cv/ATSTestDialog'
 import FOMOJobsFooter from '@/components/landing/FOMOJobsFooter'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -36,6 +37,7 @@ const CVCreator = () => {
   const [cvName, setCVName] = useState('');
   const [mobilePreviewOpen, setMobilePreviewOpen] = useState(false);
   const [linkedInImportOpen, setLinkedInImportOpen] = useState(false);
+  const [atsTestOpen, setAtsTestOpen] = useState(false);
 
   // Auto-load from localStorage on mount
   useEffect(() => {
@@ -277,6 +279,22 @@ const CVCreator = () => {
                   </Tooltip>
                 </TooltipProvider>
 
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        size="lg"
+                        onClick={() => setAtsTestOpen(true)}
+                        className="text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-700 hover:to-emerald-600 text-white w-full sm:w-auto"
+                      >
+                        <Shield className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+                        Test ATS
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Sprawdź zgodność z systemami ATS</p>
+                    </TooltipContent>
+                  </Tooltip>
+
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button
@@ -476,6 +494,14 @@ const CVCreator = () => {
         open={linkedInImportOpen}
         onOpenChange={setLinkedInImportOpen}
         onImport={handleLinkedInImport}
+      />
+
+      {/* ATS Test Dialog */}
+      <ATSTestDialog
+        open={atsTestOpen}
+        onOpenChange={setAtsTestOpen}
+        cvData={cvData}
+        currentTemplate={cvData.customization.template}
       />
     </>
   );
