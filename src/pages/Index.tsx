@@ -102,22 +102,24 @@ const Index = () => {
         </section>
 
         {/* ABOUT SECTION */}
-        <section id="about" className="py-16 bg-white dark:bg-gray-900">
+        <section id="about" className="py-20 bg-gradient-to-b from-purple-50/50 to-white dark:from-gray-900 dark:to-gray-900">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
-              Poznaj FOMOjobs
-            </h2>
-            <div className="space-y-4 max-w-3xl">
-              <p className="text-gray-700 dark:text-gray-300 text-lg">
+            <div className="text-center mb-12">
+              <h2 className="text-5xl md:text-6xl font-bold mb-8 bg-gradient-to-r from-violet-600 via-purple-400 to-yellow-400 bg-clip-text text-transparent leading-tight pb-2">
+                Poznaj FOMOjobs
+              </h2>
+            </div>
+            <div className="space-y-6 max-w-3xl mx-auto text-center">
+              <p className="text-gray-800 dark:text-gray-200 text-lg leading-relaxed">
                 Rynek pracy się zmienił. Pracodawcy coraz częściej publikują oferty na własnych,
                 mniej widocznych stronach, zamiast na dużych portalach.
               </p>
-              <p className="text-gray-700 dark:text-gray-300 text-lg">
+              <p className="text-gray-800 dark:text-gray-200 text-lg leading-relaxed">
                 FOMOjobs to Twój osobisty radar, który dzięki technologii wyszukuje i filtruje
                 te ukryte oferty. Otrzymujesz od nas jeden alert dziennie z precyzyjnie dobranymi
                 propozycjami, dopasowanymi do Twoich preferencji i szans.
               </p>
-              <p className="text-gray-700 dark:text-gray-300 text-lg">
+              <p className="text-gray-800 dark:text-gray-200 text-lg leading-relaxed">
                 Skup się na swoim CV i przygotowaniu do rozmowy – my zajmiemy się resztą.
               </p>
             </div>
@@ -134,7 +136,7 @@ const Index = () => {
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+              <h2 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-violet-600 via-purple-400 to-yellow-400 bg-clip-text text-transparent leading-tight pb-2">
                 Oszczędzaj godziny scrollowania
               </h2>
               <p className="text-xl text-muted-foreground contrast-more:text-black dark:contrast-more:text-white">
@@ -204,7 +206,7 @@ const Index = () => {
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl md:text-5xl font-bold text-gradient mb-4">
+              <h2 className="text-4xl md:text-5xl font-bold mb-12 bg-gradient-to-r from-violet-600 via-purple-400 to-yellow-400 bg-clip-text text-transparent leading-tight pb-2">
                 Dlaczego warto wybrać FOMOjobs?
               </h2>
             </motion.div>
@@ -261,9 +263,9 @@ const Index = () => {
               viewport={{ once: true }}
               className="text-center mb-12"
             >
-              <h2 className="text-4xl md:text-5xl font-bold mb-4 drop-shadow-md">
+              <h3 className="text-2xl md:text-3xl font-bold text-white mb-8">
                 Dlaczego FOMOjobs to przyszłość poszukiwania pracy?
-              </h2>
+              </h3>
               <p className="text-xl opacity-95 drop-shadow">
                 W świecie, gdzie każdego dnia publikowane są tysiące nowych ofert pracy, potrzebujesz inteligentnego rozwiązania
               </p>
@@ -327,8 +329,8 @@ const Index = () => {
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-                Często zadawane pytania (FAQ)
+              <h2 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">
+                ❓ Często zadawane pytania (FAQ)
               </h2>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto contrast-more:text-black dark:contrast-more:text-white">
                 Znajdź odpowiedzi na najczęściej zadawane pytania o FOMOjobs
@@ -433,7 +435,7 @@ const Index = () => {
               viewport={{ once: true }}
               className="max-w-2xl mx-auto text-center"
             >
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 drop-shadow-md">
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
                 Gotowy, by złapać najlepsze oferty?
               </h2>
               <p className="text-xl mb-8 opacity-95 drop-shadow">
