@@ -1,5 +1,5 @@
 import React from 'react';
-import { CVData } from '@/types/cv';
+import { CVData, RODO_CLAUSE_PL, RODO_CLAUSE_EN } from '@/types/cv';
 import { getCVTranslations, formatCVDate, getCVSkillLevel, getCVLanguageLevel } from '@/lib/cvTranslations';
 
 interface ModernTemplateProps {
@@ -347,6 +347,15 @@ const ModernTemplate: React.FC<ModernTemplateProps> = ({
                   </div>
                 ))}
               </div>
+            </div>
+          )}
+
+          {/* RODO CLAUSE (required in Poland) */}
+          {(customization.includeRodo !== false) && (
+            <div style={{ marginTop: '2rem', paddingTop: '1rem', borderTop: '1px solid #ddd' }}>
+              <p style={{ fontSize: '7pt', lineHeight: '1.3', color: '#666' }}>
+                {lang === 'pl' ? RODO_CLAUSE_PL : RODO_CLAUSE_EN}
+              </p>
             </div>
           )}
         </div>

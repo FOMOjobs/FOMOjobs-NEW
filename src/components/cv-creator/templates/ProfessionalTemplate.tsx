@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { CVData } from '@/types/cv';
+import { CVData, RODO_CLAUSE_PL, RODO_CLAUSE_EN } from '@/types/cv';
 
 interface ProfessionalTemplateProps {
   data: CVData;
@@ -448,6 +448,15 @@ const ProfessionalTemplate: React.FC<ProfessionalTemplateProps> = memo(({
                   </div>
                 ))}
               </div>
+            </div>
+          )}
+
+          {/* RODO CLAUSE (required in Poland) */}
+          {(data.customization.includeRodo !== false) && (
+            <div className="mt-8 pt-4" style={{ borderTop: '1px solid #ddd' }}>
+              <p style={{ fontSize: '7pt', lineHeight: '1.3', color: '#666' }}>
+                {data.customization.language === 'pl' ? RODO_CLAUSE_PL : RODO_CLAUSE_EN}
+              </p>
             </div>
           )}
         </div>

@@ -2,6 +2,7 @@ import React, { memo, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Collapsible,
   CollapsibleContent,
@@ -52,8 +53,8 @@ const colorPresets: ColorPreset[] = [
 ];
 
 const CustomizationPanel: React.FC = memo(() => {
-  const { cvData, setColors } = useCVStore();
-  const { primaryColor, secondaryColor, template } = cvData.customization;
+  const { cvData, setColors, updateCustomization } = useCVStore();
+  const { primaryColor, secondaryColor, template, includeRodo, language } = cvData.customization;
 
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -70,6 +71,14 @@ const CustomizationPanel: React.FC = memo(() => {
   const handleSecondaryColorChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setColors(primaryColor, e.target.value);
   }, [setColors, primaryColor]);
+
+  const handleRodoToggle = useCallback((checked: boolean) => {
+    updateCustomization({ includeRodo: checked });
+    toast.success(checked
+      ? (language === 'pl' ? 'Klauzula RODO włączona' : 'RODO clause enabled')
+      : (language === 'pl' ? 'Klauzula RODO wyłączona' : 'RODO clause disabled')
+    );
+  }, [updateCustomization, language]);
 
   // Disable color customization for ATS template
   const isATS = template === 'ats';
@@ -214,6 +223,32 @@ const CustomizationPanel: React.FC = memo(() => {
                 </div>
               </div>
             )}
+
+            {/* RODO Clause Checkbox */}
+            <div className="border-t pt-4">
+              <div className="flex items-start gap-3">
+                <Checkbox
+                  id="include-rodo"
+                  checked={includeRodo !== false}
+                  onCheckedChange={handleRodoToggle}
+                />
+                <div className="flex-1">
+                  <Label
+                    htmlFor="include-rodo"
+                    className="text-sm font-medium cursor-pointer"
+                  >
+                    {language === 'pl'
+                      ? 'Dołącz klauzulę RODO'
+                      : 'Include RODO clause'}
+                  </Label>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {language === 'pl'
+                      ? 'Wymagana przez polskie prawo zgoda na przetwarzanie danych osobowych w procesie rekrutacji (RODO/GDPR)'
+                      : 'Required by Polish law - consent for personal data processing in recruitment (GDPR)'}
+                  </p>
+                </div>
+              </div>
+            </div>
           </CardContent>
         </CollapsibleContent>
       </Card>

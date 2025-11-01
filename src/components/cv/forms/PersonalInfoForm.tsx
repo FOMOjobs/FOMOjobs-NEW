@@ -59,10 +59,16 @@ const PersonalInfoForm: React.FC = memo(() => {
 
   // Validated input handlers
   const handleNameChange = (value: string) => {
-    const result = validateAndSanitizeName(value);
-    if (result.isValid || value.length === 0) {
-      updatePersonalInfo({ fullName: result.value });
-    } else if (value.length > 0) {
+    // Allow typing freely - sanitize only
+    const sanitized = sanitizeInput(value, 100);
+    updatePersonalInfo({ fullName: sanitized });
+  };
+
+  const handleNameBlur = () => {
+    if (!personal.fullName) return; // Empty is OK during typing
+
+    const result = validateAndSanitizeName(personal.fullName);
+    if (!result.isValid) {
       toast.error(result.error);
     }
   };
@@ -155,6 +161,7 @@ const PersonalInfoForm: React.FC = memo(() => {
             placeholder="Jan Kowalski"
             value={personal.fullName}
             onChange={(e) => handleNameChange(e.target.value)}
+            onBlur={handleNameBlur}
             maxLength={100}
           />
         </div>

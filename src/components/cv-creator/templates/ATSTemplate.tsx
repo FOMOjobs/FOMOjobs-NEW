@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { CVData } from '@/types/cv';
+import { CVData, RODO_CLAUSE_PL, RODO_CLAUSE_EN } from '@/types/cv';
 
 interface ATSTemplateProps {
   data: CVData;
@@ -272,6 +272,22 @@ const ATSTemplate: React.FC<ATSTemplateProps> = memo(({ data }) => {
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* RODO CLAUSE (required in Poland) */}
+      {(data.customization.includeRodo !== false) && (
+        <div className="mt-8 pt-4 border-t border-gray-300">
+          <p
+            className="text-xs text-gray-700 leading-relaxed"
+            style={{
+              fontSize: '7pt',
+              lineHeight: '1.3',
+              color: '#555'
+            }}
+          >
+            {data.customization.language === 'pl' ? RODO_CLAUSE_PL : RODO_CLAUSE_EN}
+          </p>
         </div>
       )}
 
