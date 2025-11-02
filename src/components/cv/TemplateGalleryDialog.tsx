@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { getAllTemplates, getTemplateMetadata, type TemplateMetadata } from '@/lib/templateMetadata';
+import { TemplatePreview } from './TemplatePreview';
 import { Check, Eye, Sparkles, Shield, Zap, Star } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -123,23 +124,20 @@ export const TemplateGalleryDialog: React.FC<TemplateGalleryDialogProps> = ({
                 >
                   {/* Template Preview */}
                   <div
-                    className="h-32 rounded-t-lg relative overflow-hidden"
-                    style={{
-                      background: template.preview.startsWith('linear-gradient')
-                        ? template.preview
-                        : template.preview,
-                    }}
+                    className="h-48 rounded-t-lg relative overflow-hidden bg-gray-50"
                   >
+                    <TemplatePreview templateId={template.id} />
+
                     {/* Current template indicator */}
                     {currentTemplate === template.id && (
-                      <div className="absolute top-2 right-2 bg-white rounded-full p-1.5 shadow-lg">
-                        <Check className="w-4 h-4 text-green-600" />
+                      <div className="absolute top-2 right-2 bg-green-600 rounded-full p-1.5 shadow-lg z-10">
+                        <Check className="w-4 h-4 text-white" />
                       </div>
                     )}
 
                     {/* Hover overlay */}
                     {hoveredTemplate === template.id && (
-                      <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                      <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-10">
                         <Button
                           size="sm"
                           className="bg-white text-purple-600 hover:bg-purple-50"
