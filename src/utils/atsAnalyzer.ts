@@ -28,10 +28,12 @@ import type { CVData } from '@/types/cv';
 
 export interface ATSIssue {
   severity: 'critical' | 'warning' | 'suggestion';
-  category: 'format' | 'content' | 'structure' | 'keywords';
+  category: 'format' | 'content' | 'structure' | 'keywords' | 'legal' | 'polish-market';
   title: string;
   description: string;
   recommendation: string;
+  deduction: number; // Points deducted (0-10)
+  aiSuggestion?: string; // Optional AI-generated improvement
 }
 
 export interface ATSTestResult {
@@ -40,6 +42,8 @@ export interface ATSTestResult {
   issues: ATSIssue[];
   strengths: string[];
   summary: string;
+  totalDeductions?: number; // Sum of all deductions
+  categoryBreakdown?: Record<string, number>; // Deductions per category
 }
 
 /**
@@ -50,6 +54,27 @@ export const testATSCompatibility = (cvData: CVData, templateId?: string): ATSTe
   const strengths: string[] = [];
   let score = 100;
 
+  // 0. TEST: Polish market requirements (RODO, dates, phone)
+  const rodoIssues = checkRODOCompliance(cvData);
+  if (rodoIssues.length > 0) {
+    issues.push(...rodoIssues);
+    score -= rodoIssues.reduce((sum, issue) => sum + issue.deduction, 0);
+  }
+
+  const dateFormatIssues = checkPolishDateFormat(cvData);
+  if (dateFormatIssues.length > 0) {
+    issues.push(...dateFormatIssues);
+    score -= dateFormatIssues.reduce((sum, issue) => sum + issue.deduction, 0);
+  }
+
+  const phoneFormatIssues = checkPhoneFormat(cvData);
+  if (phoneFormatIssues.length > 0) {
+    issues.push(...phoneFormatIssues);
+    score -= phoneFormatIssues.reduce((sum, issue) => sum + issue.deduction, 0);
+  } else if (cvData.personal?.phone) {
+    strengths.push('Telefon w międzynarodowym formacie');
+  }
+
   // 1. TEST: Template compatibility
   if (templateId && templateId !== 'ats') {
     // ATSTemplate is always 100% compatible
@@ -57,7 +82,7 @@ export const testATSCompatibility = (cvData: CVData, templateId?: string): ATSTe
     const templateIssues = checkTemplateCompatibility(templateId);
     if (templateIssues.length > 0) {
       issues.push(...templateIssues);
-      score -= templateIssues.length * 5;
+      score -= templateIssues.reduce((sum, issue) => sum + issue.deduction, 0);
     } else {
       strengths.push('Szablon zgodny z ATS');
     }
@@ -69,8 +94,7 @@ export const testATSCompatibility = (cvData: CVData, templateId?: string): ATSTe
   const contactIssues = checkContactInfo(cvData);
   if (contactIssues.length > 0) {
     issues.push(...contactIssues);
-    score -= contactIssues.filter(i => i.severity === 'critical').length * 10;
-    score -= contactIssues.filter(i => i.severity === 'warning').length * 5;
+    score -= contactIssues.reduce((sum, issue) => sum + issue.deduction, 0);
   } else {
     strengths.push('Kompletne dane kontaktowe');
   }
@@ -79,7 +103,7 @@ export const testATSCompatibility = (cvData: CVData, templateId?: string): ATSTe
   const summaryIssues = checkSummary(cvData);
   if (summaryIssues.length > 0) {
     issues.push(...summaryIssues);
-    score -= summaryIssues.length * 8;
+    score -= summaryIssues.reduce((sum, issue) => sum + issue.deduction, 0);
   } else {
     strengths.push('Dobrze napisane podsumowanie');
   }
@@ -88,7 +112,7 @@ export const testATSCompatibility = (cvData: CVData, templateId?: string): ATSTe
   const experienceIssues = checkExperience(cvData);
   if (experienceIssues.length > 0) {
     issues.push(...experienceIssues);
-    score -= experienceIssues.length * 7;
+    score -= experienceIssues.reduce((sum, issue) => sum + issue.deduction, 0);
   } else {
     strengths.push('Doświadczenie zawodowe dobrze opisane');
   }
@@ -97,7 +121,7 @@ export const testATSCompatibility = (cvData: CVData, templateId?: string): ATSTe
   const educationIssues = checkEducation(cvData);
   if (educationIssues.length > 0) {
     issues.push(...educationIssues);
-    score -= educationIssues.length * 5;
+    score -= educationIssues.reduce((sum, issue) => sum + issue.deduction, 0);
   } else {
     strengths.push('Wykształcenie poprawnie uzupełnione');
   }
@@ -106,7 +130,7 @@ export const testATSCompatibility = (cvData: CVData, templateId?: string): ATSTe
   const skillsIssues = checkSkills(cvData);
   if (skillsIssues.length > 0) {
     issues.push(...skillsIssues);
-    score -= skillsIssues.length * 6;
+    score -= skillsIssues.reduce((sum, issue) => sum + issue.deduction, 0);
   } else {
     strengths.push('Umiejętności dobrze zdefiniowane');
   }
@@ -115,7 +139,7 @@ export const testATSCompatibility = (cvData: CVData, templateId?: string): ATSTe
   const structureIssues = checkStructure(cvData);
   if (structureIssues.length > 0) {
     issues.push(...structureIssues);
-    score -= structureIssues.length * 5;
+    score -= structureIssues.reduce((sum, issue) => sum + issue.deduction, 0);
   } else {
     strengths.push('Prawidłowa struktura CV');
   }
@@ -124,7 +148,7 @@ export const testATSCompatibility = (cvData: CVData, templateId?: string): ATSTe
   const lengthIssues = checkLength(cvData);
   if (lengthIssues.length > 0) {
     issues.push(...lengthIssues);
-    score -= lengthIssues.length * 3;
+    score -= lengthIssues.reduce((sum, issue) => sum + issue.deduction, 0);
   } else {
     strengths.push('Odpowiednia długość CV');
   }
@@ -138,6 +162,15 @@ export const testATSCompatibility = (cvData: CVData, templateId?: string): ATSTe
   // Generate summary
   const summary = generateSummary(score, issues.length, strengths.length);
 
+  // Calculate total deductions
+  const totalDeductions = issues.reduce((sum, issue) => sum + issue.deduction, 0);
+
+  // Group deductions by category
+  const categoryBreakdown = issues.reduce((acc, issue) => {
+    acc[issue.category] = (acc[issue.category] || 0) + issue.deduction;
+    return acc;
+  }, {} as Record<string, number>);
+
   return {
     score,
     grade,
@@ -147,7 +180,130 @@ export const testATSCompatibility = (cvData: CVData, templateId?: string): ATSTe
     }),
     strengths,
     summary,
+    totalDeductions,
+    categoryBreakdown,
   };
+};
+
+/**
+ * Check RODO compliance (Polish legal requirement)
+ * RODO = GDPR in Poland - mandatory consent clause
+ */
+const checkRODOCompliance = (cvData: CVData): ATSIssue[] => {
+  const issues: ATSIssue[] = [];
+
+  // Check if any text field contains RODO keywords
+  const allText = JSON.stringify(cvData).toLowerCase();
+  const rodoKeywords = [
+    'wyrażam zgodę',
+    'przetwarzanie danych',
+    'rodo',
+    'ochrona danych osobowych',
+    'zgodnie z ustawą',
+    'rozporządzeniem parlamentu europejskiego',
+  ];
+
+  const hasRODO = rodoKeywords.some(keyword => allText.includes(keyword));
+
+  if (!hasRODO) {
+    issues.push({
+      severity: 'critical',
+      category: 'legal',
+      title: 'Brak klauzuli RODO (wymagane w Polsce)',
+      description: 'Systemy rekrutacyjne w Polsce wymagają zgody na przetwarzanie danych osobowych zgodnie z RODO',
+      recommendation: 'Dodaj na końcu CV: "Wyrażam zgodę na przetwarzanie moich danych osobowych zawartych w mojej ofercie pracy dla potrzeb niezbędnych do realizacji procesu rekrutacji (zgodnie z ustawą z dnia 10 maja 2018 roku o ochronie danych osobowych oraz zgodnie z Rozporządzeniem Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27 kwietnia 2016 r. - RODO)."',
+      deduction: 10,
+    });
+  }
+
+  return issues;
+};
+
+/**
+ * Check Polish date format standards
+ * Preferred formats: MM.YYYY, Marzec 2020, Mar 2020
+ */
+const checkPolishDateFormat = (cvData: CVData): ATSIssue[] => {
+  const issues: ATSIssue[] = [];
+  const { experience } = cvData;
+
+  // Polish standard formats
+  const validFormats = [
+    /^\d{2}\.\d{4}$/,                           // 03.2020
+    /^[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]+ \d{4}$/,   // Marzec 2020
+    /^[A-Z][a-z]{2} \d{4}$/,                   // Mar 2020
+    /^\d{4}-\d{2}$/,                           // 2020-03 (acceptable)
+  ];
+
+  const invalidDates: Array<{ position: string; date: string }> = [];
+
+  experience.forEach((exp) => {
+    const dates = [
+      { value: exp.startDate, label: 'data rozpoczęcia' },
+      { value: exp.endDate, label: 'data zakończenia' },
+    ];
+
+    dates.forEach(({ value, label }) => {
+      if (value && !validFormats.some(regex => regex.test(value))) {
+        invalidDates.push({ position: exp.position, date: value });
+      }
+    });
+  });
+
+  if (invalidDates.length > 0) {
+    // Group all date issues into one
+    const examples = invalidDates.slice(0, 2).map(d => `"${d.date}"`).join(', ');
+    issues.push({
+      severity: 'suggestion',
+      category: 'polish-market',
+      title: 'Niestandardowy format daty',
+      description: `Znaleziono ${invalidDates.length} dat w nietypowym formacie (np. ${examples})`,
+      recommendation: 'Użyj jednego z formatów: "03.2020", "Marzec 2020" lub "Mar 2020" dla lepszej kompatybilności z polskimi ATS',
+      deduction: Math.min(5, invalidDates.length * 2), // max 5 points
+    });
+  }
+
+  return issues;
+};
+
+/**
+ * Check international phone format
+ * Polish market best practice: +48 XXX XXX XXX
+ */
+const checkPhoneFormat = (cvData: CVData): ATSIssue[] => {
+  const issues: ATSIssue[] = [];
+  const phone = cvData.personal?.phone || '';
+
+  if (!phone) return issues; // Already handled by checkContactInfo
+
+  // International format with country code
+  const internationalFormat = /^\+\d{1,3}\s?\d{3}\s?\d{3}\s?\d{3}$/;
+  const polishFormat = /^\+48\s?\d{3}\s?\d{3}\s?\d{3}$/;
+
+  const hasCountryCode = phone.startsWith('+');
+  const isInternational = internationalFormat.test(phone);
+
+  if (!hasCountryCode) {
+    issues.push({
+      severity: 'warning',
+      category: 'polish-market',
+      title: 'Telefon bez kodu kraju',
+      description: 'Dla aplikacji międzynarodowych zalecany jest format z kodem kraju',
+      recommendation: 'Zmień format na: +48 XXX XXX XXX (dla Polski) lub +XX dla innych krajów',
+      deduction: 3,
+    });
+  } else if (!isInternational) {
+    issues.push({
+      severity: 'suggestion',
+      category: 'polish-market',
+      title: 'Niestandardowy format telefonu',
+      description: 'Format telefonu może nie być rozpoznany przez niektóre systemy ATS',
+      recommendation: 'Użyj standardowego formatu: +48 123 456 789 (z odstępami)',
+      deduction: 2,
+    });
+  }
+
+  return issues;
 };
 
 /**
@@ -169,6 +325,7 @@ const checkTemplateCompatibility = (templateId: string): ATSIssue[] => {
       title: 'Szablon może mieć problemy z ATS',
       description: problematicTemplates[templateId],
       recommendation: 'Rozważ użycie szablonu "ATS-Friendly" dla maksymalnej kompatybilności',
+      deduction: 5,
     });
   }
 
@@ -189,6 +346,7 @@ const checkContactInfo = (cvData: CVData): ATSIssue[] => {
       title: 'Brak imienia i nazwiska',
       description: 'ATS wymaga pełnego imienia i nazwiska',
       recommendation: 'Uzupełnij pole "Imię i nazwisko"',
+      deduction: 10,
     });
   }
 
@@ -199,6 +357,7 @@ const checkContactInfo = (cvData: CVData): ATSIssue[] => {
       title: 'Brak adresu email',
       description: 'Email jest wymagany przez wszystkie systemy ATS',
       recommendation: 'Dodaj poprawny adres email',
+      deduction: 10,
     });
   }
 
@@ -209,6 +368,7 @@ const checkContactInfo = (cvData: CVData): ATSIssue[] => {
       title: 'Brak numeru telefonu',
       description: 'Większość rekruterów oczekuje numeru telefonu',
       recommendation: 'Dodaj numer telefonu kontaktowy',
+      deduction: 5,
     });
   }
 
@@ -219,6 +379,7 @@ const checkContactInfo = (cvData: CVData): ATSIssue[] => {
       title: 'Brak lokalizacji',
       description: 'Lokalizacja pomaga ATS w dopasowaniu do ofert w Twojej okolicy',
       recommendation: 'Dodaj miasto i kraj (np. "Warszawa, Polska")',
+      deduction: 5,
     });
   }
 
@@ -239,6 +400,7 @@ const checkSummary = (cvData: CVData): ATSIssue[] => {
       title: 'Brak podsumowania zawodowego',
       description: 'ATS często priorytetyzuje CV z podsumowaniem',
       recommendation: 'Dodaj krótkie podsumowanie (2-4 zdania) opisujące Twoje doświadczenie',
+      deduction: 8,
     });
   } else if (summary.length < 100) {
     issues.push({
@@ -247,6 +409,7 @@ const checkSummary = (cvData: CVData): ATSIssue[] => {
       title: 'Podsumowanie zbyt krótkie',
       description: 'Krótkie podsumowanie może nie zawierać kluczowych słów',
       recommendation: 'Rozszerz podsumowanie do 150-300 znaków, dodając kluczowe umiejętności',
+      deduction: 3,
     });
   } else if (summary.length > 600) {
     issues.push({
@@ -255,6 +418,7 @@ const checkSummary = (cvData: CVData): ATSIssue[] => {
       title: 'Podsumowanie zbyt długie',
       description: 'ATS może obciąć zbyt długie podsumowania',
       recommendation: 'Skróć podsumowanie do maksymalnie 400 znaków',
+      deduction: 3,
     });
   }
 
@@ -275,6 +439,7 @@ const checkExperience = (cvData: CVData): ATSIssue[] => {
       title: 'Brak doświadczenia zawodowego',
       description: 'Sekcja doświadczenia jest kluczowa dla ATS',
       recommendation: 'Dodaj przynajmniej jedno doświadczenie zawodowe',
+      deduction: 10,
     });
     return issues;
   }
@@ -288,6 +453,7 @@ const checkExperience = (cvData: CVData): ATSIssue[] => {
         title: `Brak daty rozpoczęcia w pozycji "${exp.position}"`,
         description: 'ATS wymaga dat do sortowania chronologicznego',
         recommendation: 'Dodaj datę rozpoczęcia (format: YYYY-MM)',
+        deduction: 6,
       });
     }
 
@@ -298,6 +464,7 @@ const checkExperience = (cvData: CVData): ATSIssue[] => {
         title: `Brak daty zakończenia w pozycji "${exp.position}"`,
         description: 'Jeśli nie pracujesz już na tym stanowisku, dodaj datę zakończenia',
         recommendation: 'Dodaj datę zakończenia lub zaznacz "Obecnie"',
+        deduction: 5,
       });
     }
 
@@ -308,6 +475,7 @@ const checkExperience = (cvData: CVData): ATSIssue[] => {
         title: `Zbyt krótki opis dla "${exp.position}"`,
         description: 'Krótkie opisy nie zawierają słów kluczowych',
         recommendation: 'Rozszerz opis do 100-300 znaków, dodając kluczowe osiągnięcia',
+        deduction: 3,
       });
     }
 
@@ -318,6 +486,7 @@ const checkExperience = (cvData: CVData): ATSIssue[] => {
         title: `Brak osiągnięć dla "${exp.position}"`,
         description: 'Osiągnięcia zwiększają szanse na wysoką ocenę ATS',
         recommendation: 'Dodaj 2-4 punkty z konkretnymi osiągnięciami i metrykami',
+        deduction: 3,
       });
     }
   });
@@ -339,6 +508,7 @@ const checkEducation = (cvData: CVData): ATSIssue[] => {
       title: 'Brak wykształcenia',
       description: 'Większość ofert pracy wymaga informacji o wykształceniu',
       recommendation: 'Dodaj przynajmniej jeden wpis z wykształceniem',
+      deduction: 7,
     });
     return issues;
   }
@@ -351,6 +521,7 @@ const checkEducation = (cvData: CVData): ATSIssue[] => {
         title: 'Brak tytułu/stopnia naukowego',
         description: 'ATS wymaga pełnej nazwy stopnia (np. "Magister", "Licencjat")',
         recommendation: 'Podaj pełną nazwę stopnia (nie skrót)',
+        deduction: 5,
       });
     }
 
@@ -361,6 +532,7 @@ const checkEducation = (cvData: CVData): ATSIssue[] => {
         title: 'Brak kierunku studiów',
         description: 'Kierunek studiów pomaga ATS w dopasowaniu do oferty',
         recommendation: 'Dodaj kierunek studiów (np. "Informatyka", "Marketing")',
+        deduction: 3,
       });
     }
   });
@@ -382,6 +554,7 @@ const checkSkills = (cvData: CVData): ATSIssue[] => {
       title: 'Brak umiejętności',
       description: 'ATS dopasowuje CV na podstawie słów kluczowych z umiejętności',
       recommendation: 'Dodaj przynajmniej 5-10 kluczowych umiejętności',
+      deduction: 10,
     });
     return issues;
   }
@@ -393,6 +566,7 @@ const checkSkills = (cvData: CVData): ATSIssue[] => {
       title: 'Za mało umiejętności',
       description: 'Tylko ' + skills.length + ' umiejętności może być niewystarczające',
       recommendation: 'Dodaj więcej umiejętności (zalecane: 10-15)',
+      deduction: 6,
     });
   }
 
@@ -403,6 +577,7 @@ const checkSkills = (cvData: CVData): ATSIssue[] => {
       title: 'Zbyt wiele umiejętności',
       description: 'Zbyt długa lista może rozwodnić kluczowe kompetencje',
       recommendation: 'Ogranicz do 15-20 najważniejszych umiejętności',
+      deduction: 3,
     });
   }
 
@@ -415,6 +590,7 @@ const checkSkills = (cvData: CVData): ATSIssue[] => {
       title: 'Brak umiejętności technicznych',
       description: 'Większość ofert wymaga konkretnych technologii',
       recommendation: 'Dodaj umiejętności techniczne (języki, narzędzia, technologie)',
+      deduction: 3,
     });
   }
 
@@ -430,11 +606,13 @@ const checkStructure = (cvData: CVData): ATSIssue[] => {
   // Check if photo is included (can cause ATS issues)
   if (cvData.personal.photo) {
     issues.push({
-      severity: 'suggestion',
+      severity: 'warning',
       category: 'format',
       title: 'CV zawiera zdjęcie',
-      description: 'Niektóre systemy ATS nie obsługują zdjęć lub je ignorują',
-      recommendation: 'Rozważ usunięcie zdjęcia dla lepszej kompatybilności (opcjonalne)',
+      description: 'Większość systemów ATS (60-70%) nie przetwarza zdjęć - tracisz miejsce na treść',
+      recommendation: 'Usuń zdjęcie z CV. Dodaj je opcjonalnie jako osobny załącznik lub na LinkedIn',
+      deduction: 5,
+      aiSuggestion: 'Zdjęcia profilowe są standardem w LinkedIn, ale w CV (szczególnie dla aplikacji w USA, UK) są nieprofesjonalne i blokują ATS parsing.',
     });
   }
 
@@ -451,6 +629,7 @@ const checkStructure = (cvData: CVData): ATSIssue[] => {
       title: 'Niepełna struktura CV',
       description: 'Brakuje standardowych sekcji (Doświadczenie, Wykształcenie, Umiejętności)',
       recommendation: 'Uzupełnij wszystkie sekcje dla lepszej oceny ATS',
+      deduction: 3,
     });
   }
 
@@ -476,6 +655,7 @@ const checkLength = (cvData: CVData): ATSIssue[] => {
       title: 'CV zbyt krótkie',
       description: 'Krótkie CV może nie zawierać wystarczających słów kluczowych',
       recommendation: 'Rozszerz opisy doświadczenia i dodaj konkretne osiągnięcia',
+      deduction: 6,
     });
   }
 
@@ -486,6 +666,7 @@ const checkLength = (cvData: CVData): ATSIssue[] => {
       title: 'CV bardzo długie',
       description: 'Zbyt długie CV może być trudne do przeanalizowania przez ATS',
       recommendation: 'Skróć opisy, skup się na najważniejszych osiągnięciach',
+      deduction: 3,
     });
   }
 
@@ -497,6 +678,7 @@ const checkLength = (cvData: CVData): ATSIssue[] => {
       title: 'Zbyt wiele stanowisk',
       description: 'Ponad 10 stanowisk może wskazywać na częste zmiany pracy',
       recommendation: 'Skup się na ostatnich 10 latach doświadczenia',
+      deduction: 3,
     });
   }
 
@@ -549,3 +731,36 @@ export const getATSRecommendations = (): string[] => {
     'Używaj prostych wypunktowań (•) zamiast specjalnych symboli',
   ];
 };
+
+// ═════════════════════════════════════════════════════════════
+// AI ENHANCEMENT FUNCTIONS (TODO: Phase 2)
+// ═════════════════════════════════════════════════════════════
+
+/**
+ * TODO: Analyze bullet point quality using AI
+ *
+ * Will check for:
+ * - Weak action verbs ("responsible for" vs "led")
+ * - Missing metrics/numbers
+ * - STAR method compliance
+ * - Generate improved versions
+ *
+ * @example
+ * const analysis = await analyzeBulletQuality([
+ *   "Responsible for team management",
+ *   "Led 5-person team, increasing productivity by 40%"
+ * ]);
+ * // Returns scores + improved versions
+ */
+// export async function analyzeBulletQuality(bullets: string[]): Promise<BulletAnalysis[]>
+
+/**
+ * TODO: Match CV with job description using AI
+ *
+ * Will extract keywords from JD and compare with CV content
+ *
+ * @example
+ * const match = await matchWithJobDescription(cvData, jobDescriptionText);
+ * // Returns: { score: 75, missingKeywords: [...], suggestions: [...] }
+ */
+// export async function matchWithJobDescription(cvData: CVData, jd: string): Promise<JDMatch>
